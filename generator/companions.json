@@ -1,0 +1,2847 @@
+{
+ "walls": {
+  "27": {
+   "destroyed": 40,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 152,
+   "name": "Town (H)"
+  },
+  "33": {
+   "destroyed": 784,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 14,
+   "name": "Town (C)"
+  },
+  "28": {
+   "destroyed": 41,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 140,
+   "name": "Town (V)"
+  },
+  "30": {
+   "destroyed": 43,
+   "ruins": 46,
+   "indestructible": false,
+   "seen": 1183,
+   "name": "Temple (V)"
+  },
+  "29": {
+   "destroyed": 42,
+   "ruins": 46,
+   "indestructible": false,
+   "seen": 1277,
+   "name": "Temple (H)"
+  },
+  "34": {
+   "destroyed": 144,
+   "ruins": 46,
+   "indestructible": false,
+   "seen": 179,
+   "name": "Temple (C)"
+  },
+  "140": {
+   "destroyed": 142,
+   "ruins": 46,
+   "indestructible": true,
+   "seen": 7815,
+   "name": "Dirty Marble (V)"
+  },
+  "139": {
+   "destroyed": 141,
+   "ruins": 46,
+   "indestructible": true,
+   "seen": 9048,
+   "name": "Dirty Marble (H)"
+  },
+  "143": {
+   "destroyed": 144,
+   "ruins": 46,
+   "indestructible": true,
+   "seen": 867,
+   "name": "Dirty Marble (C)"
+  },
+  "146": {
+   "destroyed": 148,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Heavy Logs (V)"
+  },
+  "145": {
+   "destroyed": 147,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Heavy Logs (H)"
+  },
+  "149": {
+   "destroyed": 150,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Heavy Logs (C)"
+  },
+  "151": {
+   "destroyed": 153,
+   "ruins": 46,
+   "indestructible": true,
+   "seen": 122,
+   "name": "Dragon (H)"
+  },
+  "152": {
+   "destroyed": 154,
+   "ruins": 46,
+   "indestructible": true,
+   "seen": 213,
+   "name": "Dragon (V)"
+  },
+  "155": {
+   "destroyed": 156,
+   "ruins": 46,
+   "indestructible": true,
+   "seen": 15,
+   "name": "Dragon (C)"
+  },
+  "158": {
+   "destroyed": 161,
+   "ruins": 170,
+   "indestructible": false,
+   "seen": 0,
+   "name": ""
+  },
+  "157": {
+   "destroyed": 160,
+   "ruins": 170,
+   "indestructible": false,
+   "seen": 0,
+   "name": ""
+  },
+  "159": {
+   "destroyed": 162,
+   "ruins": 170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Cave (C)"
+  },
+  "26": {
+   "destroyed": 39,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 6,
+   "name": "Dungeon (V)"
+  },
+  "25": {
+   "destroyed": 38,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 2,
+   "name": "Dungeon (H)"
+  },
+  "32": {
+   "destroyed": 783,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Dungeon (C)"
+  },
+  "336": {
+   "destroyed": 345,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Granite (V)"
+  },
+  "335": {
+   "destroyed": 344,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Granite (H)"
+  },
+  "357": {
+   "destroyed": 358,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Granite (C)"
+  },
+  "347": {
+   "destroyed": 339,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Sandstone (V)"
+  },
+  "346": {
+   "destroyed": 338,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Sandstone (H)"
+  },
+  "359": {
+   "destroyed": 360,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Sandstone (C)"
+  },
+  "334": {
+   "destroyed": 343,
+   "ruins": 669,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Dirt (V)"
+  },
+  "333": {
+   "destroyed": 342,
+   "ruins": 669,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Dirt (H)"
+  },
+  "355": {
+   "destroyed": 356,
+   "ruins": 669,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Dirt (C)"
+  },
+  "382": {
+   "destroyed": 395,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Undead (V)"
+  },
+  "381": {
+   "destroyed": 394,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Undead (H)"
+  },
+  "407": {
+   "destroyed": 408,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Undead (C)"
+  },
+  "384": {
+   "destroyed": 397,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Blue Marble (V)"
+  },
+  "383": {
+   "destroyed": 396,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Blue Marble (H)"
+  },
+  "409": {
+   "destroyed": 410,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Blue Marble (C)"
+  },
+  "414": {
+   "destroyed": 416,
+   "ruins": 398,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Mines (V)"
+  },
+  "413": {
+   "destroyed": 415,
+   "ruins": 398,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Mines (H)"
+  },
+  "417": {
+   "destroyed": 418,
+   "ruins": 398,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Mines (C)"
+  },
+  "224": {
+   "destroyed": 227,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Thicket (V)"
+  },
+  "223": {
+   "destroyed": 226,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Thicket (H)"
+  },
+  "225": {
+   "destroyed": 228,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Thicket (C)"
+  },
+  "363": {
+   "destroyed": 365,
+   "ruins": 380,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Red Shoji (V)"
+  },
+  "362": {
+   "destroyed": 364,
+   "ruins": 380,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Red Shoji (H)"
+  },
+  "366": {
+   "destroyed": 367,
+   "ruins": 380,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Red Shoji (C)"
+  },
+  "429": {
+   "destroyed": 442,
+   "ruins": 432,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Dragon (V)"
+  },
+  "428": {
+   "destroyed": 441,
+   "ruins": 432,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Dragon (H)"
+  },
+  "431": {
+   "destroyed": 442,
+   "ruins": 432,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Dragon Window (V)"
+  },
+  "430": {
+   "destroyed": 441,
+   "ruins": 432,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Dragon Window (H)"
+  },
+  "443": {
+   "destroyed": 444,
+   "ruins": 432,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Dragon (C)"
+  },
+  "460": {
+   "destroyed": 462,
+   "ruins": 465,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Highmountain (V)"
+  },
+  "459": {
+   "destroyed": 461,
+   "ruins": 465,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Highmountain (H)"
+  },
+  "463": {
+   "destroyed": 464,
+   "ruins": 465,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Highmountain (C)"
+  },
+  "471": {
+   "destroyed": 473,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Pagoda Shoji (V)"
+  },
+  "470": {
+   "destroyed": 472,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Pagoda Shoji (H)"
+  },
+  "475": {
+   "destroyed": 477,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Pagoda Framed (V)"
+  },
+  "474": {
+   "destroyed": 476,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Pagoda Framed (H)"
+  },
+  "483": {
+   "destroyed": 485,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Pagoda Framed (V)"
+  },
+  "482": {
+   "destroyed": 484,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Pagoda Framed (H)"
+  },
+  "487": {
+   "destroyed": 489,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Pagoda (V)"
+  },
+  "486": {
+   "destroyed": 488,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Pagoda (H)"
+  },
+  "480": {
+   "destroyed": 481,
+   "ruins": 45,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Pagoda (C)"
+  },
+  "259": {
+   "destroyed": 261,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian (V)"
+  },
+  "258": {
+   "destroyed": 260,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian (H)"
+  },
+  "272": {
+   "destroyed": 261,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Life (V)"
+  },
+  "271": {
+   "destroyed": 260,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Life (H)"
+  },
+  "274": {
+   "destroyed": 261,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Life (V)"
+  },
+  "273": {
+   "destroyed": 260,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Life (H)"
+  },
+  "276": {
+   "destroyed": 261,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Sobet (V)"
+  },
+  "275": {
+   "destroyed": 260,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Sobet (H)"
+  },
+  "284": {
+   "destroyed": 261,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Horus (V)"
+  },
+  "283": {
+   "destroyed": 260,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Horus (H)"
+  },
+  "286": {
+   "destroyed": 261,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Osiris (V)"
+  },
+  "285": {
+   "destroyed": 260,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Osiris (H)"
+  },
+  "288": {
+   "destroyed": 261,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Sekhmet (V)"
+  },
+  "287": {
+   "destroyed": 260,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Sekhmet (H)"
+  },
+  "296": {
+   "destroyed": 261,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Re.Harakhti (V)"
+  },
+  "295": {
+   "destroyed": 260,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Re.Harakhti (H)"
+  },
+  "297": {
+   "destroyed": 261,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Anubis (V)"
+  },
+  "298": {
+   "destroyed": 260,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Anubis (H)"
+  },
+  "300": {
+   "destroyed": 261,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Iris (V)"
+  },
+  "299": {
+   "destroyed": 260,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian Iris (H)"
+  },
+  "262": {
+   "destroyed": 263,
+   "ruins": 44,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Egyptian (C)"
+  },
+  "31": {
+   "destroyed": 0,
+   "ruins": 44,
+   "indestructible": true,
+   "seen": 0,
+   "name": "Solid Rock"
+  },
+  "447": {
+   "destroyed": 0,
+   "ruins": 44,
+   "indestructible": true,
+   "seen": 3079,
+   "name": "Solid Granite"
+  },
+  "448": {
+   "destroyed": 0,
+   "ruins": 44,
+   "indestructible": true,
+   "seen": 0,
+   "name": "Solid Sandstone"
+  },
+  "446": {
+   "destroyed": 0,
+   "ruins": 44,
+   "indestructible": true,
+   "seen": 16481,
+   "name": "Solid Dirt"
+  },
+  "104": {
+   "destroyed": 640,
+   "ruins": 46,
+   "indestructible": true,
+   "seen": 140,
+   "name": "Portal Pillar"
+  },
+  "371": {
+   "destroyed": 641,
+   "ruins": 170,
+   "indestructible": true,
+   "seen": 124,
+   "name": "Stalagmite"
+  },
+  "707": {
+   "destroyed": 710,
+   "ruins": 711,
+   "indestructible": false,
+   "seen": 0,
+   "name": " panel wall (H) "
+  },
+  "709": {
+   "destroyed": 712,
+   "ruins": 711,
+   "indestructible": false,
+   "seen": 0,
+   "name": " panel wall (V) "
+  },
+  "708": {
+   "destroyed": 0,
+   "ruins": 711,
+   "indestructible": false,
+   "seen": 0,
+   "name": " panel corner post "
+  },
+  "713": {
+   "destroyed": 716,
+   "ruins": 717,
+   "indestructible": false,
+   "seen": 0,
+   "name": " Lodge wall (H) "
+  },
+  "715": {
+   "destroyed": 718,
+   "ruins": 717,
+   "indestructible": false,
+   "seen": 0,
+   "name": " Lodge wall (V) "
+  },
+  "714": {
+   "destroyed": 0,
+   "ruins": 717,
+   "indestructible": false,
+   "seen": 0,
+   "name": " Lodge corner post "
+  },
+  "731": {
+   "destroyed": 735,
+   "ruins": 0,
+   "indestructible": false,
+   "seen": 0,
+   "name": " front wall (H) "
+  },
+  "732": {
+   "destroyed": 735,
+   "ruins": 0,
+   "indestructible": false,
+   "seen": 0,
+   "name": " inside back wall (H) "
+  },
+  "733": {
+   "destroyed": 736,
+   "ruins": 0,
+   "indestructible": false,
+   "seen": 0,
+   "name": " inside left wall (V) "
+  },
+  "734": {
+   "destroyed": 736,
+   "ruins": 0,
+   "indestructible": false,
+   "seen": 0,
+   "name": " outside right wall (V) "
+  },
+  "991": {
+   "destroyed": 994,
+   "ruins": 995,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Ice Labyrinth(H)"
+  },
+  "993": {
+   "destroyed": 996,
+   "ruins": 995,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Ice Labyrinth (V)"
+  },
+  "997": {
+   "destroyed": 998,
+   "ruins": 995,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Ice Labyrinth Corner Pillar"
+  },
+  "1008": {
+   "destroyed": 1011,
+   "ruins": 1012,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Lava Tube Wall (H)"
+  },
+  "1010": {
+   "destroyed": 1013,
+   "ruins": 1012,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Lava Tube Wall (V)"
+  },
+  "1014": {
+   "destroyed": 1015,
+   "ruins": 1012,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Lava Tube Corner Pillar"
+  },
+  "1088": {
+   "destroyed": 147,
+   "ruins": 717,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Log Fortification (H)"
+  },
+  "1089": {
+   "destroyed": 148,
+   "ruins": 717,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Log Fortification (V)"
+  },
+  "1092": {
+   "destroyed": 1095,
+   "ruins": 1094,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Swamp cave wall (V)"
+  },
+  "1090": {
+   "destroyed": 1093,
+   "ruins": 1094,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Swamp cave wall (h)"
+  },
+  "1096": {
+   "destroyed": 1097,
+   "ruins": 1094,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Swamp cave pillar"
+  },
+  "1108": {
+   "destroyed": 1097,
+   "ruins": 1094,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Swamp tree pillar"
+  },
+  "1115": {
+   "destroyed": 1095,
+   "ruins": 1094,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Swamp cave wall vine (V)"
+  },
+  "1114": {
+   "destroyed": 1093,
+   "ruins": 1094,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Swamp cave wall vine (H)"
+  },
+  "1128": {
+   "destroyed": 1170,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 30,
+   "name": "grey stone dragon - column wrap"
+  },
+  "1129": {
+   "destroyed": 1170,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "gold dragon - column wrap"
+  },
+  "1130": {
+   "destroyed": 1170,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "gold serpent - column wrap"
+  },
+  "1131": {
+   "destroyed": 1169,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "marble dragon column"
+  },
+  "1132": {
+   "destroyed": 1169,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 30,
+   "name": "bull head column"
+  },
+  "1140": {
+   "destroyed": 1169,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "lion head column"
+  },
+  "1221": {
+   "destroyed": 1221,
+   "ruins": 1221,
+   "indestructible": true,
+   "seen": 0,
+   "name": "mine solid"
+  },
+  "1213": {
+   "destroyed": 1217,
+   "ruins": 1216,
+   "indestructible": true,
+   "seen": 0,
+   "name": "mine wall (h)"
+  },
+  "1215": {
+   "destroyed": 1217,
+   "ruins": 1218,
+   "indestructible": true,
+   "seen": 0,
+   "name": "mine wall (v)"
+  },
+  "1219": {
+   "destroyed": 1217,
+   "ruins": 1220,
+   "indestructible": true,
+   "seen": 0,
+   "name": "mine pillar"
+  },
+  "1222": {
+   "destroyed": 1217,
+   "ruins": 1220,
+   "indestructible": true,
+   "seen": 0,
+   "name": "mine wood post"
+  },
+  "1225": {
+   "destroyed": 1229,
+   "ruins": 1228,
+   "indestructible": false,
+   "seen": 687,
+   "name": "irr wall (h)"
+  },
+  "1227": {
+   "destroyed": 1229,
+   "ruins": 1230,
+   "indestructible": false,
+   "seen": 644,
+   "name": "irr wall (v)"
+  },
+  "1231": {
+   "destroyed": 1229,
+   "ruins": 1232,
+   "indestructible": false,
+   "seen": 67,
+   "name": "irr post"
+  },
+  "666": {
+   "destroyed": 667,
+   "ruins": 667,
+   "indestructible": false,
+   "seen": 0,
+   "name": "stacked box obstruction"
+  },
+  "670": {
+   "destroyed": 676,
+   "ruins": 674,
+   "indestructible": false,
+   "seen": 0,
+   "name": "light stone wall (H)"
+  },
+  "672": {
+   "destroyed": 675,
+   "ruins": 674,
+   "indestructible": false,
+   "seen": 0,
+   "name": "light stone wall (V)"
+  },
+  "673": {
+   "destroyed": 677,
+   "ruins": 674,
+   "indestructible": false,
+   "seen": 0,
+   "name": "light stone column"
+  },
+  "679": {
+   "destroyed": 685,
+   "ruins": 683,
+   "indestructible": false,
+   "seen": 0,
+   "name": "rock wall (H)"
+  },
+  "681": {
+   "destroyed": 684,
+   "ruins": 683,
+   "indestructible": false,
+   "seen": 0,
+   "name": "rock wall (V)"
+  },
+  "682": {
+   "destroyed": 686,
+   "ruins": 683,
+   "indestructible": false,
+   "seen": 0,
+   "name": "rock wall column"
+  },
+  "688": {
+   "destroyed": 694,
+   "ruins": 692,
+   "indestructible": false,
+   "seen": 0,
+   "name": "cave wall (H)"
+  },
+  "690": {
+   "destroyed": 693,
+   "ruins": 692,
+   "indestructible": false,
+   "seen": 0,
+   "name": "cave wall (V)"
+  },
+  "691": {
+   "destroyed": 1229,
+   "ruins": 692,
+   "indestructible": false,
+   "seen": 0,
+   "name": "cave wall column"
+  },
+  "697": {
+   "destroyed": 1229,
+   "ruins": 938,
+   "indestructible": false,
+   "seen": 0,
+   "name": "animated fireplace H"
+  },
+  "698": {
+   "destroyed": 1229,
+   "ruins": 947,
+   "indestructible": false,
+   "seen": 0,
+   "name": "animated fireplace V"
+  },
+  "699": {
+   "destroyed": 703,
+   "ruins": 705,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Big City wall H"
+  },
+  "701": {
+   "destroyed": 703,
+   "ruins": 704,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Big City wall V"
+  },
+  "702": {
+   "destroyed": 703,
+   "ruins": 706,
+   "indestructible": false,
+   "seen": 8,
+   "name": "Big City wall corner column"
+  },
+  "862": {
+   "destroyed": 703,
+   "ruins": 705,
+   "indestructible": false,
+   "seen": 32,
+   "name": "Big City wall alt 1 H"
+  },
+  "863": {
+   "destroyed": 703,
+   "ruins": 704,
+   "indestructible": false,
+   "seen": 32,
+   "name": "Big City wall alt 1 V"
+  },
+  "864": {
+   "destroyed": 703,
+   "ruins": 705,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Big City wall alt 2 H"
+  },
+  "865": {
+   "destroyed": 703,
+   "ruins": 704,
+   "indestructible": false,
+   "seen": 16,
+   "name": "Big City wall alt 2 V"
+  },
+  "867": {
+   "destroyed": 703,
+   "ruins": 705,
+   "indestructible": false,
+   "seen": 32,
+   "name": "Big City stained glass H"
+  },
+  "868": {
+   "destroyed": 703,
+   "ruins": 704,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Big City stained glass V"
+  },
+  "869": {
+   "destroyed": 703,
+   "ruins": 705,
+   "indestructible": false,
+   "seen": 0,
+   "name": "Big City wall plain H"
+  },
+  "870": {
+   "destroyed": 703,
+   "ruins": 704,
+   "indestructible": false,
+   "seen": 16,
+   "name": "Big City wall plain V"
+  },
+  "871": {
+   "destroyed": 1229,
+   "ruins": 938,
+   "indestructible": false,
+   "seen": 8,
+   "name": "fireplace H"
+  },
+  "872": {
+   "destroyed": 1229,
+   "ruins": 947,
+   "indestructible": false,
+   "seen": 0,
+   "name": "fireplace v"
+  },
+  "936": {
+   "destroyed": 1229,
+   "ruins": 938,
+   "indestructible": false,
+   "seen": 0,
+   "name": "stone wall H"
+  },
+  "937": {
+   "destroyed": 1229,
+   "ruins": 947,
+   "indestructible": false,
+   "seen": 0,
+   "name": "stone wall V"
+  },
+  "939": {
+   "destroyed": 1239,
+   "ruins": 965,
+   "indestructible": false,
+   "seen": 0,
+   "name": "wood siding wall H"
+  },
+  "940": {
+   "destroyed": 1239,
+   "ruins": 956,
+   "indestructible": false,
+   "seen": 0,
+   "name": "wood siding wall V"
+  },
+  "946": {
+   "destroyed": 1239,
+   "ruins": 408,
+   "indestructible": false,
+   "seen": 0,
+   "name": "wood post"
+  },
+  "952": {
+   "destroyed": 1239,
+   "ruins": 408,
+   "indestructible": true,
+   "seen": 0,
+   "name": "fence H"
+  },
+  "953": {
+   "destroyed": 1239,
+   "ruins": 408,
+   "indestructible": true,
+   "seen": 0,
+   "name": "fence v"
+  },
+  "957": {
+   "destroyed": 1236,
+   "ruins": 1236,
+   "indestructible": false,
+   "seen": 0,
+   "name": "rustic log wall H"
+  },
+  "958": {
+   "destroyed": 1236,
+   "ruins": 1236,
+   "indestructible": false,
+   "seen": 0,
+   "name": "rustic log wall V"
+  },
+  "1235": {
+   "destroyed": 1236,
+   "ruins": 1238,
+   "indestructible": false,
+   "seen": 0,
+   "name": "rustic log wall post"
+  },
+  "966": {
+   "destroyed": 46,
+   "ruins": 42,
+   "indestructible": false,
+   "seen": 8,
+   "name": "temple stained glass H"
+  },
+  "967": {
+   "destroyed": 46,
+   "ruins": 43,
+   "indestructible": false,
+   "seen": 16,
+   "name": "temple stained glass V"
+  },
+  "1240": {
+   "destroyed": 46,
+   "ruins": 42,
+   "indestructible": false,
+   "seen": 12,
+   "name": "temple niche H"
+  },
+  "1241": {
+   "destroyed": 46,
+   "ruins": 43,
+   "indestructible": false,
+   "seen": 0,
+   "name": "temple niche V"
+  },
+  "1258": {
+   "destroyed": 1262,
+   "ruins": 1264,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary purple wall H"
+  },
+  "1260": {
+   "destroyed": 1262,
+   "ruins": 1263,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary purple wall V"
+  },
+  "1261": {
+   "destroyed": 1262,
+   "ruins": 1265,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary purple corner post"
+  },
+  "1266": {
+   "destroyed": 1262,
+   "ruins": 1264,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary purple arch wall H"
+  },
+  "1267": {
+   "destroyed": 1262,
+   "ruins": 1263,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary purple arch wall V"
+  },
+  "1268": {
+   "destroyed": 1262,
+   "ruins": 1264,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary purple plain wall H"
+  },
+  "1269": {
+   "destroyed": 1262,
+   "ruins": 1263,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary purple plain wall V"
+  },
+  "1270": {
+   "destroyed": 1262,
+   "ruins": 1264,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary purple demon head wall H"
+  },
+  "1282": {
+   "destroyed": 1286,
+   "ruins": 1288,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary desaturated blue wall H"
+  },
+  "1284": {
+   "destroyed": 1286,
+   "ruins": 1287,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary desaturated blue wall V"
+  },
+  "1285": {
+   "destroyed": 1286,
+   "ruins": 1289,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary desaturated blue column"
+  },
+  "1290": {
+   "destroyed": 1286,
+   "ruins": 1288,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary desaturated blue arch wall H"
+  },
+  "1291": {
+   "destroyed": 1286,
+   "ruins": 1287,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary desaturated blue arch wall V"
+  },
+  "1292": {
+   "destroyed": 1286,
+   "ruins": 1288,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary desaturated blue bare wall H"
+  },
+  "1293": {
+   "destroyed": 1286,
+   "ruins": 1287,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary desaturated blue bare wall V"
+  },
+  "1294": {
+   "destroyed": 1286,
+   "ruins": 1288,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary desaturated blue demonhead wall V"
+  },
+  "1306": {
+   "destroyed": 1310,
+   "ruins": 1312,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary 2x desaturated green wall H"
+  },
+  "1308": {
+   "destroyed": 1310,
+   "ruins": 1311,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary 2x desaturated green wall V"
+  },
+  "1309": {
+   "destroyed": 1310,
+   "ruins": 1313,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary 2x desaturated green column"
+  },
+  "1314": {
+   "destroyed": 1310,
+   "ruins": 1312,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary 2x desaturated green arch wall H"
+  },
+  "1315": {
+   "destroyed": 1310,
+   "ruins": 1311,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary 2x desaturated green arch wall V"
+  },
+  "1316": {
+   "destroyed": 1310,
+   "ruins": 1312,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary 2x desaturated green bare wall H"
+  },
+  "1317": {
+   "destroyed": 1310,
+   "ruins": 1311,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary 2x desaturated green bare wall V"
+  },
+  "1318": {
+   "destroyed": 1310,
+   "ruins": 1312,
+   "indestructible": false,
+   "seen": 0,
+   "name": "dungeon dreary 2x desaturated green demonhead wall H"
+  },
+  "1340": {
+   "destroyed": 1344,
+   "ruins": 1346,
+   "indestructible": false,
+   "seen": 0,
+   "name": "red brick wall (h)"
+  },
+  "1342": {
+   "destroyed": 1344,
+   "ruins": 1345,
+   "indestructible": false,
+   "seen": 0,
+   "name": "red brick wall (v)"
+  },
+  "1343": {
+   "destroyed": 1344,
+   "ruins": 1347,
+   "indestructible": false,
+   "seen": 0,
+   "name": "red brick post"
+  },
+  "1348": {
+   "destroyed": 1352,
+   "ruins": 1354,
+   "indestructible": false,
+   "seen": 0,
+   "name": "icy cave wall (h)"
+  },
+  "1350": {
+   "destroyed": 1352,
+   "ruins": 1353,
+   "indestructible": false,
+   "seen": 0,
+   "name": "icy cave wall (v)"
+  },
+  "1351": {
+   "destroyed": 1352,
+   "ruins": 1355,
+   "indestructible": false,
+   "seen": 0,
+   "name": "icy cave post"
+  },
+  "1356": {
+   "destroyed": 1360,
+   "ruins": 1359,
+   "indestructible": false,
+   "seen": 0,
+   "name": "glacier wall (H)"
+  },
+  "1358": {
+   "destroyed": 1360,
+   "ruins": 1361,
+   "indestructible": false,
+   "seen": 0,
+   "name": "glacier wall (v)"
+  },
+  "1362": {
+   "destroyed": 1360,
+   "ruins": 1363,
+   "indestructible": false,
+   "seen": 0,
+   "name": "glacier post"
+  },
+  "1364": {
+   "destroyed": 1368,
+   "ruins": 1370,
+   "indestructible": false,
+   "seen": 0,
+   "name": "nidavellir wall (h)"
+  },
+  "1366": {
+   "destroyed": 1368,
+   "ruins": 1369,
+   "indestructible": false,
+   "seen": 0,
+   "name": "nidavellir wall (v)"
+  },
+  "1367": {
+   "destroyed": 1368,
+   "ruins": 1371,
+   "indestructible": false,
+   "seen": 15,
+   "name": "nidavellir post"
+  },
+  "1380": {
+   "destroyed": 1368,
+   "ruins": 1371,
+   "indestructible": true,
+   "seen": 85,
+   "name": "nidavellir mythril wall (h)"
+  },
+  "1381": {
+   "destroyed": 1368,
+   "ruins": 1371,
+   "indestructible": true,
+   "seen": 72,
+   "name": "nidavellir mythril wall (v)"
+  },
+  "1116": {
+   "destroyed": 1161,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar right wall (H)"
+  },
+  "1147": {
+   "destroyed": 1161,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar right wall grout (H) (alt color)"
+  },
+  "1156": {
+   "destroyed": 1161,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar right wall highlights (H) (alt color)"
+  },
+  "1117": {
+   "destroyed": 1166,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace wall (H)"
+  },
+  "1135": {
+   "destroyed": 1166,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace wall grout (H) (alt color)"
+  },
+  "1152": {
+   "destroyed": 1166,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace wall highlights (H) (alt color)"
+  },
+  "1118": {
+   "destroyed": 1163,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar left wall (H)"
+  },
+  "1149": {
+   "destroyed": 1163,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar left wall grout (H) (alt color)"
+  },
+  "1154": {
+   "destroyed": 1163,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar left wall highlights (H) (alt color)"
+  },
+  "1119": {
+   "destroyed": 1164,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar left wall (v)"
+  },
+  "1148": {
+   "destroyed": 1164,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar left wall grout (v) (alt color)"
+  },
+  "1153": {
+   "destroyed": 1164,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar left wall highlights (v) (alt color)"
+  },
+  "1120": {
+   "destroyed": 1165,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace wall (v)"
+  },
+  "1134": {
+   "destroyed": 1165,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace wall grout(v) (Alt color)"
+  },
+  "1151": {
+   "destroyed": 1165,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace wall highlights (v) (Alt color)"
+  },
+  "1121": {
+   "destroyed": 1162,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar right wall (v)"
+  },
+  "1150": {
+   "destroyed": 1162,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar right wall grout (v) (alt color)"
+  },
+  "1155": {
+   "destroyed": 1162,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "palace pillar right wall highlights (v) (alt color)"
+  },
+  "1122": {
+   "destroyed": 1167,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "art niche wall (v)"
+  },
+  "1145": {
+   "destroyed": 1167,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "art niche wall grout (v) (alt color)"
+  },
+  "1157": {
+   "destroyed": 1167,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "art niche wall highlights (v) (alt color)"
+  },
+  "1123": {
+   "destroyed": 1186,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "arch (v)"
+  },
+  "1124": {
+   "destroyed": 1169,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "column"
+  },
+  "1126": {
+   "destroyed": 1168,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "art niche wall (h)"
+  },
+  "1146": {
+   "destroyed": 1168,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "art niche wall grout (h) (alt color)"
+  },
+  "1158": {
+   "destroyed": 1168,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "art niche wall highlights (h) (alt color)"
+  },
+  "1127": {
+   "destroyed": 1185,
+   "ruins": 1170,
+   "indestructible": false,
+   "seen": 0,
+   "name": "arch (h)"
+  }
+ },
+ "doors": {
+  "77": {
+   "open": 77,
+   "closed": 65,
+   "secret": 28,
+   "destroyed": 83,
+   "seen": 2,
+   "name": "Town (V)"
+  },
+  "65": {
+   "open": 77,
+   "closed": 65,
+   "secret": 28,
+   "destroyed": 83,
+   "seen": 2,
+   "name": "Town (V)"
+  },
+  "28": {
+   "open": 77,
+   "closed": 65,
+   "secret": 28,
+   "destroyed": 83,
+   "seen": 2,
+   "name": "Town (V)"
+  },
+  "83": {
+   "open": 77,
+   "closed": 65,
+   "secret": 28,
+   "destroyed": 83,
+   "seen": 2,
+   "name": "Town (V)"
+  },
+  "76": {
+   "open": 76,
+   "closed": 64,
+   "secret": 27,
+   "destroyed": 82,
+   "seen": 16,
+   "name": "Town (H)"
+  },
+  "64": {
+   "open": 76,
+   "closed": 64,
+   "secret": 27,
+   "destroyed": 82,
+   "seen": 16,
+   "name": "Town (H)"
+  },
+  "27": {
+   "open": 231,
+   "closed": 229,
+   "secret": 27,
+   "destroyed": 233,
+   "seen": 5,
+   "name": "Runic (H)"
+  },
+  "82": {
+   "open": 76,
+   "closed": 64,
+   "secret": 27,
+   "destroyed": 82,
+   "seen": 16,
+   "name": "Town (H)"
+  },
+  "973": {
+   "open": 973,
+   "closed": 972,
+   "secret": 15,
+   "destroyed": 8,
+   "seen": 0,
+   "name": "TrapCellar Door"
+  },
+  "972": {
+   "open": 973,
+   "closed": 972,
+   "secret": 15,
+   "destroyed": 8,
+   "seen": 0,
+   "name": "TrapCellar Door"
+  },
+  "15": {
+   "open": 973,
+   "closed": 972,
+   "secret": 15,
+   "destroyed": 8,
+   "seen": 0,
+   "name": "TrapCellar Door"
+  },
+  "8": {
+   "open": 973,
+   "closed": 972,
+   "secret": 15,
+   "destroyed": 8,
+   "seen": 0,
+   "name": "TrapCellar Door"
+  },
+  "79": {
+   "open": 79,
+   "closed": 67,
+   "secret": 152,
+   "destroyed": 85,
+   "seen": 400,
+   "name": "Temple (V)"
+  },
+  "67": {
+   "open": 79,
+   "closed": 67,
+   "secret": 152,
+   "destroyed": 85,
+   "seen": 400,
+   "name": "Temple (V)"
+  },
+  "152": {
+   "open": 1386,
+   "closed": 1385,
+   "secret": 152,
+   "destroyed": 1387,
+   "seen": 16,
+   "name": "thin chamber door (v)"
+  },
+  "85": {
+   "open": 79,
+   "closed": 67,
+   "secret": 152,
+   "destroyed": 85,
+   "seen": 400,
+   "name": "Temple (V)"
+  },
+  "78": {
+   "open": 78,
+   "closed": 66,
+   "secret": 151,
+   "destroyed": 84,
+   "seen": 303,
+   "name": "Temple (H)"
+  },
+  "66": {
+   "open": 78,
+   "closed": 66,
+   "secret": 151,
+   "destroyed": 84,
+   "seen": 303,
+   "name": "Temple (H)"
+  },
+  "151": {
+   "open": 506,
+   "closed": 504,
+   "secret": 151,
+   "destroyed": 508,
+   "seen": 44,
+   "name": "Dragon (H)"
+  },
+  "84": {
+   "open": 78,
+   "closed": 66,
+   "secret": 151,
+   "destroyed": 84,
+   "seen": 303,
+   "name": "Temple (H)"
+  },
+  "48": {
+   "open": 48,
+   "closed": 36,
+   "secret": 140,
+   "destroyed": 49,
+   "seen": 0,
+   "name": "Marble (V)"
+  },
+  "36": {
+   "open": 48,
+   "closed": 36,
+   "secret": 140,
+   "destroyed": 49,
+   "seen": 0,
+   "name": "Marble (V)"
+  },
+  "140": {
+   "open": 497,
+   "closed": 495,
+   "secret": 140,
+   "destroyed": 499,
+   "seen": 0,
+   "name": "Dirty Marble (V)"
+  },
+  "49": {
+   "open": 48,
+   "closed": 36,
+   "secret": 140,
+   "destroyed": 49,
+   "seen": 0,
+   "name": "Marble (V)"
+  },
+  "47": {
+   "open": 47,
+   "closed": 35,
+   "secret": 139,
+   "destroyed": 37,
+   "seen": 0,
+   "name": "Marble (H)"
+  },
+  "35": {
+   "open": 47,
+   "closed": 35,
+   "secret": 139,
+   "destroyed": 37,
+   "seen": 0,
+   "name": "Marble (H)"
+  },
+  "139": {
+   "open": 496,
+   "closed": 494,
+   "secret": 139,
+   "destroyed": 498,
+   "seen": 0,
+   "name": "Dirty Marble (H)"
+  },
+  "37": {
+   "open": 47,
+   "closed": 35,
+   "secret": 139,
+   "destroyed": 37,
+   "seen": 0,
+   "name": "Marble (H)"
+  },
+  "75": {
+   "open": 75,
+   "closed": 63,
+   "secret": 26,
+   "destroyed": 81,
+   "seen": 34,
+   "name": "Dungeon (V)"
+  },
+  "63": {
+   "open": 75,
+   "closed": 63,
+   "secret": 26,
+   "destroyed": 81,
+   "seen": 34,
+   "name": "Dungeon (V)"
+  },
+  "26": {
+   "open": 75,
+   "closed": 63,
+   "secret": 26,
+   "destroyed": 81,
+   "seen": 34,
+   "name": "Dungeon (V)"
+  },
+  "81": {
+   "open": 75,
+   "closed": 63,
+   "secret": 26,
+   "destroyed": 81,
+   "seen": 34,
+   "name": "Dungeon (V)"
+  },
+  "74": {
+   "open": 74,
+   "closed": 62,
+   "secret": 25,
+   "destroyed": 80,
+   "seen": 16,
+   "name": "Dungeon (H)"
+  },
+  "62": {
+   "open": 74,
+   "closed": 62,
+   "secret": 25,
+   "destroyed": 80,
+   "seen": 16,
+   "name": "Dungeon (H)"
+  },
+  "25": {
+   "open": 74,
+   "closed": 62,
+   "secret": 25,
+   "destroyed": 80,
+   "seen": 16,
+   "name": "Dungeon (H)"
+  },
+  "80": {
+   "open": 74,
+   "closed": 62,
+   "secret": 25,
+   "destroyed": 80,
+   "seen": 16,
+   "name": "Dungeon (H)"
+  },
+  "232": {
+   "open": 232,
+   "closed": 230,
+   "secret": 28,
+   "destroyed": 234,
+   "seen": 0,
+   "name": "Runic (V)"
+  },
+  "230": {
+   "open": 232,
+   "closed": 230,
+   "secret": 28,
+   "destroyed": 234,
+   "seen": 0,
+   "name": "Runic (V)"
+  },
+  "234": {
+   "open": 232,
+   "closed": 230,
+   "secret": 28,
+   "destroyed": 234,
+   "seen": 0,
+   "name": "Runic (V)"
+  },
+  "231": {
+   "open": 231,
+   "closed": 229,
+   "secret": 27,
+   "destroyed": 233,
+   "seen": 5,
+   "name": "Runic (H)"
+  },
+  "229": {
+   "open": 231,
+   "closed": 229,
+   "secret": 27,
+   "destroyed": 233,
+   "seen": 5,
+   "name": "Runic (H)"
+  },
+  "233": {
+   "open": 231,
+   "closed": 229,
+   "secret": 27,
+   "destroyed": 233,
+   "seen": 5,
+   "name": "Runic (H)"
+  },
+  "308": {
+   "open": 308,
+   "closed": 312,
+   "secret": 300,
+   "destroyed": 310,
+   "seen": 0,
+   "name": "Egyptian (V)"
+  },
+  "312": {
+   "open": 308,
+   "closed": 312,
+   "secret": 300,
+   "destroyed": 310,
+   "seen": 0,
+   "name": "Egyptian (V)"
+  },
+  "300": {
+   "open": 308,
+   "closed": 312,
+   "secret": 300,
+   "destroyed": 310,
+   "seen": 0,
+   "name": "Egyptian (V)"
+  },
+  "310": {
+   "open": 308,
+   "closed": 312,
+   "secret": 300,
+   "destroyed": 310,
+   "seen": 0,
+   "name": "Egyptian (V)"
+  },
+  "307": {
+   "open": 307,
+   "closed": 311,
+   "secret": 299,
+   "destroyed": 309,
+   "seen": 0,
+   "name": "Egyptian (H)"
+  },
+  "311": {
+   "open": 307,
+   "closed": 311,
+   "secret": 299,
+   "destroyed": 309,
+   "seen": 0,
+   "name": "Egyptian (H)"
+  },
+  "299": {
+   "open": 307,
+   "closed": 311,
+   "secret": 299,
+   "destroyed": 309,
+   "seen": 0,
+   "name": "Egyptian (H)"
+  },
+  "309": {
+   "open": 307,
+   "closed": 311,
+   "secret": 299,
+   "destroyed": 309,
+   "seen": 0,
+   "name": "Egyptian (H)"
+  },
+  "392": {
+   "open": 392,
+   "closed": 379,
+   "secret": 363,
+   "destroyed": 405,
+   "seen": 0,
+   "name": "Red Shoji (V)"
+  },
+  "379": {
+   "open": 392,
+   "closed": 379,
+   "secret": 363,
+   "destroyed": 405,
+   "seen": 0,
+   "name": "Red Shoji (V)"
+  },
+  "363": {
+   "open": 392,
+   "closed": 379,
+   "secret": 363,
+   "destroyed": 405,
+   "seen": 0,
+   "name": "Red Shoji (V)"
+  },
+  "405": {
+   "open": 392,
+   "closed": 379,
+   "secret": 363,
+   "destroyed": 405,
+   "seen": 0,
+   "name": "Red Shoji (V)"
+  },
+  "391": {
+   "open": 391,
+   "closed": 378,
+   "secret": 362,
+   "destroyed": 404,
+   "seen": 0,
+   "name": "Red Shoji (H)"
+  },
+  "378": {
+   "open": 391,
+   "closed": 378,
+   "secret": 362,
+   "destroyed": 404,
+   "seen": 0,
+   "name": "Red Shoji (H)"
+  },
+  "362": {
+   "open": 391,
+   "closed": 378,
+   "secret": 362,
+   "destroyed": 404,
+   "seen": 0,
+   "name": "Red Shoji (H)"
+  },
+  "404": {
+   "open": 391,
+   "closed": 378,
+   "secret": 362,
+   "destroyed": 404,
+   "seen": 0,
+   "name": "Red Shoji (H)"
+  },
+  "434": {
+   "open": 434,
+   "closed": 421,
+   "secret": 450,
+   "destroyed": 436,
+   "seen": 0,
+   "name": "Jail (V)"
+  },
+  "421": {
+   "open": 434,
+   "closed": 421,
+   "secret": 450,
+   "destroyed": 436,
+   "seen": 0,
+   "name": "Jail (V)"
+  },
+  "450": {
+   "open": 434,
+   "closed": 421,
+   "secret": 450,
+   "destroyed": 436,
+   "seen": 0,
+   "name": "Jail (V)"
+  },
+  "436": {
+   "open": 434,
+   "closed": 421,
+   "secret": 450,
+   "destroyed": 436,
+   "seen": 0,
+   "name": "Jail (V)"
+  },
+  "433": {
+   "open": 433,
+   "closed": 420,
+   "secret": 449,
+   "destroyed": 435,
+   "seen": 5,
+   "name": "Jail (H)"
+  },
+  "420": {
+   "open": 433,
+   "closed": 420,
+   "secret": 449,
+   "destroyed": 435,
+   "seen": 5,
+   "name": "Jail (H)"
+  },
+  "449": {
+   "open": 433,
+   "closed": 420,
+   "secret": 449,
+   "destroyed": 435,
+   "seen": 5,
+   "name": "Jail (H)"
+  },
+  "435": {
+   "open": 433,
+   "closed": 420,
+   "secret": 449,
+   "destroyed": 435,
+   "seen": 5,
+   "name": "Jail (H)"
+  },
+  "456": {
+   "open": 456,
+   "closed": 454,
+   "secret": 429,
+   "destroyed": 458,
+   "seen": 0,
+   "name": "Steel (V)"
+  },
+  "454": {
+   "open": 456,
+   "closed": 454,
+   "secret": 429,
+   "destroyed": 458,
+   "seen": 0,
+   "name": "Steel (V)"
+  },
+  "429": {
+   "open": 456,
+   "closed": 454,
+   "secret": 429,
+   "destroyed": 458,
+   "seen": 0,
+   "name": "Steel (V)"
+  },
+  "458": {
+   "open": 456,
+   "closed": 454,
+   "secret": 429,
+   "destroyed": 458,
+   "seen": 0,
+   "name": "Steel (V)"
+  },
+  "455": {
+   "open": 455,
+   "closed": 453,
+   "secret": 428,
+   "destroyed": 457,
+   "seen": 0,
+   "name": "Steel (H)"
+  },
+  "453": {
+   "open": 455,
+   "closed": 453,
+   "secret": 428,
+   "destroyed": 457,
+   "seen": 0,
+   "name": "Steel (H)"
+  },
+  "428": {
+   "open": 455,
+   "closed": 453,
+   "secret": 428,
+   "destroyed": 457,
+   "seen": 0,
+   "name": "Steel (H)"
+  },
+  "457": {
+   "open": 455,
+   "closed": 453,
+   "secret": 428,
+   "destroyed": 457,
+   "seen": 0,
+   "name": "Steel (H)"
+  },
+  "497": {
+   "open": 497,
+   "closed": 495,
+   "secret": 140,
+   "destroyed": 499,
+   "seen": 0,
+   "name": "Dirty Marble (V)"
+  },
+  "495": {
+   "open": 497,
+   "closed": 495,
+   "secret": 140,
+   "destroyed": 499,
+   "seen": 0,
+   "name": "Dirty Marble (V)"
+  },
+  "499": {
+   "open": 497,
+   "closed": 495,
+   "secret": 140,
+   "destroyed": 499,
+   "seen": 0,
+   "name": "Dirty Marble (V)"
+  },
+  "496": {
+   "open": 496,
+   "closed": 494,
+   "secret": 139,
+   "destroyed": 498,
+   "seen": 0,
+   "name": "Dirty Marble (H)"
+  },
+  "494": {
+   "open": 496,
+   "closed": 494,
+   "secret": 139,
+   "destroyed": 498,
+   "seen": 0,
+   "name": "Dirty Marble (H)"
+  },
+  "498": {
+   "open": 496,
+   "closed": 494,
+   "secret": 139,
+   "destroyed": 498,
+   "seen": 0,
+   "name": "Dirty Marble (H)"
+  },
+  "506": {
+   "open": 506,
+   "closed": 504,
+   "secret": 151,
+   "destroyed": 508,
+   "seen": 44,
+   "name": "Dragon (H)"
+  },
+  "504": {
+   "open": 506,
+   "closed": 504,
+   "secret": 151,
+   "destroyed": 508,
+   "seen": 44,
+   "name": "Dragon (H)"
+  },
+  "508": {
+   "open": 506,
+   "closed": 504,
+   "secret": 151,
+   "destroyed": 508,
+   "seen": 44,
+   "name": "Dragon (H)"
+  },
+  "507": {
+   "open": 507,
+   "closed": 505,
+   "secret": 152,
+   "destroyed": 509,
+   "seen": 0,
+   "name": "Dragon (V)"
+  },
+  "505": {
+   "open": 507,
+   "closed": 505,
+   "secret": 152,
+   "destroyed": 509,
+   "seen": 0,
+   "name": "Dragon (V)"
+  },
+  "509": {
+   "open": 507,
+   "closed": 505,
+   "secret": 152,
+   "destroyed": 509,
+   "seen": 0,
+   "name": "Dragon (V)"
+  },
+  "1041": {
+   "open": 1041,
+   "closed": 1040,
+   "secret": 152,
+   "destroyed": 1042,
+   "seen": 0,
+   "name": "4 panel door (H)"
+  },
+  "1040": {
+   "open": 1041,
+   "closed": 1040,
+   "secret": 152,
+   "destroyed": 1042,
+   "seen": 0,
+   "name": "4 panel door (H)"
+  },
+  "1042": {
+   "open": 1041,
+   "closed": 1040,
+   "secret": 152,
+   "destroyed": 1042,
+   "seen": 0,
+   "name": "4 panel door (H)"
+  },
+  "1044": {
+   "open": 1044,
+   "closed": 1043,
+   "secret": 152,
+   "destroyed": 1045,
+   "seen": 0,
+   "name": "4 panel door (v)"
+  },
+  "1043": {
+   "open": 1044,
+   "closed": 1043,
+   "secret": 152,
+   "destroyed": 1045,
+   "seen": 0,
+   "name": "4 panel door (v)"
+  },
+  "1045": {
+   "open": 1044,
+   "closed": 1043,
+   "secret": 152,
+   "destroyed": 1045,
+   "seen": 0,
+   "name": "4 panel door (v)"
+  },
+  "1047": {
+   "open": 1047,
+   "closed": 1046,
+   "secret": 152,
+   "destroyed": 1047,
+   "seen": 0,
+   "name": "blue steel door (h)"
+  },
+  "1046": {
+   "open": 1047,
+   "closed": 1046,
+   "secret": 152,
+   "destroyed": 1047,
+   "seen": 0,
+   "name": "blue steel door (h)"
+  },
+  "1050": {
+   "open": 1050,
+   "closed": 1049,
+   "secret": 152,
+   "destroyed": 1050,
+   "seen": 0,
+   "name": "blue steel door (v)"
+  },
+  "1049": {
+   "open": 1050,
+   "closed": 1049,
+   "secret": 152,
+   "destroyed": 1050,
+   "seen": 0,
+   "name": "blue steel door (v)"
+  },
+  "1053": {
+   "open": 1053,
+   "closed": 1052,
+   "secret": 152,
+   "destroyed": 1054,
+   "seen": 0,
+   "name": "peephole door (h)"
+  },
+  "1052": {
+   "open": 1053,
+   "closed": 1052,
+   "secret": 152,
+   "destroyed": 1054,
+   "seen": 0,
+   "name": "peephole door (h)"
+  },
+  "1054": {
+   "open": 1053,
+   "closed": 1052,
+   "secret": 152,
+   "destroyed": 1054,
+   "seen": 0,
+   "name": "peephole door (h)"
+  },
+  "1056": {
+   "open": 1056,
+   "closed": 1055,
+   "secret": 152,
+   "destroyed": 1057,
+   "seen": 0,
+   "name": "peephole door (v)"
+  },
+  "1055": {
+   "open": 1056,
+   "closed": 1055,
+   "secret": 152,
+   "destroyed": 1057,
+   "seen": 0,
+   "name": "peephole door (v)"
+  },
+  "1057": {
+   "open": 1056,
+   "closed": 1055,
+   "secret": 152,
+   "destroyed": 1057,
+   "seen": 0,
+   "name": "peephole door (v)"
+  },
+  "1059": {
+   "open": 1059,
+   "closed": 1058,
+   "secret": 152,
+   "destroyed": 1060,
+   "seen": 0,
+   "name": "plain door (h)"
+  },
+  "1058": {
+   "open": 1059,
+   "closed": 1058,
+   "secret": 152,
+   "destroyed": 1060,
+   "seen": 0,
+   "name": "plain door (h)"
+  },
+  "1060": {
+   "open": 1059,
+   "closed": 1058,
+   "secret": 152,
+   "destroyed": 1060,
+   "seen": 0,
+   "name": "plain door (h)"
+  },
+  "1062": {
+   "open": 1062,
+   "closed": 1061,
+   "secret": 152,
+   "destroyed": 1063,
+   "seen": 0,
+   "name": "plain door (v)"
+  },
+  "1061": {
+   "open": 1062,
+   "closed": 1061,
+   "secret": 152,
+   "destroyed": 1063,
+   "seen": 0,
+   "name": "plain door (v)"
+  },
+  "1063": {
+   "open": 1062,
+   "closed": 1061,
+   "secret": 152,
+   "destroyed": 1063,
+   "seen": 0,
+   "name": "plain door (v)"
+  },
+  "1065": {
+   "open": 1065,
+   "closed": 1064,
+   "secret": 152,
+   "destroyed": 1065,
+   "seen": 0,
+   "name": "steel door (h)"
+  },
+  "1064": {
+   "open": 1065,
+   "closed": 1064,
+   "secret": 152,
+   "destroyed": 1065,
+   "seen": 0,
+   "name": "steel door (h)"
+  },
+  "1068": {
+   "open": 1068,
+   "closed": 1067,
+   "secret": 152,
+   "destroyed": 1068,
+   "seen": 0,
+   "name": "steel door (v)"
+  },
+  "1067": {
+   "open": 1068,
+   "closed": 1067,
+   "secret": 152,
+   "destroyed": 1068,
+   "seen": 0,
+   "name": "steel door (v)"
+  },
+  "1071": {
+   "open": 1071,
+   "closed": 1070,
+   "secret": 152,
+   "destroyed": 1071,
+   "seen": 0,
+   "name": "steel door rusted (h)"
+  },
+  "1070": {
+   "open": 1071,
+   "closed": 1070,
+   "secret": 152,
+   "destroyed": 1071,
+   "seen": 0,
+   "name": "steel door rusted (h)"
+  },
+  "1074": {
+   "open": 1074,
+   "closed": 1073,
+   "secret": 152,
+   "destroyed": 1074,
+   "seen": 0,
+   "name": "steel door rusted (v)"
+  },
+  "1073": {
+   "open": 1074,
+   "closed": 1073,
+   "secret": 152,
+   "destroyed": 1074,
+   "seen": 0,
+   "name": "steel door rusted (v)"
+  },
+  "1077": {
+   "open": 1077,
+   "closed": 1076,
+   "secret": 152,
+   "destroyed": 1078,
+   "seen": 0,
+   "name": "thin slat door (h)"
+  },
+  "1076": {
+   "open": 1077,
+   "closed": 1076,
+   "secret": 152,
+   "destroyed": 1078,
+   "seen": 0,
+   "name": "thin slat door (h)"
+  },
+  "1078": {
+   "open": 1077,
+   "closed": 1076,
+   "secret": 152,
+   "destroyed": 1078,
+   "seen": 0,
+   "name": "thin slat door (h)"
+  },
+  "1080": {
+   "open": 1080,
+   "closed": 1079,
+   "secret": 152,
+   "destroyed": 1081,
+   "seen": 0,
+   "name": "thin slat door (v)"
+  },
+  "1079": {
+   "open": 1080,
+   "closed": 1079,
+   "secret": 152,
+   "destroyed": 1081,
+   "seen": 0,
+   "name": "thin slat door (v)"
+  },
+  "1081": {
+   "open": 1080,
+   "closed": 1079,
+   "secret": 152,
+   "destroyed": 1081,
+   "seen": 0,
+   "name": "thin slat door (v)"
+  },
+  "1083": {
+   "open": 1083,
+   "closed": 1082,
+   "secret": 152,
+   "destroyed": 1084,
+   "seen": 0,
+   "name": "wide slat door (h)"
+  },
+  "1082": {
+   "open": 1083,
+   "closed": 1082,
+   "secret": 152,
+   "destroyed": 1084,
+   "seen": 0,
+   "name": "wide slat door (h)"
+  },
+  "1084": {
+   "open": 1083,
+   "closed": 1082,
+   "secret": 152,
+   "destroyed": 1084,
+   "seen": 0,
+   "name": "wide slat door (h)"
+  },
+  "1086": {
+   "open": 1086,
+   "closed": 1085,
+   "secret": 152,
+   "destroyed": 1087,
+   "seen": 0,
+   "name": "wide slat door (v)"
+  },
+  "1085": {
+   "open": 1086,
+   "closed": 1085,
+   "secret": 152,
+   "destroyed": 1087,
+   "seen": 0,
+   "name": "wide slat door (v)"
+  },
+  "1087": {
+   "open": 1086,
+   "closed": 1085,
+   "secret": 152,
+   "destroyed": 1087,
+   "seen": 0,
+   "name": "wide slat door (v)"
+  },
+  "859": {
+   "open": 859,
+   "closed": 858,
+   "secret": 152,
+   "destroyed": 703,
+   "seen": 24,
+   "name": "Big City Window H"
+  },
+  "858": {
+   "open": 859,
+   "closed": 858,
+   "secret": 152,
+   "destroyed": 703,
+   "seen": 24,
+   "name": "Big City Window H"
+  },
+  "703": {
+   "open": 861,
+   "closed": 860,
+   "secret": 152,
+   "destroyed": 703,
+   "seen": 16,
+   "name": "Big City Window V"
+  },
+  "861": {
+   "open": 861,
+   "closed": 860,
+   "secret": 152,
+   "destroyed": 703,
+   "seen": 16,
+   "name": "Big City Window V"
+  },
+  "860": {
+   "open": 861,
+   "closed": 860,
+   "secret": 152,
+   "destroyed": 703,
+   "seen": 16,
+   "name": "Big City Window V"
+  },
+  "942": {
+   "open": 942,
+   "closed": 941,
+   "secret": 152,
+   "destroyed": 1239,
+   "seen": 0,
+   "name": "Big City wood-sided window H"
+  },
+  "941": {
+   "open": 942,
+   "closed": 941,
+   "secret": 152,
+   "destroyed": 1239,
+   "seen": 0,
+   "name": "Big City wood-sided window H"
+  },
+  "1239": {
+   "open": 944,
+   "closed": 943,
+   "secret": 152,
+   "destroyed": 1239,
+   "seen": 0,
+   "name": "Big City wood-sided window V"
+  },
+  "944": {
+   "open": 944,
+   "closed": 943,
+   "secret": 152,
+   "destroyed": 1239,
+   "seen": 0,
+   "name": "Big City wood-sided window V"
+  },
+  "943": {
+   "open": 944,
+   "closed": 943,
+   "secret": 152,
+   "destroyed": 1239,
+   "seen": 0,
+   "name": "Big City wood-sided window V"
+  },
+  "949": {
+   "open": 949,
+   "closed": 948,
+   "secret": 152,
+   "destroyed": 949,
+   "seen": 0,
+   "name": "Big City L cemetary gate H"
+  },
+  "948": {
+   "open": 949,
+   "closed": 948,
+   "secret": 152,
+   "destroyed": 949,
+   "seen": 0,
+   "name": "Big City L cemetary gate H"
+  },
+  "951": {
+   "open": 951,
+   "closed": 950,
+   "secret": 152,
+   "destroyed": 951,
+   "seen": 0,
+   "name": "Big City R cemetary gate H"
+  },
+  "950": {
+   "open": 951,
+   "closed": 950,
+   "secret": 152,
+   "destroyed": 951,
+   "seen": 0,
+   "name": "Big City R cemetary gate H"
+  },
+  "961": {
+   "open": 961,
+   "closed": 962,
+   "secret": 152,
+   "destroyed": 1236,
+   "seen": 0,
+   "name": "Big City log cabin window H"
+  },
+  "962": {
+   "open": 961,
+   "closed": 962,
+   "secret": 152,
+   "destroyed": 1236,
+   "seen": 0,
+   "name": "Big City log cabin window H"
+  },
+  "1236": {
+   "open": 963,
+   "closed": 964,
+   "secret": 152,
+   "destroyed": 1236,
+   "seen": 0,
+   "name": "Big City log cabin window V"
+  },
+  "963": {
+   "open": 963,
+   "closed": 964,
+   "secret": 152,
+   "destroyed": 1236,
+   "seen": 0,
+   "name": "Big City log cabin window V"
+  },
+  "964": {
+   "open": 963,
+   "closed": 964,
+   "secret": 152,
+   "destroyed": 1236,
+   "seen": 0,
+   "name": "Big City log cabin window V"
+  },
+  "1383": {
+   "open": 1383,
+   "closed": 1382,
+   "secret": 152,
+   "destroyed": 1384,
+   "seen": 0,
+   "name": "thin chamber door (h)"
+  },
+  "1382": {
+   "open": 1383,
+   "closed": 1382,
+   "secret": 152,
+   "destroyed": 1384,
+   "seen": 0,
+   "name": "thin chamber door (h)"
+  },
+  "1384": {
+   "open": 1383,
+   "closed": 1382,
+   "secret": 152,
+   "destroyed": 1384,
+   "seen": 0,
+   "name": "thin chamber door (h)"
+  },
+  "1386": {
+   "open": 1386,
+   "closed": 1385,
+   "secret": 152,
+   "destroyed": 1387,
+   "seen": 16,
+   "name": "thin chamber door (v)"
+  },
+  "1385": {
+   "open": 1386,
+   "closed": 1385,
+   "secret": 152,
+   "destroyed": 1387,
+   "seen": 16,
+   "name": "thin chamber door (v)"
+  },
+  "1387": {
+   "open": 1386,
+   "closed": 1385,
+   "secret": 152,
+   "destroyed": 1387,
+   "seen": 16,
+   "name": "thin chamber door (v)"
+  }
+ }
+}

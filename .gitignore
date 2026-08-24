@@ -1,0 +1,10 @@
+# user data — maps in progress, autosaves; never committed
+workspace/
+
+# python
+__pycache__/
+*.pyc
+
+# packaging output (phase 2)
+dist/
+build/

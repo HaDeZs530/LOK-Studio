@@ -1,0 +1,8 @@
+{
+  "_comment": "BARE STRUCTURAL template (Tony 2026-08-24): floors + blocks only. Id 0 = role disabled — no faces, corners, caps or doors are emitted; the builder derives nothing (no offset strips: N/W of a mass is void unless floor is drawn there). Copy this file or save a style from the sketcher, then set real ground/structural ids. Doors are forbidden in bare builds — connectivity is open gaps.",
+  "wall-ns": 0,
+  "wall-ew": 0,
+  "corner": 0,
+  "door-ns": 0,
+  "door-ew": 0
+}

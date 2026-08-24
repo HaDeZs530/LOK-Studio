@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>LOK Sketcher</title>
+<style>
+  html,body{margin:0;height:100%;background:#0a1014;color:#cfe4e6;font-family:Georgia,serif;overflow:hidden}
+  #app{display:flex;flex-direction:column;height:100%}
+  #topbar{display:flex;gap:6px;align-items:center;flex-shrink:0;background:#0c161c;border-bottom:1px solid #2a6f78;padding:6px 10px}
+  #topbar button{padding:5px 12px;border:1px solid #234f57;background:#0f1d24;color:#cfe4e6;border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px;letter-spacing:1px}
+  #topbar button.active{border-color:#52d8dc;background:#12303a;box-shadow:0 0 7px rgba(82,216,220,.3)}
+  #topbar .tsep{width:1px;height:20px;background:#1b3a42;margin:0 3px}
+  #brushrow{display:flex;gap:4px}
+  #tabrow button{letter-spacing:2px;color:#e6d9a8;border-color:#b89b4a}
+  #tabrow button.active{border-color:#52d8dc;background:#12303a;color:#bfeff5;box-shadow:0 0 7px rgba(82,216,220,.3)}
+  #bigbtns2 button,#bigbtns3 button{width:100%;margin:3px 0;padding:8px;border:1px solid #b89b4a;background:#101d24;color:#e6d9a8;border-radius:3px;cursor:pointer;font-size:13px;font-family:Georgia,serif;letter-spacing:2px}
+  .maskrow{display:flex;align-items:center;gap:5px;width:100%;margin:3px 0;padding:5px 7px;border:1px solid #234f57;background:#0f1d24;border-radius:3px;cursor:pointer}
+  .maskrow.active{border-color:#52d8dc;background:#12303a;box-shadow:0 0 7px rgba(82,216,220,.3)}
+  .maskrow .msw{width:14px;height:14px;border-radius:2px;flex-shrink:0;border:1px solid #000}
+  .maskrow input{flex:1 1 40px;min-width:30px;background:#0a1014;color:#cfe4e6;border:1px solid #234f57;border-radius:3px;padding:3px 5px;font-family:inherit;font-size:12px}
+  .maskrow select{flex:1 1 60px;min-width:50px;background:#0a1014;color:#e0c85a;border:1px solid #234f57;border-radius:3px;padding:3px;font-family:inherit;font-size:11px}
+  .maskrow .mdel{flex-shrink:0;color:#d9a08a;background:none;border:none;cursor:pointer;font-size:14px;padding:0 3px}
+  #pos{min-width:130px;text-align:center;padding:5px 12px;border:1px solid #234f57;background:#0a1014;
+       color:#e0c85a;border-radius:3px;font-size:13px;letter-spacing:2px}
+  #topbar #maptitle{width:220px;box-sizing:border-box;background:#0a1014;color:#cfe4e6;
+       border:1px solid #234f57;border-radius:3px;padding:5px 10px;font-family:Georgia,serif;font-size:13px;letter-spacing:2px}
+  #wrap{display:flex;flex:1 1 0;min-height:0}
+  #cv{flex:1 1 0;min-width:0;display:block;cursor:crosshair;background:#0a1014}
+  #side{width:250px;box-sizing:border-box;background:#0c161c;border-left:1px solid #2a6f78;padding:12px;overflow-y:auto;flex-shrink:0}
+  h3{margin:2px 0 2px 0;font-size:17px;color:#e0c85a;letter-spacing:3px;font-weight:normal}
+  .sub{font-size:10px;color:#5d8a90;letter-spacing:2px;margin-bottom:8px}
+  .tool{display:flex;align-items:center;width:100%;margin:3px 0;padding:6px 9px;border:1px solid #234f57;
+        background:#0f1d24;color:#cfe4e6;border-radius:3px;cursor:pointer;font-size:13px;text-align:left;font-family:Georgia,serif;letter-spacing:1px}
+  .tool.active{border-color:#52d8dc;background:#12303a;box-shadow:0 0 7px rgba(82,216,220,.3)}
+  .sw{display:inline-block;width:15px;height:15px;margin-right:9px;border:1px solid #000;flex-shrink:0;border-radius:2px}
+  .sw.diamond{width:11px;height:11px;transform:rotate(45deg);margin-left:2px;margin-right:11px;border-radius:1px}
+  .sw.dot{border-radius:50%}
+  .row{display:flex;gap:6px;margin:6px 0}
+  .row button{flex:1;padding:5px;border:1px solid #234f57;background:#0f1d24;color:#cfe4e6;border-radius:3px;cursor:pointer;font-family:Georgia,serif}
+  .row button.active{border-color:#52d8dc;background:#12303a}
+  label{font-size:10px;color:#5d8a90;letter-spacing:2px;text-transform:uppercase}
+  input[type=number]{width:58px;background:#0a1014;color:#cfe4e6;border:1px solid #234f57;border-radius:3px;padding:3px;font-family:inherit}
+  input[type=text]{width:100%;box-sizing:border-box;background:#0a1014;color:#cfe4e6;border:1px solid #234f57;border-radius:3px;padding:5px;font-family:inherit;letter-spacing:1px}
+  #help{font-size:11px;color:#4d6d73;line-height:1.6;margin-top:10px}
+  hr{border:0;border-top:1px solid #1b3a42;margin:10px 0}
+  #bigbtns button{width:100%;margin:3px 0;padding:8px;border:1px solid #b89b4a;background:#101d24;color:#e6d9a8;border-radius:3px;cursor:pointer;font-size:13px;font-family:Georgia,serif;letter-spacing:2px}
+  #modebtn{width:100%;margin:3px 0;padding:9px;border:1px solid #b89b4a;background:#101d24;color:#bfeff5;border-radius:3px;cursor:pointer;font-size:13px;font-family:Georgia,serif;letter-spacing:2px}
+  details#conngrp{margin:3px 0}
+  details#conngrp summary{cursor:pointer;padding:6px 9px;border:1px solid #234f57;background:#0f1d24;border-radius:3px;
+    font-size:13px;letter-spacing:1px;color:#cfe4e6;list-style:none}
+  details#conngrp summary::before{content:"\25B8  "}
+  details#conngrp[open] summary::before{content:"\25BE  "}
+  #palscreen{position:fixed;inset:0;background:#0a1014;z-index:10;display:none;overflow-y:auto;padding:26px 44px 44px 44px}
+  #palscreen.open{display:block}
+  #palscreen h2{font-size:20px;color:#e0c85a;letter-spacing:4px;font-weight:normal;margin:0 0 2px 0}
+  #palscreen .sub2{font-size:11px;color:#5d8a90;letter-spacing:2px;margin-bottom:18px}
+  #palhead{display:flex;gap:8px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+  #palhead button{padding:6px 16px;border:1px solid #b89b4a;background:#101d24;color:#e6d9a8;border-radius:3px;cursor:pointer;
+    font-family:Georgia,serif;font-size:13px;letter-spacing:2px}
+  #palhead #palclose{border-color:#52d8dc;color:#bfeff5;margin-left:auto}
+  #stylesel{width:240px;background:#0a1014;color:#cfe4e6;border:1px solid #234f57;border-radius:3px;
+    padding:6px;font-family:Georgia,serif;font-size:13px;letter-spacing:1px}
+  #palgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:5px 40px;max-width:1100px}
+  .palrow{display:flex;align-items:center;justify-content:space-between;padding:3px 2px;border-bottom:1px solid #12242a}
+  .palrow label{flex:1 1 auto;text-transform:none;letter-spacing:1px;font-size:13px;color:#8fb0b5}
+  .palrow input{width:84px;flex-shrink:0;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;border-radius:3px;
+    padding:5px 8px;font-family:inherit;font-size:13px;text-align:right;letter-spacing:1px}
+  #palettebtn{width:100%;margin:3px 0;padding:9px;border:1px solid #b89b4a;background:#101d24;color:#e6d9a8;border-radius:3px;
+    cursor:pointer;font-size:13px;font-family:Georgia,serif;letter-spacing:2px}
+  .ticon{width:60px;height:60px;object-fit:contain;flex-shrink:0;margin:0 8px;image-rendering:pixelated;background:#000;border:1px solid #12242a;border-radius:2px}
+  .ticon.none{visibility:hidden}
+  .rst{flex-shrink:0;margin-left:4px;padding:3px 6px;border:1px solid #234f57;background:#0f1d24;color:#8fb0b5;border-radius:3px;
+    cursor:pointer;font-size:13px;font-family:Georgia,serif}
+  .rst:hover{border-color:#52d8dc;color:#bfeff5}
+  .rst.ghost{visibility:hidden;pointer-events:none}
+  .rst.dw.active{border-color:#e0c85a;color:#e0c85a}
+  #ledgersearch{width:320px;box-sizing:border-box;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;border-radius:3px;
+    padding:6px 10px;font-family:Georgia,serif;font-size:13px;letter-spacing:1px;margin-bottom:14px}
+  #ledgergrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px;max-width:1500px}
+  .tcard{display:flex;align-items:center;gap:8px;padding:5px 7px;border:1px solid #12242a;border-radius:3px;background:#0c161c;cursor:pointer;overflow:hidden}
+  .tcard:hover{border-color:#52d8dc}
+  .tcard img{width:80px;height:80px;object-fit:contain;image-rendering:pixelated;flex-shrink:0;background:#000;border-radius:2px}
+  .tcard .tid{color:#e0c85a;font-size:14px;letter-spacing:1px}
+  .tcard .tnm{color:#5d8a90;font-size:10px;letter-spacing:1px;line-height:1.25;overflow:hidden;max-height:26px}
+  .glyph{display:inline-block;width:15px;margin-right:9px;text-align:center;flex-shrink:0;font-size:14px}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="topbar">
+  <span id="pos" title="Cursor tile coordinates">&nbsp;</span>
+  <span class="tsep"></span>
+  <button id="tb_undo" title="Ctrl+Z">&#10226; Undo</button>
+  <button id="tb_redo" title="Ctrl+Y">&#10227; Redo</button>
+  <span class="tsep"></span>
+  <button id="tb_select" title="C — drag a box on the grid">&#11034; Select</button>
+  <button id="tb_copy" title="Ctrl+C — copy the selected box">Copy</button>
+  <button id="tb_paste" title="Ctrl+V — ghost follows mouse, click stamps">Paste</button>
+  <span class="tsep"></span>
+  <span id="brushrow" title="Brush size">
+    <button data-b="1" class="active">1</button><button data-b="2">2</button><button data-b="3">3</button><button data-b="5">5</button>
+  </span>
+  <span class="tsep"></span>
+  <button id="zin">+</button><button id="zout">&minus;</button><button id="zfit">Fit</button>
+  <button id="goto00" title="Pan the view so tile (0,0) is mid-screen">&#8982; Go to 0,0</button>
+  <input type="text" id="maptitle" placeholder="MAP TITLE" value="">
+</div>
+<div id="wrap">
+<canvas id="cv"></canvas>
+<div id="side">
+  <h3>LOK SKETCHER</h3>
+  <div class="sub">STORMHALTER &middot; MAP DRAFTING</div>
+  <div class="row" id="tabrow">
+    <button id="tab_sketch" class="active">SKETCH</button>
+    <button id="tab_masks">MASKS</button>
+  </div>
+  <button id="palettebtn">&#9646; PALETTE / STYLES</button>
+  <div id="side_sketch">
+  <button id="modebtn">&#9670; BLUEPRINT VIEW (M)</button>
+  <div id="tools"></div>
+  <details id="conngrp"><summary>CONNECTORS</summary><div id="conntools"></div></details>
+  <hr>
+  <label>Grid W&times;H &middot; center X/Y</label><br>
+  <input type="number" id="gw" value="200"> &times; <input type="number" id="gh" value="200"><br>
+  <input type="number" id="cx" value="0"> / <input type="number" id="cy" value="0">
+  <div class="row">
+    <button id="applygrid" title="Apply size and slide the window to the center coordinate — drawn tiles keep their absolute x/y">Apply</button><button id="centergrid" title="Slide the window so tile (0,0) is the center">Center on 0,0</button>
+  </div>
+  <hr>
+  <div id="bigbtns">
+    <button id="export">EXPORT JSON</button>
+    <button id="importbtn">IMPORT JSON</button>
+    <input type="file" id="importfile" accept=".json" style="display:none">
+    <button id="clear" style="border-color:#8a3a2a;color:#d9a08a">CLEAR ALL</button>
+  </div>
+  </div>
+  <div id="side_masks" style="display:none">
+  <div id="bigbtns2">
+    <button id="maskbasebtn">IMPORT BASE MAP</button>
+    <input type="file" id="maskbasefile" accept=".json" style="display:none">
+  </div>
+  <div id="maskbaseinfo" class="sub" style="margin:4px 0">no base map loaded</div>
+  <hr>
+  <div class="row">
+    <button id="maskpaint" class="active">Paint</button><button id="maskerase">Erase</button>
+  </div>
+  <div id="masklist"></div>
+  <button id="maskadd" class="tool">+ Add mask</button>
+  <hr>
+  <div id="bigbtns3">
+    <button id="maskexport">EXPORT MASKS</button>
+    <button id="maskimport">IMPORT MASKS</button>
+    <input type="file" id="maskimportfile" accept=".json" style="display:none">
+  </div>
+  </div>
+  <div id="help">
+    <b>Draw:</b> left-click / drag &middot; <b>Erase:</b> lifts marks/labels first, ground on a second pass<br>
+    <b>Pan:</b> right-drag &middot; space-drag &middot; arrows<br>
+    <b>Zoom:</b> wheel &middot; <b>Undo:</b> Ctrl+Z &middot; <b>Redo:</b> Ctrl+Y / Ctrl+Shift+Z<br>
+    <b>Select (C):</b> drag a box &middot; Ctrl+C copy &middot; Ctrl+X cut &middot; Ctrl+V paste (ghost follows mouse, each click stamps) &middot; Del clears the box &middot; Esc exits<br>
+    <b>Label:</b> pick L &middot; click empty tile = new &middot; click label = edit &middot; drag label = move<br>
+    <b>Connectors:</b> S spawn &middot; O portal &middot; U stairs up &middot; N stairs down &middot; click again to set link tag (same tag = linked across levels)<br>
+    <b>Keys:</b> W wall (partition) &middot; X structural &middot; D door &middot; F room floor &middot; R hall floor &middot; I dirt floor &middot; G grass &middot; A water &middot; Q deep water &middot; T road &middot; V dead &middot; B boss &middot; P path &middot; Y tree &middot; H tree wall &middot; L label &middot; E erase &middot; M view<br>
+    Wall = partition (1-thick). Structural = block mass / enclosure &mdash; the generator builds walls exactly as drawn and never auto-encloses the map.<br>
+    Deep water and Tree wall are impassable. Tree is a walkable overlay &mdash; the style set picks the species.<br><br>
+    Autosaves to this browser. Export JSON into the LOK Sketcher folder to move machines or hand to Claude.
+  </div>
+</div>
+</div>
+</div>
+<div id="palscreen">
+  <h2>PALETTE &amp; STYLES</h2>
+  <div class="sub2">ROLE &rarr; GAME TILE ID &middot; EXPORTS INSIDE THE SKETCH JSON &middot; MULTI-PART ENTRIES COMMA-SEPARATED</div>
+  <div id="palhead">
+    <select id="stylesel"><option value="">&mdash; saved styles &mdash;</option></select>
+    <button id="stylesave" title="Save the numbers below as a named style (browser + linked styles folder)">Save</button>
+    <button id="styleexp" title="Download the style as a JSON file for Generator/styles/">Export</button>
+    <button id="styledel" title="Delete the selected style (browser + linked styles folder)">Delete</button>
+    <button id="styledef" title="Reset every box to the gray-box defaults">Defaults</button>
+    <button id="palclose" title="Esc">&larr; Back to sketch</button>
+  </div>
+  <div id="palgrid"></div>
+  <h2 style="margin-top:30px">TILE LEDGER</h2>
+  <div class="sub2">EVERY TERRAIN ID IN THE GAME &middot; CLICK A TILE TO COPY ITS ID</div>
+  <input type="text" id="ledgersearch" placeholder="filter by id or name&hellip;">
+  <div id="ledgergrid"></div>
+</div>
+<script src="tiles_ledger.js"></script>
+<script>
+const TOOLS = [
+  {id:"wall",  name:"Wall",       key:"w", col:"#b9c7d2", bp:"#e8dcc0"},
+  {id:"structural", name:"Structural", key:"x", col:"#78848f", bp:"#c9ba92"},
+  {id:"door",  name:"Door",       key:"d", col:"#c24a2a", bp:"#d0622e"},
+  {id:"room",  name:"Room floor", key:"f", col:"#3a4a56", bp:"#332c22"},
+  {id:"hall",  name:"Hall floor", key:"r", col:"#55687a", bp:"#403729"},
+  {id:"dirtfloor", name:"Dirt floor", key:"i", col:"#8a6a3c", bp:"#4f3f26"},
+  {id:"grass", name:"Grass",      key:"g", col:"#4d7a3d", bp:"#3d5c31"},
+  {id:"dirt",  name:"Road",       key:"t", col:"#6d5433", bp:"#4a3d28"},
+  {id:"water", name:"Water",      key:"a", col:"#2f6fb8", bp:"#3d84c9"},
+  {id:"deepwater", name:"Deep water (block)", key:"q", col:"#1d4a80", bp:"#255a9e"},
+  {id:"dead",  name:"Dead space", key:"v", col:"#000000", bp:"#080706"},
+  {id:"boss",  name:"Boss (mark)",key:"b", col:"#35c4d6", bp:"#6adcf0"},
+  {id:"path",  name:"Path (mark)",key:"p", col:"#3fb85a", bp:"#57c96a"},
+  {id:"tree",  name:"Tree (mark)",key:"y", col:"#2e8b3a", bp:"#57c96a"},
+  {id:"treewall", name:"Tree wall (block)", key:"h", col:"#1d5c26", bp:"#2e8b3a"},
+  {id:"label", name:"Label (text)",key:"l", col:"#c9a648", bp:"#e8dcc0"},
+  {id:"select",name:"Select",     key:"c", col:"#e0c85a", bp:"#e0c85a"},
+  {id:"erase", name:"Erase",      key:"e", col:"#0d0b09", bp:"#0d0b09"},
+];
+const CONN = [
+  {id:"spawn",       name:"Spawn",       key:"s", col:"#e0c85a", glyph:"\u2726"},
+  {id:"portal",      name:"Portal",      key:"o", col:"#b06ae0", glyph:"\u25CE"},
+  {id:"stairs_up",   name:"Stairs Up",   key:"u", col:"#d0d8dc", glyph:"\u25B2"},
+  {id:"stairs_down", name:"Stairs Down", key:"n", col:"#d0d8dc", glyph:"\u25BC"},
+];
+const CONNIDS = CONN.map(c=>c.id);
+const MARKIDS = ["boss","path","tree","treewall"];
+const TCOL = Object.fromEntries(TOOLS.map(t=>[t.id,t.col]));
+const BPCOL = Object.fromEntries(TOOLS.map(t=>[t.id,t.bp]));
+let GW=200, GH=200, OX=-100, OY=-100;
+let terrain = new Map();   // "x,y" -> terrain id
+let marks   = new Map();   // "x,y" -> boss|path
+let labels  = new Map();   // "x,y" -> text
+let connectors = new Map(); // "x,y" -> {t:"spawn"|"portal"|"stairs_up"|"stairs_down", tag:""}
+let tool="wall", brush=1, blueprint=false;
+let zoom=8, panX=20, panY=20;
+let undoStack=[], redoStack=[], curStroke=null;
+let sel=null, selDrag=null, clip=null, pasteMode=false;
+function snapKeys(ks){
+  const s=new Map();
+  for(const k of ks) s.set(k,{t:terrain.get(k)||null,m:marks.get(k)||null,l:labels.get(k)||null,c:connectors.get(k)||null});
+  return s;
+}
+function pushUndo(s){ if(s&&s.size){ undoStack.push(s); if(undoStack.length>300) undoStack.shift(); redoStack=[]; } }
+function applySnapshot(s){
+  const inv=new Map();
+  for(const [k,v] of s){
+    inv.set(k,{t:terrain.get(k)||null,m:marks.get(k)||null,l:labels.get(k)||null,c:connectors.get(k)||null});
+    v.t?terrain.set(k,v.t):terrain.delete(k);
+    v.m?marks.set(k,v.m):marks.delete(k);
+    v.l?labels.set(k,v.l):labels.delete(k);
+    v.c?connectors.set(k,v.c):connectors.delete(k);
+  }
+  return inv;
+}
+function undo(){ const s=undoStack.pop(); if(s){ redoStack.push(applySnapshot(s)); draw(); save(); } }
+function redo(){ const s=redoStack.pop(); if(s){ undoStack.push(applySnapshot(s)); draw(); save(); } }
+function selKeys(){
+  const ks=[];
+  for(let x=sel.x0;x<=sel.x1;x++) for(let y=sel.y0;y<=sel.y1;y++) ks.push(key(x,y));
+  return ks;
+}
+function copySel(){
+  if(!sel) return;
+  clip={w:sel.x1-sel.x0+1,h:sel.y1-sel.y0+1,cells:[]};
+  for(let x=sel.x0;x<=sel.x1;x++) for(let y=sel.y0;y<=sel.y1;y++){
+    const k=key(x,y);
+    const t=terrain.get(k)||null,m=marks.get(k)||null,l=labels.get(k)||null,c=connectors.get(k)||null;
+    if(t||m||l||c) clip.cells.push([x-sel.x0,y-sel.y0,{t:t,m:m,l:l,c:c?{t:c.t,tag:c.tag}:null}]);
+  }
+}
+function deleteSel(){
+  if(!sel) return;
+  const s=snapKeys(selKeys());
+  for(const k of s.keys()){ terrain.delete(k); marks.delete(k); labels.delete(k); connectors.delete(k); }
+  pushUndo(s); draw(); save();
+}
+function stampClip(gx,gy){
+  const ks=[];
+  for(const [dx,dy] of clip.cells){
+    const x=gx+dx,y=gy+dy;
+    if(x>=0&&y>=0&&x<GW&&y<GH) ks.push(key(x,y));
+  }
+  const s=snapKeys(ks);
+  for(const [dx,dy,v] of clip.cells){
+    const x=gx+dx,y=gy+dy;
+    if(x<0||y<0||x>=GW||y>=GH) continue;
+    const k=key(x,y);
+    if(v.t) terrain.set(k,v.t);
+    if(v.m) marks.set(k,v.m);
+    if(v.l) labels.set(k,v.l);
+    if(v.c) connectors.set(k,{t:v.c.t,tag:v.c.tag});
+  }
+  pushUndo(s); draw(); save();
+}
+const cv=document.getElementById("cv");
+const cx=cv.getContext("2d");
+const key=(x,y)=>x+","+y;
+function resize(){ cv.width=cv.clientWidth; cv.height=cv.clientHeight; draw(); }
+window.addEventListener("resize", resize);
+function bounds(){
+  const x1=Math.max(0,Math.floor(-panX/zoom)), y1=Math.max(0,Math.floor(-panY/zoom));
+  const x2=Math.min(GW,Math.ceil((cv.width-panX)/zoom)), y2=Math.min(GH,Math.ceil((cv.height-panY)/zoom));
+  return [x1,y1,x2,y2];
+}
+function draw(){ blueprint ? drawBlueprint() : drawEdit(); }
+function drawEdit(){
+  cx.shadowBlur=0;
+  cx.fillStyle="#0a1014"; cx.fillRect(0,0,cv.width,cv.height);
+  const [x1,y1,x2,y2]=bounds();
+  cx.fillStyle=TCOL.dead;   // unplaced tiles read as blank/dead — no need to paint dead space around a build
+  cx.fillRect(panX,panY,GW*zoom,GH*zoom);
+  if(uiMode==="mask") cx.globalAlpha=0.38;          // dim the base map under the masks
+  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
+    const t=terrain.get(key(gx,gy));
+    if(t){ cx.fillStyle=TCOL[t]; cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom); }
+  }
+  cx.globalAlpha=1;
+  if(zoom>=5){
+    cx.strokeStyle="rgba(120,200,210,0.07)"; cx.lineWidth=1; cx.beginPath();
+    for(let gx=x1; gx<=x2; gx++){ cx.moveTo(panX+gx*zoom+.5,panY+y1*zoom); cx.lineTo(panX+gx*zoom+.5,panY+y2*zoom); }
+    for(let gy=y1; gy<=y2; gy++){ cx.moveTo(panX+x1*zoom,panY+gy*zoom+.5); cx.lineTo(panX+x2*zoom,panY+gy*zoom+.5); }
+    cx.stroke();
+    cx.strokeStyle="rgba(82,216,220,0.18)"; cx.beginPath();
+    for(let gx=x1; gx<=x2; gx++) if((gx+OX)%10===0){ cx.moveTo(panX+gx*zoom+.5,panY+y1*zoom); cx.lineTo(panX+gx*zoom+.5,panY+y2*zoom); }
+    for(let gy=y1; gy<=y2; gy++) if((gy+OY)%10===0){ cx.moveTo(panX+x1*zoom,panY+gy*zoom+.5); cx.lineTo(panX+x2*zoom,panY+gy*zoom+.5); }
+    cx.stroke();
+    cx.strokeStyle="rgba(208,98,46,0.55)"; cx.lineWidth=2; cx.beginPath();
+    const zx=-OX, zy=-OY;
+    if(zx>=x1&&zx<=x2){ cx.moveTo(panX+zx*zoom,panY+y1*zoom); cx.lineTo(panX+zx*zoom,panY+y2*zoom); }
+    if(zy>=y1&&zy<=y2){ cx.moveTo(panX+x1*zoom,panY+zy*zoom); cx.lineTo(panX+x2*zoom,panY+zy*zoom); }
+    cx.stroke(); cx.lineWidth=1;
+  }
+  drawMarks(x1,y1,x2,y2,false);
+  drawConnectors(false);
+  drawLabels(false);
+  if(uiMode==="mask"){
+    cx.globalAlpha=0.45;
+    masks.forEach((m,i)=>{
+      cx.fillStyle=maskColor(i);
+      if(i===activeMask) cx.globalAlpha=0.6;
+      for(const k of m.tiles){
+        const [gx,gy]=k.split(",").map(Number);
+        if(gx>=x1&&gx<x2&&gy>=y1&&gy<y2) cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
+      }
+      cx.globalAlpha=0.45;
+    });
+    cx.globalAlpha=1;
+  }
+  drawGhost(false);
+  cx.strokeStyle="#2a6f78"; cx.lineWidth=2;
+  cx.strokeRect(panX,panY,GW*zoom,GH*zoom);
+  rulers();
+}
+function drawBlueprint(){
+  cx.shadowBlur=0;
+  cx.fillStyle="#0d0b09"; cx.fillRect(0,0,cv.width,cv.height);
+  const [x1,y1,x2,y2]=bounds();
+  // faint parchment grid
+  if(zoom>=4){
+    cx.strokeStyle="rgba(201,166,72,0.05)"; cx.lineWidth=1; cx.beginPath();
+    for(let gx=x1; gx<=x2; gx++){ cx.moveTo(panX+gx*zoom+.5,panY+y1*zoom); cx.lineTo(panX+gx*zoom+.5,panY+y2*zoom); }
+    for(let gy=y1; gy<=y2; gy++){ cx.moveTo(panX+x1*zoom,panY+gy*zoom+.5); cx.lineTo(panX+x2*zoom,panY+gy*zoom+.5); }
+    cx.stroke();
+  }
+  // terrain: floors/grass/water/dirt first
+  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
+    const t=terrain.get(key(gx,gy));
+    if(t && t!=="wall" && t!=="structural" && t!=="door"){
+      if(t==="water"||t==="deepwater"){ cx.shadowColor="#3d84c9"; cx.shadowBlur=zoom*0.8; }
+      cx.fillStyle=BPCOL[t];
+      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
+      cx.shadowBlur=0;
+    }
+  }
+  // walls as cream slabs with a subtle inner shade
+  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
+    const t=terrain.get(key(gx,gy));
+    if(t==="wall"||t==="structural"){
+      cx.fillStyle= t==="wall" ? "#e8dcc0" : "#c9ba92";
+      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
+      cx.fillStyle= t==="wall" ? "rgba(0,0,0,0.14)" : "rgba(0,0,0,0.28)";
+      cx.fillRect(panX+gx*zoom,panY+gy*zoom+zoom*0.65,zoom,zoom*0.35);
+    } else if(t==="door"){
+      cx.fillStyle="#332c22";
+      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
+      cx.shadowColor="#d0622e"; cx.shadowBlur=zoom*0.7;
+      cx.fillStyle="#d0622e";
+      cx.fillRect(panX+gx*zoom+zoom*0.15,panY+gy*zoom+zoom*0.3,zoom*0.7,zoom*0.4);
+      cx.shadowBlur=0;
+    }
+  }
+  drawMarks(x1,y1,x2,y2,true);
+  drawConnectors(true);
+  drawLabels(true);
+  drawGhost(true);
+  // title block
+  const title=document.getElementById("maptitle").value.trim();
+  if(title){
+    cx.fillStyle="#8a7a55"; cx.font="11px Georgia"; cx.textAlign="left";
+    cx.fillText("S T O R M H A L T E R", 54, cv.height-52);
+    cx.fillStyle="#e8dcc0"; cx.font="26px Georgia";
+    cx.fillText(title.toUpperCase().split("").join(" "), 54, cv.height-26);
+  }
+  rulers();
+}
+function drawMarks(x1,y1,x2,y2,bp){
+  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
+    const m=marks.get(key(gx,gy));
+    if(!m) continue;
+    const cxp=panX+gx*zoom+zoom/2, cyp=panY+gy*zoom+zoom/2;
+    if(m==="boss"){
+      if(bp){ cx.shadowColor="#6adcf0"; cx.shadowBlur=zoom; }
+      cx.fillStyle=bp?"#6adcf0":"#35c4d6";
+      cx.save(); cx.translate(cxp,cyp); cx.rotate(Math.PI/4);
+      const s=Math.max(3,zoom*0.4);
+      cx.fillRect(-s/2,-s/2,s,s); cx.restore();
+      cx.shadowBlur=0;
+    } else if(m==="tree"||m==="treewall"){
+      const col=(bp?BPCOL:TCOL)[m];
+      const s=Math.max(3,zoom*(m==="treewall"?0.46:0.32));
+      if(bp&&m==="treewall"){ cx.shadowColor=col; cx.shadowBlur=zoom*0.5; }
+      cx.fillStyle=col;
+      cx.beginPath(); cx.moveTo(cxp,cyp-s); cx.lineTo(cxp+s*0.9,cyp+s*0.8); cx.lineTo(cxp-s*0.9,cyp+s*0.8); cx.closePath(); cx.fill();
+      if(m==="treewall"){ cx.strokeStyle= bp?"#e8dcc0":"#0a1014"; cx.lineWidth=1; cx.stroke(); }
+      cx.shadowBlur=0;
+    } else {
+      cx.fillStyle=(bp?BPCOL:TCOL)[m];
+      cx.beginPath(); cx.arc(cxp,cyp,Math.max(2,zoom*0.22),0,7); cx.fill();
+    }
+  }
+}
+function drawConnectors(bp){
+  for(const [k,c] of connectors){
+    const [gx,gy]=k.split(",").map(Number);
+    const x=panX+gx*zoom+zoom/2, y=panY+gy*zoom+zoom/2;
+    if(x<-zoom||y<-zoom||x>cv.width+zoom||y>cv.height+zoom) continue;
+    const r=Math.max(3,zoom*0.38);
+    if(c.t==="portal"){
+      if(bp){ cx.shadowColor="#c07ae8"; cx.shadowBlur=zoom; }
+      cx.strokeStyle="#b06ae0"; cx.lineWidth=Math.max(1.5,zoom*0.12);
+      cx.beginPath(); cx.arc(x,y,r,0,7); cx.stroke();
+      cx.beginPath(); cx.arc(x,y,r*0.5,0,7); cx.stroke();
+    } else if(c.t==="spawn"){
+      if(bp){ cx.shadowColor="#e0c85a"; cx.shadowBlur=zoom; }
+      cx.strokeStyle="#e0c85a"; cx.lineWidth=Math.max(1.5,zoom*0.12);
+      cx.beginPath(); cx.arc(x,y,r,0,7); cx.stroke();
+      cx.fillStyle="#e0c85a"; cx.beginPath(); cx.arc(x,y,r*0.35,0,7); cx.fill();
+    } else {
+      const up=c.t==="stairs_up";
+      cx.fillStyle= bp ? "#e8dcc0" : "#d0d8dc";
+      if(bp){ cx.shadowColor="#e8dcc0"; cx.shadowBlur=zoom*0.6; }
+      cx.beginPath();
+      if(up){ cx.moveTo(x,y-r); cx.lineTo(x+r,y+r*0.8); cx.lineTo(x-r,y+r*0.8); }
+      else  { cx.moveTo(x,y+r); cx.lineTo(x+r,y-r*0.8); cx.lineTo(x-r,y-r*0.8); }
+      cx.closePath(); cx.fill();
+    }
+    cx.shadowBlur=0; cx.lineWidth=1;
+    if(c.tag && zoom>=3){
+      cx.font="bold "+Math.max(9,Math.min(14,zoom*1.1))+"px Georgia";
+      cx.textAlign="left"; cx.textBaseline="middle";
+      cx.fillStyle= bp ? "#e8dcc0" : "#e0c85a";
+      cx.fillText(c.tag, x+r+3, y);
+    }
+  }
+  cx.textAlign="left"; cx.textBaseline="alphabetic";
+}
+function drawLabels(bp){
+  if(zoom<3) return;
+  for(const [k,txt] of labels){
+    const [gx,gy]=k.split(",").map(Number);
+    const sx=panX+gx*zoom+zoom/2, sy=panY+gy*zoom+zoom/2;
+    if(sx<0||sy<0||sx>cv.width||sy>cv.height) continue;
+    cx.font=(bp? "bold ":"")+Math.max(10,Math.min(16,zoom*1.4))+"px Georgia";
+    cx.textAlign="center"; cx.textBaseline="middle";
+    const t = bp ? txt.toUpperCase().split("").join(" ") : txt;
+    if(!bp){ cx.fillStyle="rgba(0,0,0,0.55)"; cx.fillRect(sx-cx.measureText(t).width/2-4, sy-9, cx.measureText(t).width+8, 18); }
+    cx.fillStyle = bp ? "#e8dcc0" : "#c9a648";
+    cx.fillText(t, sx, sy);
+  }
+  cx.textBaseline="alphabetic";
+}
+function rulers(){
+  const [x1,y1,x2,y2]=bounds();
+  const RT=18, RL=42;
+  cx.fillStyle="rgba(8,14,18,0.93)";
+  cx.fillRect(0,0,cv.width,RT); cx.fillRect(0,0,RL,cv.height);
+  cx.fillStyle="#e0c85a"; cx.font="bold 12px Georgia";
+  cx.textAlign="center"; cx.textBaseline="middle";
+  const step = zoom>=6 ? 10 : (zoom>=3 ? 20 : 50);
+  for(let gx=Math.max(0,x1); gx<=x2&&gx<=GW; gx++){
+    const wx=gx+OX;
+    if(wx%step===0){ const s=panX+gx*zoom; if(s>RL-6&&s<cv.width) cx.fillText(wx,s,RT/2); }
+  }
+  cx.textAlign="right";
+  for(let gy=Math.max(0,y1); gy<=y2&&gy<=GH; gy++){
+    const wy=gy+OY;
+    if(wy%step===0){ const s=panY+gy*zoom; if(s>RT+4&&s<cv.height) cx.fillText(wy,RL-5,s); }
+  }
+  cx.textAlign="left"; cx.textBaseline="alphabetic";
+}
+function tileAt(e){
+  const r=cv.getBoundingClientRect();
+  const sx=cv.width/r.width, sy=cv.height/r.height;
+  return [Math.floor(((e.clientX-r.left)*sx-panX)/zoom), Math.floor(((e.clientY-r.top)*sy-panY)/zoom)];
+}
+function applyCell(gx,gy,erase){
+  if(gx<0||gy<0||gx>=GW||gy>=GH) return;
+  const k=key(gx,gy);
+  const before={t:terrain.get(k)||null,m:marks.get(k)||null,l:labels.get(k)||null,c:connectors.get(k)||null};
+  if(erase||tool==="erase"){
+    if(curStroke && curStroke.has(k)) return;              // one peel per cell per stroke
+    if(marks.has(k)||labels.has(k)||connectors.has(k)){ marks.delete(k); labels.delete(k); connectors.delete(k); }
+    else terrain.delete(k);
+  }
+  else if(MARKIDS.includes(tool)){ marks.set(k,tool); }
+  else if(tool==="label"){ return; }
+  else { terrain.set(k,tool); }
+  const after={t:terrain.get(k)||null,m:marks.get(k)||null,l:labels.get(k)||null,c:connectors.get(k)||null};
+  if(curStroke && (before.t!==after.t||before.m!==after.m||before.l!==after.l||before.c!==after.c) && !curStroke.has(k))
+    curStroke.set(k,before);
+}
+function paint(e,erase){
+  const [gx,gy]=tileAt(e);
+  const r=Math.floor(brush/2);
+  for(let dx=-r; dx<brush-r; dx++) for(let dy=-r; dy<brush-r; dy++) applyCell(gx+dx,gy+dy,erase);
+  draw();
+}
+let down=false, panning=false, spaceHeld=false, lastPan=null, labelDrag=null, hover=null;
+// ---------------- masks mode ----------------
+// Separate map area: Claude preps a coordinate section (xml_to_sketch context JSON),
+// Tony imports it as a read-only base and paints named style masks over it.
+let uiMode="sketch", sketchKeep=null;
+let maskBaseRaw=null, maskErase=false, masks=[], activeMask=-1;
+const MASK_COLS=["#e0c85a","#b06ae0","#52d8dc","#c24a2a","#3fb85a","#e08ab0","#8a92e0","#d0a050","#6adc9a","#dc6a6a"];
+function parseBase(d){   // sketch JSON -> terrain/marks/labels/connectors Maps + grid
+  const t=new Map(), m=new Map(), l=new Map(), c=new Map();
+  const ox=(d.x0!==undefined)?d.x0:-100, oy=(d.y0!==undefined)?d.y0:-100;
+  for(const [name,cells] of Object.entries(d.layers||{})){
+    const tn=name==="floor"?"room":name;
+    for(const cell of cells){
+      const k=key(cell[0]-ox,cell[1]-oy);
+      if(MARKIDS.includes(tn)) m.set(k,tn);
+      else if(CONNIDS.includes(tn)) c.set(k,{t:tn,tag:cell[2]||""});
+      else t.set(k,tn);
+    }
+  }
+  for(const [x,y,txt] of (d.labels||[])) l.set(key(x-ox,y-oy),txt);
+  return {GW:d.width||200,GH:d.height||200,OX:ox,OY:oy,terrain:t,marks:m,labels:l,connectors:c};
+}
+function setMode(mode){
+  if(mode===uiMode) return;
+  if(mode==="mask"){
+    maskBaseRaw=exportData();                     // the SKETCH is the mask base, always
+    document.getElementById("maskbaseinfo").textContent=
+      "base: "+(maskBaseRaw.title||"current sketch")+" ("+maskBaseRaw.width+"×"+maskBaseRaw.height+")";
+    sketchKeep={GW,GH,OX,OY,terrain,marks,labels,connectors,undoStack,redoStack,sel,clip,blueprint};
+    const b=maskBaseRaw?parseBase(maskBaseRaw):{GW:200,GH:200,OX:-100,OY:-100,terrain:new Map(),marks:new Map(),labels:new Map(),connectors:new Map()};
+    ({GW,GH,OX,OY}=b); terrain=b.terrain; marks=b.marks; labels=b.labels; connectors=b.connectors;
+    undoStack=[]; redoStack=[]; sel=null; pasteMode=false; blueprint=false;
+  } else {
+    ({GW,GH,OX,OY}=sketchKeep); terrain=sketchKeep.terrain; marks=sketchKeep.marks;
+    labels=sketchKeep.labels; connectors=sketchKeep.connectors;
+    undoStack=sketchKeep.undoStack; redoStack=sketchKeep.redoStack;
+    sel=sketchKeep.sel; clip=sketchKeep.clip; blueprint=sketchKeep.blueprint;
+  }
+  uiMode=mode;
+  document.getElementById("tab_sketch").classList.toggle("active",mode==="sketch");
+  document.getElementById("tab_masks").classList.toggle("active",mode==="mask");
+  document.getElementById("side_sketch").style.display=mode==="sketch"?"":"none";
+  document.getElementById("side_masks").style.display=mode==="mask"?"":"none";
+  draw();
+}
+function maskApply(gx,gy){
+  if(gx<0||gy<0||gx>=GW||gy>=GH) return;
+  const k=key(gx,gy);
+  if(maskErase){ for(const m of masks) m.tiles.delete(k); return; }
+  if(activeMask<0||!masks[activeMask]) return;
+  for(let i=0;i<masks.length;i++) if(i!==activeMask) masks[i].tiles.delete(k);   // one mask per tile
+  masks[activeMask].tiles.add(k);
+}
+function maskPaint(e){
+  const [gx,gy]=tileAt(e);
+  const r=Math.floor(brush/2);
+  for(let dx=-r; dx<brush-r; dx++) for(let dy=-r; dy<brush-r; dy++) maskApply(gx+dx,gy+dy);
+  draw(); maskSave();
+}
+function maskColor(i){ return MASK_COLS[i%MASK_COLS.length]; }
+function renderMaskList(){
+  const div=document.getElementById("masklist"); div.innerHTML="";
+  const styles=Object.keys(loadStyles()).sort();
+  masks.forEach((m,i)=>{
+    const r=document.createElement("div"); r.className="maskrow"+(i===activeMask?" active":"");
+    const sw=document.createElement("span"); sw.className="msw"; sw.style.background=maskColor(i);
+    const nm=document.createElement("input"); nm.value=m.name; nm.title="mask name";
+    nm.oninput=()=>{ m.name=nm.value; maskSave(); };
+    const st=document.createElement("select"); st.title="style applied to this area";
+    st.innerHTML='<option value="">(style?)</option>'+styles.map(s=>'<option'+(m.style===s?' selected':'')+'>'+s+'</option>').join("");
+    st.onchange=()=>{ m.style=st.value; maskSave(); };
+    const del=document.createElement("button"); del.className="mdel"; del.textContent="×"; del.title="delete mask";
+    del.onclick=ev=>{ ev.stopPropagation(); if(confirm("Delete mask '"+m.name+"'?")){ masks.splice(i,1); if(activeMask>=masks.length) activeMask=masks.length-1; renderMaskList(); draw(); maskSave(); } };
+    r.append(sw,nm,st,del);
+    r.onclick=ev=>{ if(ev.target===nm||ev.target===st||ev.target===del) return; activeMask=i; renderMaskList(); draw(); };
+    div.appendChild(r);
+  });
+}
+function maskSave(){
+  try{ localStorage.setItem("lok_masks_autosave",JSON.stringify({
+    base:maskBaseRaw, masks:masks.map(m=>({name:m.name,style:m.style,tiles:[...m.tiles].map(k=>k.split(",").map(Number))}))
+  })); }catch(e){}
+}
+function maskRestore(){
+  try{
+    const d=JSON.parse(localStorage.getItem("lok_masks_autosave")||"null");
+    if(!d) return;
+    maskBaseRaw=d.base||null;
+    masks=(d.masks||[]).map(m=>({name:m.name,style:m.style,tiles:new Set(m.tiles.map(([x,y])=>key(x,y)))}));
+    activeMask=masks.length?0:-1;
+    if(maskBaseRaw) document.getElementById("maskbaseinfo").textContent=
+      "base: "+(maskBaseRaw.title||"untitled")+" ("+(maskBaseRaw.width||200)+"×"+(maskBaseRaw.height||200)+")";
+    renderMaskList();
+  }catch(e){}
+}
+document.getElementById("tab_sketch").onclick=()=>setMode("sketch");
+document.getElementById("tab_masks").onclick=()=>setMode("mask");
+document.getElementById("maskpaint").onclick=()=>{ maskErase=false;
+  document.getElementById("maskpaint").classList.add("active"); document.getElementById("maskerase").classList.remove("active"); };
+document.getElementById("maskerase").onclick=()=>{ maskErase=true;
+  document.getElementById("maskerase").classList.add("active"); document.getElementById("maskpaint").classList.remove("active"); };
+document.getElementById("maskadd").onclick=()=>{
+  const name=prompt("Mask name (what is this area?):","area "+(masks.length+1));
+  if(name===null) return;
+  masks.push({name:name.trim()||("area "+(masks.length+1)),style:"",tiles:new Set()});
+  activeMask=masks.length-1; maskErase=false;
+  document.getElementById("maskpaint").classList.add("active"); document.getElementById("maskerase").classList.remove("active");
+  renderMaskList(); maskSave();
+};
+document.getElementById("maskbasebtn").onclick=()=>document.getElementById("maskbasefile").click();
+document.getElementById("maskbasefile").addEventListener("change",ev=>{
+  const f=ev.target.files[0]; if(!f) return;
+  f.text().then(txt=>{
+    const d=JSON.parse(txt);
+    const wasMask = uiMode==="mask";
+    if(wasMask) setMode("sketch");                // restore sketch state properly first
+    loadData(d);                                  // loads into the SKETCH (both areas share it)
+    if(wasMask) setMode("mask");                  // re-enter: sketch snapshots as the base
+    maskSave();
+  });
+});
+document.getElementById("maskexport").onclick=()=>{
+  const noStyle=masks.filter(m=>!m.style&&m.tiles.size);
+  if(noStyle.length&&!confirm("Masks without a style bound: "+noStyle.map(m=>m.name).join(", ")+". Export anyway?")) return;
+  const all=loadStyles(), used={};
+  for(const m of masks) if(m.style&&all[m.style]) used[m.style]=all[m.style];
+  const out={app:"lok-sketcher",kind:"masks",version:1,
+    source:{title:maskBaseRaw?maskBaseRaw.title||"":"",width:GW,height:GH,x0:OX,y0:OY},
+    styles:used,                                   // style VALUES ride with the file
+    masks:masks.map(m=>({name:m.name,style:m.style,
+      tiles:[...m.tiles].map(k=>{const [x,y]=k.split(",").map(Number);return [x+OX,y+OY];})}))};
+  const blob=new Blob([JSON.stringify(out)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=((maskBaseRaw&&maskBaseRaw.title)?maskBaseRaw.title.toLowerCase().replace(/[^a-z0-9]+/g,"_"):"map")+"_masks.json"; a.click();
+};
+document.getElementById("maskimport").onclick=()=>document.getElementById("maskimportfile").click();
+document.getElementById("maskimportfile").addEventListener("change",ev=>{
+  const f=ev.target.files[0]; if(!f) return;
+  f.text().then(txt=>{
+    const d=JSON.parse(txt);
+    if(d.kind!=="masks"){ alert("Not a masks file."); return; }
+    const ox=(uiMode==="mask")?OX:(d.source&&d.source.x0!==undefined?d.source.x0:-100);
+    const oy=(uiMode==="mask")?OY:(d.source&&d.source.y0!==undefined?d.source.y0:-100);
+    masks=(d.masks||[]).map(m=>({name:m.name,style:m.style||"",
+      tiles:new Set(m.tiles.map(([x,y])=>key(x-ox,y-oy)))}));
+    activeMask=masks.length?0:-1;
+    renderMaskList(); draw(); maskSave();
+  });
+});
+function drawGhost(bp){
+  if(sel){
+    cx.save(); cx.setLineDash([6,4]); cx.strokeStyle="#e0c85a"; cx.lineWidth=1.5;
+    cx.strokeRect(panX+sel.x0*zoom+.75, panY+sel.y0*zoom+.75,
+                  (sel.x1-sel.x0+1)*zoom-1.5, (sel.y1-sel.y0+1)*zoom-1.5);
+    cx.restore();
+  }
+  if(pasteMode&&clip&&hover){
+    cx.save(); cx.globalAlpha=.45;
+    for(const [dx,dy,v] of clip.cells){
+      const x=hover[0]+dx, y=hover[1]+dy;
+      if(x<0||y<0||x>=GW||y>=GH) continue;
+      const col = v.t ? (bp?BPCOL[v.t]:TCOL[v.t]) : (v.m ? (bp?BPCOL[v.m]:TCOL[v.m]) : "#e0c85a");
+      cx.fillStyle=col;
+      cx.fillRect(panX+x*zoom,panY+y*zoom,zoom,zoom);
+    }
+    cx.globalAlpha=1; cx.setLineDash([6,4]); cx.strokeStyle="#52d8dc"; cx.lineWidth=1.5;
+    cx.strokeRect(panX+hover[0]*zoom+.75, panY+hover[1]*zoom+.75, clip.w*zoom-1.5, clip.h*zoom-1.5);
+    cx.restore(); return;
+  }
+  if(!hover||panning||(uiMode!=="mask"&&tool==="select")) return;
+  const single = uiMode!=="mask" && (tool==="label" || CONNIDS.includes(tool));
+  const r = single?0:Math.floor(brush/2), n = single?1:brush;
+  const t = TOOLS.concat(CONN).find(t=>t.id===tool);
+  let col = t ? ((bp&&t.bp)?t.bp:t.col) : "#ffffff";
+  if(uiMode==="mask") col = maskErase ? "#c24a2a" : (activeMask>=0 ? maskColor(activeMask) : "#4d6d73");
+  cx.save();
+  cx.globalAlpha = (uiMode==="mask" ? maskErase : tool==="erase") ? 0.15 : 0.4;
+  let minx=1e9,miny=1e9,maxx=-1e9,maxy=-1e9;
+  for(let dx=-r; dx<n-r; dx++) for(let dy=-r; dy<n-r; dy++){
+    const gx=hover[0]+dx, gy=hover[1]+dy;
+    if(gx<0||gy<0||gx>=GW||gy>=GH) continue;
+    cx.fillStyle=col;
+    cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
+    minx=Math.min(minx,gx);miny=Math.min(miny,gy);maxx=Math.max(maxx,gx);maxy=Math.max(maxy,gy);
+  }
+  cx.globalAlpha=1;
+  if(minx<=maxx){
+    cx.strokeStyle = (uiMode==="mask" ? maskErase : tool==="erase") ? "#c24a2a" : "#52d8dc";
+    cx.lineWidth=1.5;
+    cx.strokeRect(panX+minx*zoom+.75, panY+miny*zoom+.75, (maxx-minx+1)*zoom-1.5, (maxy-miny+1)*zoom-1.5);
+  }
+  cx.restore();
+}
+cv.addEventListener("mousedown", e=>{
+  e.preventDefault();
+  if(spaceHeld||e.button===1||e.button===2){ panning=true; lastPan=[e.clientX,e.clientY]; cv.style.cursor="grab"; return; }
+  if(uiMode==="mask"){ down=true; maskPaint(e); return; }
+  if(tool==="select"){
+    const [gx,gy]=tileAt(e);
+    if(gx<0||gy<0||gx>=GW||gy>=GH) return;
+    if(pasteMode&&clip){ stampClip(gx,gy); return; }
+    selDrag=[gx,gy]; sel={x0:gx,y0:gy,x1:gx,y1:gy}; draw(); return;
+  }
+  if(CONNIDS.includes(tool)){
+    const [gx,gy]=tileAt(e);
+    if(gx<0||gy<0||gx>=GW||gy>=GH) return;
+    const k=key(gx,gy);
+    const prev=connectors.get(k)||null;
+    if(prev && prev.t===tool){
+      const tag=prompt("Link tag (same tag on two connectors = linked, e.g. A, L3). Empty = none:", prev.tag||"");
+      if(tag!==null){ prev.tag=tag.trim(); }
+    } else {
+      const s=new Map(); s.set(k,{t:terrain.get(k)||null,m:marks.get(k)||null,l:labels.get(k)||null,c:prev});
+      pushUndo(s);
+      connectors.set(k,{t:tool,tag:""});
+    }
+    draw(); save(); return;
+  }
+  if(tool==="label"){
+    const [gx,gy]=tileAt(e);
+    if(gx<0||gy<0||gx>=GW||gy>=GH) return;
+    const k=key(gx,gy);
+    if(labels.has(k)){ labelDrag={from:k, moved:false}; return; }   // drag to move, click to edit
+    const txt=prompt("Label text (empty removes):", "");
+    if(txt===null) return;
+    if(txt.trim()!=="") labels.set(k,txt.trim());
+    draw(); save(); return;
+  }
+  curStroke=new Map();
+  down=true; paint(e,false);
+});
+cv.addEventListener("mousemove", e=>{
+  const [gx,gy]=tileAt(e);
+  document.getElementById("pos").textContent=(gx>=0&&gy>=0&&gx<GW&&gy<GH)?"( "+(gx+OX)+" , "+(gy+OY)+" )":" ";
+  hover=(gx>=0&&gy>=0&&gx<GW&&gy<GH)?[gx,gy]:null;
+  if(panning){ panX+=e.clientX-lastPan[0]; panY+=e.clientY-lastPan[1]; lastPan=[e.clientX,e.clientY]; draw(); return; }
+  if(selDrag){
+    if(gx>=0&&gy>=0&&gx<GW&&gy<GH)
+      sel={x0:Math.min(selDrag[0],gx),y0:Math.min(selDrag[1],gy),x1:Math.max(selDrag[0],gx),y1:Math.max(selDrag[1],gy)};
+    draw(); return;
+  }
+  if(labelDrag){
+    const k2=key(gx,gy);
+    if(k2!==labelDrag.from && gx>=0&&gy>=0&&gx<GW&&gy<GH){
+      const txt=labels.get(labelDrag.from);
+      if(txt!==undefined){ labels.delete(labelDrag.from); labels.set(k2,txt); labelDrag.from=k2; labelDrag.moved=true; draw(); }
+    }
+    return;
+  }
+  if(down){ if(uiMode==="mask") maskPaint(e); else paint(e,false); return; }
+  draw();
+});
+cv.addEventListener("mouseleave", ()=>{ hover=null; draw(); });
+window.addEventListener("mouseup", ()=>{
+  if(selDrag){ selDrag=null; return; }
+  if(labelDrag){
+    if(!labelDrag.moved){    // plain click on an existing label: edit its text
+      const k=labelDrag.from;
+      const txt=prompt("Label text (empty removes):", labels.get(k)||"");
+      if(txt!==null){ if(txt.trim()==="") labels.delete(k); else labels.set(k,txt.trim()); draw(); }
+    }
+    labelDrag=null; save(); return;
+  }
+  if(curStroke&&curStroke.size) pushUndo(curStroke);
+  curStroke=null; down=panning=false;
+  if(!spaceHeld) cv.style.cursor="crosshair";
+  save();
+});
+cv.addEventListener("contextmenu", e=>e.preventDefault());
+cv.addEventListener("wheel", e=>{
+  e.preventDefault();
+  const r=cv.getBoundingClientRect();
+  const mx=(e.clientX-r.left)*(cv.width/r.width), my=(e.clientY-r.top)*(cv.height/r.height);
+  const oz=zoom;
+  zoom=Math.max(2,Math.min(40,zoom*(e.deltaY<0?1.2:1/1.2)));
+  panX=mx-(mx-panX)*zoom/oz; panY=my-(my-panY)*zoom/oz;
+  draw();
+},{passive:false});
+window.addEventListener("keydown", e=>{
+  if(document.getElementById("palscreen").classList.contains("open")){
+    if(e.key==="Escape"){ document.getElementById("palscreen").classList.remove("open"); e.preventDefault(); }
+    return;                                    // palette screen swallows all other hotkeys
+  }
+  if(document.activeElement && ["INPUT","TEXTAREA"].includes(document.activeElement.tagName)) return;
+  if(e.code==="Space"){ spaceHeld=true; cv.style.cursor="grab"; e.preventDefault(); return; }
+  if(uiMode==="mask"){                              // masks: pan keys only, no tool/undo/view keys
+    const step=60;
+    if(e.key==="ArrowLeft"){panX+=step;draw();} if(e.key==="ArrowRight"){panX-=step;draw();}
+    if(e.key==="ArrowUp"){panY+=step;draw();} if(e.key==="ArrowDown"){panY-=step;draw();}
+    return;
+  }
+  const ctrl=e.ctrlKey||e.metaKey;
+  if(ctrl&&e.key.toLowerCase()==="z"){ e.shiftKey?redo():undo(); e.preventDefault(); return; }
+  if(ctrl&&e.key.toLowerCase()==="y"){ redo(); e.preventDefault(); return; }
+  if(ctrl&&e.key.toLowerCase()==="c"&&sel){ copySel(); e.preventDefault(); return; }
+  if(ctrl&&e.key.toLowerCase()==="x"&&sel){ copySel(); deleteSel(); e.preventDefault(); return; }
+  if(ctrl&&e.key.toLowerCase()==="v"&&clip){ pasteMode=true; selectTool("select"); draw(); e.preventDefault(); return; }
+  if(e.key==="Delete"&&sel){ deleteSel(); return; }
+  if(e.key==="Escape"){ pasteMode=false; sel=null; selDrag=null; draw(); return; }
+  if(e.key.toLowerCase()==="m"){ toggleMode(); return; }
+  const step=60;
+  if(e.key==="ArrowLeft"){panX+=step;draw();} if(e.key==="ArrowRight"){panX-=step;draw();}
+  if(e.key==="ArrowUp"){panY+=step;draw();} if(e.key==="ArrowDown"){panY-=step;draw();}
+  if(!ctrl){
+    const t=TOOLS.concat(CONN).find(t=>t.key===e.key.toLowerCase());
+    if(t) selectTool(t.id);
+  }
+});
+window.addEventListener("keyup", e=>{ if(e.code==="Space"){ spaceHeld=false; cv.style.cursor="crosshair"; } });
+function toggleMode(){
+  blueprint=!blueprint;
+  document.getElementById("modebtn").textContent = blueprint ? "✎ EDIT VIEW (M)" : "◆ BLUEPRINT VIEW (M)";
+  draw();
+}
+document.getElementById("modebtn").onclick=toggleMode;
+const toolsDiv=document.getElementById("tools");
+for(const t of TOOLS){
+  const b=document.createElement("button");
+  b.className="tool"+(t.id===tool?" active":""); b.id="t_"+t.id;
+  const shp = t.id==="boss" ? " diamond" : ((t.id==="path"||t.id==="tree") ? " dot" : "");
+  b.innerHTML='<span class="sw'+shp+'" style="background:'+t.col+'"></span>'+t.name+' <span style="margin-left:auto;color:#4d6d73">'+t.key.toUpperCase()+"</span>";
+  b.onclick=()=>selectTool(t.id);
+  toolsDiv.appendChild(b);
+}
+const connDiv=document.getElementById("conntools");
+for(const t of CONN){
+  const b=document.createElement("button");
+  b.className="tool"; b.id="t_"+t.id;
+  b.innerHTML='<span class="glyph" style="color:'+t.col+'">'+t.glyph+'</span>'+t.name+' <span style="margin-left:auto;color:#4d6d73">'+t.key.toUpperCase()+"</span>";
+  b.onclick=()=>selectTool(t.id);
+  connDiv.appendChild(b);
+}
+// ---------------- palette / style sets ----------------
+// ONE number per role (Tony's ruling 2026-08-23). The generator fills in the
+// load-bearing companions (wall destroyed/ruins, door closed/secret/destroyed,
+// water cost/obstruction) from companions.json, mined from the live maps.
+// NOTE (Tony's ruling 2026-08-23): there is no separate "seen floor" id — the floor
+// under partition walls and doors is ALWAYS the room floor. The only independent
+// under-ground is Wall floor (under structural mass). The generator enforces it.
+const PAL_FIELDS=[
+  ["room","Room floor","1","nl"],
+  ["hall","Hall floor","1","nl"],
+  ["dirtfloor","Dirt floor","12","nl"],
+  ["grass","Grass","13","nl"],
+  ["dirt","Road","184","nl"],
+  ["water","Water","22","n"],
+  ["deepwater","Deep water","19","dw"],
+  ["structural_floor","Structural wall floor","12","nl"],
+  ["structural","Structural","447","n"],
+  ["wall-ns","Wall NS","29","n"],
+  ["wall-ew","Wall EW","30","n"],
+  ["corner","Corner","34","n"],
+  ["door-ns","Door NS","66","n"],
+  ["door-ew","Door EW","67","n"],
+  ["tree","Tree","98","n"],
+  ["treewall","Tree wall","266","n"],
+  ["boss_ground","Boss ground","5","n"],
+  ["spawn_ground","Spawn ground","2","n"],
+  ["stairs_up","Stairs up","127","n"],
+  ["stairs_down","Stairs down","123","n"],
+  ["portal_egress","Portal egress","318","n"],
+];
+const LEDGER=window.TILE_LEDGER||{};
+function ledgerEntry(str){                 // first number in the box -> ledger entry
+  const m=String(str||"").match(/\d+/);
+  return m ? LEDGER[m[0]] : null;
+}
+function updateIcon(k){
+  const img=document.getElementById("pic_"+k);
+  const raw=String(document.getElementById("pal_"+k).value).trim();
+  if(raw==="0"){                       // 0 = none: role not emitted (bare style)
+    img.removeAttribute("src"); img.classList.add("none");
+    img.title="none — not emitted (bare style)"; return;
+  }
+  const first=(raw.match(/-?\d+/)||[raw])[0];   // comma lists: icon shows the first id
+  const e=ledgerEntry(first);
+  if(e){ img.src=e.i; img.title=e.n||""; img.classList.remove("none"); }
+  else { img.removeAttribute("src"); img.classList.add("none"); img.title=""; }
+}
+const palRows=document.getElementById("palgrid");
+const NONE_ROLES=["wall-ns","wall-ew","corner","door-ns","door-ew"]; // 0 = none (bare style)
+function syncDw(){
+  const v=String(document.getElementById("pal_deepwater").value).trim();
+  document.getElementById("dw19").classList.toggle("active",v==="19");
+  document.getElementById("dw605").classList.toggle("active",v==="605");
+}
+for(const [k,label,def] of PAL_FIELDS){
+  const r=document.createElement("div"); r.className="palrow";
+  if(k==="deepwater"){
+    // Deep water shows the OBSTRUCTION (what the player actually sees — the water
+    // ground underneath comes from the Water role at build time). Two choices only.
+    r.innerHTML='<label>'+label+'</label><img class="ticon none" id="pic_'+k+'">'
+      +'<input type="hidden" id="pal_'+k+'" value="'+def+'">'
+      +'<button class="rst dw" id="dw19" title="Obstruction 19">19</button>'
+      +'<button class="rst dw" id="dw605" title="Obstruction 605">605</button>'
+      +'<button class="rst ghost" tabindex="-1">&#215;</button>';
+    palRows.appendChild(r);
+    const setdw=v=>{ document.getElementById("pal_deepwater").value=v; syncDw(); updateIcon(k); save(); };
+    document.getElementById("dw19").onclick=()=>setdw("19");
+    document.getElementById("dw605").onclick=()=>setdw("605");
+    syncDw();
+    continue;
+  }
+  r.innerHTML='<label>'+label+'</label><img class="ticon none" id="pic_'+k+'">'
+    +'<input type="text" id="pal_'+k+'" value="'+def+'">'
+    +'<button class="rst" id="rst_'+k+'" title="Reset to default ('+def+')">&#8634;</button>'
+    +(NONE_ROLES.includes(k)?'<button class="rst" id="off_'+k+'" title="Set to 0 — none, not emitted (bare style)">&#215;</button>'
+                            :'<button class="rst ghost" tabindex="-1">&#215;</button>');
+  palRows.appendChild(r);
+  document.getElementById("rst_"+k).onclick=()=>{
+    document.getElementById("pal_"+k).value=def; updateIcon(k); save();
+  };
+  if(NONE_ROLES.includes(k)) document.getElementById("off_"+k).onclick=()=>{
+    document.getElementById("pal_"+k).value="0"; updateIcon(k); save();
+  };
+}
+palRows.addEventListener("input",e=>{
+  const m=(e.target.id||"").match(/^pal_(.+)$/);
+  if(m) updateIcon(m[1]);
+  save();
+});
+function palIcons(){ for(const [k] of PAL_FIELDS) updateIcon(k); }
+palIcons();
+let ledgerBuilt=false;
+// Door OPEN and DESTROYED variants hidden from the ledger (Tony 2026-08-24): a placed
+// door carries its whole family automatically, so only the CLOSED sprite is listed.
+// Secret ids stay — they are real wall tiles (e.g. 151 Dragon, 139/140 Dirty Marble).
+// Generated from Generator/companions.json: (opens ∪ destroyeds) − closeds − secrets −
+// walls. REGENERATE when mine_companions.py finds new door families.
+const LEDGER_HIDE=new Set([8,37,47,48,49,74,75,76,77,78,79,80,81,82,83,84,85,231,232,
+  233,234,307,308,309,310,391,392,404,405,433,434,435,436,455,456,457,458,496,497,498,
+  499,506,507,508,509,703,859,861,942,944,949,951,961,963,973,1041,1042,1044,1045,1047,
+  1050,1053,1054,1056,1057,1059,1060,1062,1063,1065,1068,1071,1074,1077,1078,1080,1081,
+  1083,1084,1086,1087,1236,1239,1383,1384,1386,1387]);
+function buildLedger(){
+  if(ledgerBuilt) return;
+  ledgerBuilt=true;
+  const g=document.getElementById("ledgergrid");
+  const frag=document.createDocumentFragment();
+  const ids=Object.keys(LEDGER).map(Number).sort((a,b)=>a-b).filter(id=>!LEDGER_HIDE.has(id));
+  for(const id of ids){
+    const e=LEDGER[id];
+    const c=document.createElement("div"); c.className="tcard";
+    c.dataset.k=id+" "+(e.n||"").toLowerCase();
+    c.title=(e.n||"")+" — click to copy "+id;
+    c.innerHTML='<img loading="lazy" src="'+e.i+'"><div><div class="tid">'+id+'</div><div class="tnm">'+(e.n||"")+'</div></div>';
+    c.onclick=()=>{ try{ navigator.clipboard.writeText(String(id)); }catch(err){} };
+    frag.appendChild(c);
+  }
+  g.appendChild(frag);
+  if(!ids.length) g.innerHTML='<div style="color:#5d8a90">tiles_ledger.js not found beside this file — run bake_ledger.py</div>';
+}
+document.getElementById("ledgersearch").addEventListener("input",e=>{
+  const q=e.target.value.trim().toLowerCase();
+  for(const c of document.getElementById("ledgergrid").children)
+    c.style.display=(!q||(c.dataset.k||"").includes(q))?"":"none";
+});
+const palScreen=document.getElementById("palscreen");
+document.getElementById("palettebtn").onclick=()=>{ buildLedger(); palScreen.classList.add("open"); stylesFromFolder(false); };
+document.getElementById("palclose").onclick=()=>palScreen.classList.remove("open");
+function palParse(k,shape,str){
+  if(shape==="nl"){                        // floor roles: comma list = random per-tile mix,
+    const parts=String(str).split(",")     // weighted by repetition (Tony 2026-08-24)
+      .map(s=>parseInt(s.trim(),10)).filter(n=>!isNaN(n));
+    if(!parts.length) return undefined;
+    return parts.length===1?parts[0]:parts;
+  }
+  const n=parseInt(String(str).trim(),10);
+  return isNaN(n) ? undefined : n;
+}
+function palToStr(shape,v){
+  if(v===undefined||v===null) return null;
+  if(Array.isArray(v)) return shape==="nl" ? v.join(",") : String(v[0]);  // walls: legacy full entries
+  if(typeof v==="object"){
+    if(shape==="dw") return String(v.obstruction!==undefined?v.obstruction:19);  // deep water = the obstruction
+    const n=v.ground!==undefined?v.ground:(v.tree!==undefined?v.tree:v.obstruction);
+    return n===undefined?null:String(n);
+  }
+  return String(v);
+}
+function palObj(){
+  const p={};
+  for(const [k,_,def,shape] of PAL_FIELDS){
+    const v=palParse(k,shape,document.getElementById("pal_"+k).value||def);
+    if(v!==undefined) p[k]=v;
+  }
+  return p;
+}
+function palSet(p){
+  for(const [k,_,def,shape] of PAL_FIELDS){
+    const s=palToStr(shape,p?p[k]:undefined);
+    document.getElementById("pal_"+k).value = s!==null ? s : def;
+  }
+  palIcons(); syncDw();
+}
+function loadStyles(){ try{ return JSON.parse(localStorage.getItem("lok_styles")||"{}"); }catch(e){ return {}; } }
+let styleCache=loadStyles();
+// ---- SHARED STYLES FOLDER (Tony 2026-08-24): Save writes straight into a linked folder
+// (pick Generator/styles ONCE per machine — OneDrive syncs it), and the dropdown lists
+// the folder's styles from ANY machine. Browser security requires the one-time pick and,
+// depending on settings, a one-click re-allow after a browser restart. localStorage
+// stays as the offline fallback; on a name clash the folder wins.
+let styleDir=null, styleDirLoaded=false, styleSyncTried=false;
+function idbH(mode,fn){ return new Promise((res,rej)=>{ const rq=indexedDB.open("lok_sketcher_fs",1);
+  rq.onupgradeneeded=()=>rq.result.createObjectStore("h");
+  rq.onsuccess=()=>{ const tx=rq.result.transaction("h",mode); const r2=fn(tx.objectStore("h"));
+    tx.oncomplete=()=>res(r2&&r2.result); tx.onerror=()=>rej(tx.error); };
+  rq.onerror=()=>rej(rq.error); }); }
+async function styleDirHandle(interactive){
+  if(!window.showDirectoryPicker) return null;
+  if(!styleDir && !styleDirLoaded){ styleDirLoaded=true;
+    try{ styleDir=await idbH("readonly",st=>st.get("styledir")); }catch(e){} }
+  if(!styleDir && interactive){
+    try{ styleDir=await showDirectoryPicker({id:"lokstyles",mode:"readwrite"});
+         await idbH("readwrite",st=>st.put(styleDir,"styledir")); }
+    catch(e){ return null; }                       // user cancelled the picker
+  }
+  if(!styleDir) return null;
+  try{
+    let p=await styleDir.queryPermission({mode:"readwrite"});
+    if(p!=="granted"&&interactive) p=await styleDir.requestPermission({mode:"readwrite"});
+    return p==="granted"?styleDir:null;
+  }catch(e){ return null; }
+}
+async function stylesFromFolder(interactive){
+  const dir=await styleDirHandle(interactive);
+  if(!dir) return false;
+  const out={};
+  try{
+    for await(const ent of dir.values()){
+      if(ent.kind==="file"&&ent.name.toLowerCase().endsWith(".json")){
+        try{
+          const d=JSON.parse(await (await ent.getFile()).text());
+          if(d&&typeof d==="object"){
+            const nm=(typeof d._name==="string"&&d._name)||ent.name.slice(0,-5);
+            delete d._comment; delete d._name;
+            out[nm]=d;
+          }
+        }catch(e){}
+      }
+    }
+  }catch(e){ return false; }
+  styleCache=Object.assign({},loadStyles(),out);
+  refreshStyleSel(document.getElementById("stylesel").value);
+  return true;
+}
+async function styleToFolder(name,obj){
+  const dir=await styleDirHandle(true);
+  if(!dir) return false;
+  try{
+    const fn=name.toLowerCase().replace(/[^a-z0-9]+/g,"_")+".json";
+    const fh=await dir.getFileHandle(fn,{create:true});
+    const w=await fh.createWritable();
+    await w.write(JSON.stringify(Object.assign({_name:name},obj),null,2));
+    await w.close();
+    return true;
+  }catch(e){ return false; }
+}
+function refreshStyleSel(selName){
+  const sel=document.getElementById("stylesel");
+  sel.innerHTML='<option value="">&mdash; saved styles &mdash;</option>';
+  for(const n of Object.keys(styleCache).sort()){
+    const o=document.createElement("option"); o.value=n; o.textContent=n;
+    if(n===selName) o.selected=true;
+    sel.appendChild(o);
+  }
+}
+document.getElementById("stylesel").addEventListener("mousedown",()=>{
+  if(!styleSyncTried){ styleSyncTried=true; stylesFromFolder(true); } // first click links/reloads the folder
+});
+document.getElementById("stylesel").addEventListener("change",e=>{
+  const st=styleCache[e.target.value];
+  if(st){ palSet(st); save(); }
+});
+document.getElementById("stylesave").onclick=async()=>{
+  const cur=document.getElementById("stylesel").value;
+  const name=(prompt("Style name:",cur||"")||"").trim();
+  if(!name) return;
+  const obj=palObj();
+  const styles=loadStyles(); styles[name]=obj;
+  try{ localStorage.setItem("lok_styles",JSON.stringify(styles)); }catch(e){}
+  styleCache[name]=obj;
+  refreshStyleSel(name);
+  if(!await styleToFolder(name,obj))
+    alert(window.showDirectoryPicker
+      ? "Saved in this browser only — styles folder not linked. Save again and pick Claude Worldforge Testing\\Generator\\styles, or use Export."
+      : "This browser can't write folders — saved locally; use Export to share.");
+};
+document.getElementById("styledel").onclick=async()=>{
+  const name=document.getElementById("stylesel").value;
+  if(!name){ alert("Pick a style in the dropdown first."); return; }
+  if(!confirm('Delete style "'+name+'" from this browser AND the styles folder?')) return;
+  const styles=loadStyles(); delete styles[name];
+  try{ localStorage.setItem("lok_styles",JSON.stringify(styles)); }catch(e){}
+  delete styleCache[name];
+  const dir=await styleDirHandle(true);
+  if(dir){
+    try{ await dir.removeEntry(name.toLowerCase().replace(/[^a-z0-9]+/g,"_")+".json"); }
+    catch(e){}                                   // file may not exist in the folder — fine
+  }else if(window.showDirectoryPicker){
+    alert("Removed from this browser. The styles folder isn't linked from here, so its copy (if any) will still show on other machines until deleted there.");
+  }
+  refreshStyleSel("");
+};
+document.getElementById("styleexp").onclick=()=>{
+  const name=document.getElementById("stylesel").value||"style";
+  const p=palObj();
+  p._comment="LOK Sketcher style export — drop into Claude Worldforge Testing/Generator/styles/ and build with --style "+name;
+  const blob=new Blob([JSON.stringify(p,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=name.toLowerCase().replace(/[^a-z0-9]+/g,"_")+".json"; a.click();
+};
+document.getElementById("styledef").onclick=()=>{ palSet(null); document.getElementById("stylesel").value=""; save(); };
+refreshStyleSel();
+stylesFromFolder(false);   // silent folder load at boot if permission is already granted
+function selectTool(id){ tool=id; if(id!=="select") pasteMode=false; for(const t of TOOLS.concat(CONN)) document.getElementById("t_"+t.id).classList.toggle("active",t.id===id); document.getElementById("tb_select").classList.toggle("active",id==="select"); if(CONNIDS.includes(id)) document.getElementById("conngrp").open=true; draw(); }
+document.getElementById("tb_undo").onclick=undo;
+document.getElementById("tb_redo").onclick=redo;
+document.getElementById("tb_select").onclick=()=>selectTool("select");
+document.getElementById("tb_copy").onclick=()=>{ if(sel) copySel(); else alert("Drag a selection box first (Select tool, C)."); };
+document.getElementById("tb_paste").onclick=()=>{ if(clip){ pasteMode=true; selectTool("select"); } else alert("Nothing copied yet — select a box and Copy first."); };
+document.querySelectorAll("#brushrow button").forEach(b=>b.onclick=()=>{
+  brush=+b.dataset.b; document.querySelectorAll("#brushrow button").forEach(x=>x.classList.toggle("active",x===b)); draw();
+});
+document.getElementById("goto00").onclick=()=>{
+  panX = cv.width/2 - (-OX)*zoom - zoom/2;
+  panY = cv.height/2 - (-OY)*zoom - zoom/2;
+  draw();
+};
+document.getElementById("zin").onclick=()=>{zoom=Math.min(40,zoom*1.3);draw();};
+document.getElementById("zout").onclick=()=>{zoom=Math.max(2,zoom/1.3);draw();};
+document.getElementById("zfit").onclick=()=>{zoom=Math.max(2,Math.min((cv.width-60)/GW,(cv.height-60)/GH));panX=48;panY=26;draw();};
+document.getElementById("centergrid").onclick=()=>{
+  document.getElementById("cx").value=0; document.getElementById("cy").value=0;
+  document.getElementById("applygrid").click();
+};
+document.getElementById("applygrid").onclick=()=>{
+  // Center-based window control (Tony 2026-08-24): the canvas is a window over the
+  // region plane. Drawn tiles KEEP their absolute x/y — re-centering re-keys them by
+  // the origin delta so exports are identical before and after. If the requested
+  // window would drop drawn tiles, the canvas GROWS symmetrically around the chosen
+  // center until everything has 25 tiles of clearance (never clips, never refuses).
+  if(uiMode==="mask"){ alert("Switch to the SKETCH tab to change the grid."); return; }
+  let gw=Math.max(10,+document.getElementById("gw").value||200);
+  let gh=Math.max(10,+document.getElementById("gh").value||200);
+  const cx=Math.round(+document.getElementById("cx").value||0);
+  const cy=Math.round(+document.getElementById("cy").value||0);
+  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+  for(const m of [terrain,marks,labels,connectors])
+    for(const k of m.keys()){
+      const p=k.split(",").map(Number), ax=p[0]+OX, ay=p[1]+OY;
+      if(ax<minX)minX=ax; if(ax>maxX)maxX=ax; if(ay<minY)minY=ay; if(ay>maxY)maxY=ay;
+    }
+  if(minX!==Infinity){
+    const PAD=25;
+    let gw2=gw, gh2=gh;
+    while(Math.floor(gw2/2)<cx-minX+PAD || gw2-1-Math.floor(gw2/2)<maxX-cx+PAD) gw2++;
+    while(Math.floor(gh2/2)<cy-minY+PAD || gh2-1-Math.floor(gh2/2)<maxY-cy+PAD) gh2++;
+    if(gw2>gw||gh2>gh){
+      alert("Canvas grown to "+gw2+"×"+gh2+" so all drawn tiles stay in view with 25 tiles of clearance.");
+      gw=gw2; gh=gh2;
+      document.getElementById("gw").value=gw; document.getElementById("gh").value=gh;
+    }
+  }
+  const nOX=cx-Math.floor(gw/2), nOY=cy-Math.floor(gh/2);
+  const dx=OX-nOX, dy=OY-nOY;
+  if(dx||dy){
+    const shift=(m)=>{ const n=new Map();
+      for(const [k,v] of m){ const p=k.split(",").map(Number); n.set(key(p[0]+dx,p[1]+dy),v); }
+      return n; };
+    terrain=shift(terrain); marks=shift(marks); labels=shift(labels); connectors=shift(connectors);
+    undoStack=undoStack.map(shift); redoStack=redoStack.map(shift);
+    sel=null; selDrag=null; pasteMode=false;
+  }
+  GW=gw; GH=gh; OX=nOX; OY=nOY;
+  panX = cv.width/2 - (cx-OX)*zoom - zoom/2;
+  panY = cv.height/2 - (cy-OY)*zoom - zoom/2;
+  draw(); save();
+};
+function exportData(){
+  const layers={};
+  for(const t of TOOLS){ if(t.id!=="erase"&&t.id!=="label"&&t.id!=="select") layers[t.id]=[]; }
+  for(const [k,v] of terrain){ const [x,y]=k.split(",").map(Number); layers[v].push([x+OX,y+OY]); }
+  for(const [k,v] of marks){ const [x,y]=k.split(",").map(Number); layers[v].push([x+OX,y+OY]); }
+  const labs=[];
+  for(const [k,v] of labels){ const [x,y]=k.split(",").map(Number); labs.push([x+OX,y+OY,v]); }
+  for(const [k,c] of connectors){ const [x,y]=k.split(",").map(Number); (layers[c.t]=layers[c.t]||[]).push([x+OX,y+OY,c.tag||""]); }
+  return {app:"lok-sketcher",version:5,title:document.getElementById("maptitle").value,
+          width:GW,height:GH,x0:OX,y0:OY,layers,labels:labs,palette:palObj()};
+}
+document.getElementById("export").onclick=()=>{
+  const blob=new Blob([JSON.stringify(exportData())],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  const t=document.getElementById("maptitle").value.trim();
+  a.download=(t? t.toLowerCase().replace(/[^a-z0-9]+/g,"_") : "lok_sketch")+".json"; a.click();
+};
+document.getElementById("importbtn").onclick=()=>document.getElementById("importfile").click();
+document.getElementById("importfile").addEventListener("change", ev=>{
+  const f=ev.target.files[0]; if(!f) return;
+  f.text().then(txt=>loadData(JSON.parse(txt)));
+});
+function loadData(d){
+  GW=d.width||200; GH=d.height||200; OX=(d.x0!==undefined)?d.x0:-100; OY=(d.y0!==undefined)?d.y0:-100;
+  document.getElementById("gw").value=GW; document.getElementById("gh").value=GH;
+  document.getElementById("cx").value=OX+Math.floor(GW/2); document.getElementById("cy").value=OY+Math.floor(GH/2);
+  document.getElementById("maptitle").value=d.title||"";
+  terrain=new Map(); marks=new Map(); labels=new Map(); connectors=new Map();
+  for(const [name,cells] of Object.entries(d.layers||{})){
+    const tname = name==="floor" ? "room" : name;   // v1-v4 generic floor imports as room floor
+    for(const cell of cells){
+      const k=key(cell[0]-OX,cell[1]-OY);
+      if(MARKIDS.includes(tname)) marks.set(k,tname);
+      else if(CONNIDS.includes(tname)) connectors.set(k,{t:tname,tag:(cell[2]||"")});
+      else terrain.set(k,tname);
+    }
+  }
+  for(const [x,y,txt] of (d.labels||[])) labels.set(key(x-OX,y-OY),txt);
+  if(d.palette) palSet(d.palette);
+  draw(); save();
+}
+document.getElementById("clear").onclick=()=>{
+  if(confirm("Clear the entire sketch AND all masks?")){
+    terrain=new Map(); marks=new Map(); labels=new Map(); connectors=new Map();
+    undoStack=[]; redoStack=[]; sel=null; clip=null; pasteMode=false;
+    masks=[]; activeMask=-1; maskBaseRaw=null;
+    document.getElementById("maskbaseinfo").textContent="no base map loaded";
+    renderMaskList(); maskSave();
+    draw(); save();
+  }
+};
+document.getElementById("maptitle").addEventListener("input", ()=>{ save(); if(blueprint) draw(); });
+function save(){
+  if(uiMode==="mask"){ maskSave(); return; }     // never write the base map over the sketch autosave
+  try{ localStorage.setItem("lok_sketch_autosave", JSON.stringify(exportData())); }catch(e){}
+}
+(function init(){
+  resize();
+  try{ const d=localStorage.getItem("lok_sketch_autosave"); if(d) loadData(JSON.parse(d)); }catch(e){}
+  maskRestore();
+  document.getElementById("zfit").click();
+})();
+</script>
+</body>
+</html>
