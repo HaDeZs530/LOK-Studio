@@ -215,6 +215,7 @@
   <div id="bigbtns3">
     <button id="maskexport">EXPORT MASKS</button>
     <button id="maskimport">IMPORT MASKS</button>
+    <button id="maskapply" style="border-color:#8a7a2c;color:#e0c85a">&#9654; APPLY MASKS</button>
     <input type="file" id="maskimportfile" accept=".json" style="display:none">
   </div>
   </div>
@@ -754,16 +755,25 @@ document.getElementById("maskbasefile").addEventListener("change",ev=>{
   const f=ev.target.files[0]; if(!f) return;
   f.text().then(loadBaseFromText);
 });
-document.getElementById("maskexport").onclick=async()=>{
-  const noStyle=masks.filter(m=>!m.style&&m.tiles.size);
-  if(noStyle.length&&!await uiConfirm("Masks without a style bound: "+noStyle.map(m=>m.name).join(", ")+". Export anyway?")) return;
+async function collectMasksOut(strict){
+  const painted=masks.filter(m=>m.tiles.size);
+  if(!painted.length){ uiAlert("No mask tiles painted yet."); return null; }
+  const noStyle=painted.filter(m=>!m.style);
+  if(noStyle.length){
+    if(strict){ uiAlert("Every mask needs a style before applying: "+noStyle.map(m=>m.name).join(", ")); return null; }
+    if(!await uiConfirm("Masks without a style bound: "+noStyle.map(m=>m.name).join(", ")+". Export anyway?")) return null;
+  }
   const all=(APP()?styleCache:loadStyles()), used={};
   for(const m of masks) if(m.style&&all[m.style]) used[m.style]=all[m.style];
-  const out={app:"lok-sketcher",kind:"masks",version:1,
+  return {app:"lok-sketcher",kind:"masks",version:1,
     source:{title:maskBaseRaw?maskBaseRaw.title||"":"",width:GW,height:GH,x0:OX,y0:OY},
     styles:used,                                   // style VALUES ride with the file
     masks:masks.map(m=>({name:m.name,style:m.style,
       tiles:[...m.tiles].map(k=>{const [x,y]=k.split(",").map(Number);return [x+OX,y+OY];})}))};
+}
+document.getElementById("maskexport").onclick=async()=>{
+  const out=await collectMasksOut(false);
+  if(!out) return;
   const data=JSON.stringify(out);
   const fname=((maskBaseRaw&&maskBaseRaw.title)?maskBaseRaw.title.toLowerCase().replace(/[^a-z0-9]+/g,"_"):"map")+"_masks.json";
   if(APP()){ APP().export_json(fname,data).then(pth=>{ if(pth) uiAlert("Masks exported:\n"+pth); }); return; }
@@ -1482,6 +1492,7 @@ document.getElementById("buildbtn").onclick=async()=>{
   }
   if(!pf) return;
   if(pf.error){ uiAlert(pf.error); return; }
+  document.getElementById("buildhead").textContent="BUILD";
   bRep().textContent="";
   bAct().innerHTML="";
   const head=[
@@ -1515,6 +1526,31 @@ document.getElementById("buildbtn").onclick=async()=>{
       bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
     }));
   }
+  bPanel().classList.add("open");
+};
+document.getElementById("maskapply").onclick=async()=>{
+  if(!APP()){ uiAlert("Applying masks runs in the LOK Studio app."); return; }
+  const rid=parseInt(document.getElementById("regionnum").value,10);
+  if(isNaN(rid)){ uiAlert("Set the R# box — masks apply to that region."); return; }
+  const out=await collectMasksOut(true);
+  if(!out) return;
+  document.getElementById("buildhead").textContent="APPLY MASKS";
+  bRep().textContent="APPLY MASKS — region "+rid+"\n"
+    +out.masks.filter(m=>m.tiles.length).map(m=>"  mask \""+m.name+"\" → style \""+m.style+"\"  ("+m.tiles.length+" tiles)").join("\n")
+    +"\n";
+  bAct().innerHTML="";
+  actButton("Close","",buildClose);
+  const dry=actButton("APPLY (DRY RUN)","go",()=>runAction(dry,async()=>{
+    const r=await APP().apply_masks_run(rid,JSON.stringify(out),false);
+    bRep().textContent+="\n"+r.report+"\n";
+    if(r.ok){
+      const wr=actButton("CONFIRM & WRITE","danger",()=>runAction(wr,async()=>{
+        const r2=await APP().apply_masks_run(rid,JSON.stringify(out),true);
+        bRep().textContent+="\n"+r2.report+"\n"+(r2.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
+        bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
+      }));
+    }
+  }));
   bPanel().classList.add("open");
 };
 const APP=()=>window.pywebview&&window.pywebview.api;

@@ -49,6 +49,14 @@ folder once. Styles live in `generator/styles/`, so they travel with pushes;
 - Region XML stays UTF-8 BOM + CRLF, floor-first component order, full wall child
   sets. The audit battery runs on every build.
 
+## Packaged version (no Python needed)
+
+The Actions tab builds a double-clickable Windows package: run the **Build Windows
+package** workflow (or push a `v*` tag to also cut a Release), download
+`LOK-Studio-win64.zip`, unzip anywhere, run `LOK-Studio.exe`. User files live in
+`%LOCALAPPDATA%\LOK Studio`. Needs Microsoft's WebView2 runtime, which Windows 11
+and updated Windows 10 machines already have.
+
 ## Status
 
 Phase 1 complete (2026-08-24): the full loop — import region, edit, pre-flight,

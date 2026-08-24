@@ -17,15 +17,38 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent      # repo root
-UI = ROOT / "app" / "ui" / "lok_sketcher.html"
-GEN = ROOT / "generator"
-WORKSPACE = ROOT / "workspace"                     # user data — gitignored
+FROZEN = bool(getattr(sys, "frozen", False))
+if FROZEN:
+    # packaged app: bundled read-only data lives in _internal (sys._MEIPASS);
+    # everything the user writes goes to %LOCALAPPDATA%\LOK Studio.
+    import os
+    _BUNDLE = Path(getattr(sys, "_MEIPASS", Path(sys.executable).parent))
+    ROOT = _BUNDLE
+    UI = _BUNDLE / "ui" / "lok_sketcher.html"
+    GEN = _BUNDLE / "generator"
+    WORKSPACE = Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "LOK Studio"
+    STYLES = WORKSPACE / "styles"                  # writable; seeded from the bundle
+else:
+    ROOT = Path(__file__).resolve().parent.parent  # repo root
+    UI = ROOT / "app" / "ui" / "lok_sketcher.html"
+    GEN = ROOT / "generator"
+    WORKSPACE = ROOT / "workspace"                 # user data — gitignored
+    STYLES = GEN / "styles"
 IMPORTS = WORKSPACE / "Imports"
 EXPORTS = WORKSPACE / "Exports"
 SNAPSHOTS = WORKSPACE / "Snapshots"
-STYLES = GEN / "styles"
 SETTINGS = WORKSPACE / "settings.json"
+
+# Frozen re-exec: the packaged exe has no separate python, so generator scripts run
+# as "<exe> --script <name> <args...>" — this branch executes them and exits.
+if "--script" in sys.argv:
+    _i = sys.argv.index("--script")
+    _script, _args = sys.argv[_i + 1], sys.argv[_i + 2:]
+    sys.argv = [_script] + _args
+    sys.path.insert(0, str(GEN))
+    import runpy
+    runpy.run_path(str(GEN / _script), run_name="__main__")
+    sys.exit(0)
 
 
 def _settings():
@@ -44,7 +67,10 @@ def _run(script, *args):
     """Run a generator script, capture its report. UTF-8 forced end to end —
     Windows pipes default to cp1252, which chokes on the reports' ⚠/× glyphs."""
     import os
-    cmd = [sys.executable, "-X", "utf8", str(GEN / script), *[str(a) for a in args]]
+    if FROZEN:
+        cmd = [sys.executable, "--script", script, *[str(a) for a in args]]
+    else:
+        cmd = [sys.executable, "-X", "utf8", str(GEN / script), *[str(a) for a in args]]
     env = dict(os.environ, PYTHONUTF8="1", PYTHONIOENCODING="utf-8")
     p = subprocess.run(cmd, capture_output=True, text=True,
                        encoding="utf-8", errors="replace", env=env)
@@ -312,6 +338,29 @@ class Api:
         r["report"] = notice + r["report"]
         return r
 
+    def apply_masks_run(self, rid, masks_json, write=False):
+        """Restyle the masked areas of region <rid>. Needs the region imported through
+        IMPORT REGION first — that kept context is the restyle base. Dry run unless
+        write; apply_masks backs up to _pre-fix before writing."""
+        target = self._target(rid)
+        if target is None:
+            return {"ok": False, "report": "Regions folder not set."}
+        if not target.exists():
+            return {"ok": False, "report": f"{target.name} not found — masks restyle an "
+                                           f"EXISTING region."}
+        origins = _settings().get("origins", {}).get(str(rid), {})
+        base = origins.get("base")
+        if not (base and Path(base).exists()):
+            return {"ok": False, "report": f"No import context for region {rid} — use "
+                                           f"IMPORT REGION on it first (that kept copy "
+                                           f"is the restyle base)."}
+        mf = WORKSPACE / "_apply_masks.json"
+        mf.write_text(masks_json, encoding="utf-8")
+        args = [str(mf), base, "--merge", str(target)]
+        if write:
+            args += ["--write"]
+        return _run("apply_masks.py", *args)
+
     def version(self):
         return "LOK Studio 0.1.0"
 
@@ -322,8 +371,14 @@ def main():
     except ImportError:
         sys.exit("pywebview is not installed — run run.bat (it installs it), or:\n"
                  "  python -m pip install pywebview")
-    for d in (WORKSPACE, IMPORTS, EXPORTS):
+    for d in (WORKSPACE, IMPORTS, EXPORTS, SNAPSHOTS):
         d.mkdir(parents=True, exist_ok=True)
+    if FROZEN:
+        # first run: seed the writable styles folder from the bundled defaults
+        STYLES.mkdir(parents=True, exist_ok=True)
+        for f in (GEN / "styles").glob("*.json"):
+            if not (STYLES / f.name).exists():
+                shutil.copy2(f, STYLES / f.name)
     window = webview.create_window(
         "LOK Studio", UI.as_uri(), js_api=Api(),
         width=1500, height=950, background_color="#0a1014")
