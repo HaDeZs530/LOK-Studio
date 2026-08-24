@@ -168,7 +168,9 @@ def main():
     xs = [p[0] for p in all_pts]; ys = [p[1] for p in all_pts]
     x0, y0 = (win[0], win[1]) if win else (min(xs) - 2, min(ys) - 2)
     x1, y1 = (win[2], win[3]) if win else (max(xs) + 2, max(ys) + 2)
+    rid = root.findtext("id")
     out = {"app": "lok-sketcher", "version": 4, "title": title,
+           "region": (int(rid) if rid and rid.strip().lstrip("-").isdigit() else None),
            "width": x1 - x0 + 1, "height": y1 - y0 + 1, "x0": x0, "y0": y0,
            "layers": layers, "labels": []}
     dest = Path(a[a.index("-o")+1]) if "-o" in a else src.with_name(

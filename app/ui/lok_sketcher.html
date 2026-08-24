@@ -25,6 +25,11 @@
   .maskrow .mdel{flex-shrink:0;color:#d9a08a;background:none;border:none;cursor:pointer;font-size:14px;padding:0 3px}
   #pos{min-width:130px;text-align:center;padding:5px 12px;border:1px solid #234f57;background:#0a1014;
        color:#e0c85a;border-radius:3px;font-size:13px;letter-spacing:2px}
+  #topbar #regionnum{width:64px;box-sizing:border-box;background:#0a1014;color:#e0c85a;border:1px solid #234f57;
+    border-radius:3px;padding:5px 8px;font-family:inherit;font-size:13px;text-align:center;
+    -moz-appearance:textfield;appearance:textfield}
+  #topbar #regionnum::-webkit-outer-spin-button,#topbar #regionnum::-webkit-inner-spin-button{
+    -webkit-appearance:none;margin:0}
   #topbar #maptitle{width:220px;box-sizing:border-box;background:#0a1014;color:#cfe4e6;
        border:1px solid #234f57;border-radius:3px;padding:5px 10px;font-family:Georgia,serif;font-size:13px;letter-spacing:2px}
   #wrap{display:flex;flex:1 1 0;min-height:0}
@@ -118,7 +123,9 @@
   <span class="tsep"></span>
   <button id="zin">+</button><button id="zout">&minus;</button><button id="zfit">Fit</button>
   <button id="goto00" title="Pan the view so tile (0,0) is mid-screen">&#8982; Go to 0,0</button>
+  <input type="number" id="regionnum" placeholder="R#" title="Region number this map belongs to — travels inside the export">
   <input type="text" id="maptitle" placeholder="MAP TITLE" value="">
+  <span id="modebadge" title="Which view you are in right now">EDIT</span>
 </div>
 <div id="wrap">
 <canvas id="cv"></canvas>
@@ -131,7 +138,6 @@
   </div>
   <button id="palettebtn">&#9646; PALETTE / STYLES</button>
   <div id="side_sketch">
-  <span id="modebadge" title="Which view you are in right now">EDIT</span>
   <button id="modebtn" title="Toggle blueprint view (M)">&#9670; BLUEPRINT VIEW (M)</button>
   <div id="tools"></div>
   <details id="conngrp"><summary>CONNECTORS</summary><div id="conntools"></div></details>
@@ -1285,7 +1291,9 @@ function exportData(){
   const labs=[];
   for(const [k,v] of labels){ const [x,y]=k.split(",").map(Number); labs.push([x+OX,y+OY,v]); }
   for(const [k,c] of connectors){ const [x,y]=k.split(",").map(Number); (layers[c.t]=layers[c.t]||[]).push([x+OX,y+OY,c.tag||""]); }
+  const _rn=parseInt(document.getElementById("regionnum").value,10);
   return {app:"lok-sketcher",version:5,title:document.getElementById("maptitle").value,
+          region:(isNaN(_rn)?null:_rn),
           width:GW,height:GH,x0:OX,y0:OY,layers,labels:labs,palette:palObj()};
 }
 document.getElementById("export").onclick=()=>{
@@ -1310,6 +1318,7 @@ function loadData(d){
   document.getElementById("gw").value=GW; document.getElementById("gh").value=GH;
   document.getElementById("cx").value=OX+Math.floor(GW/2); document.getElementById("cy").value=OY+Math.floor(GH/2);
   document.getElementById("maptitle").value=d.title||"";
+  document.getElementById("regionnum").value=(d.region!==undefined&&d.region!==null)?d.region:"";
   terrain=new Map(); marks=new Map(); labels=new Map(); connectors=new Map();
   for(const [name,cells] of Object.entries(d.layers||{})){
     const tname = name==="floor" ? "room" : name;   // v1-v4 generic floor imports as room floor
