@@ -10,6 +10,9 @@
   #topbar button{padding:5px 12px;border:1px solid #234f57;background:#0f1d24;color:#cfe4e6;border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px;letter-spacing:1px}
   #topbar button.active{border-color:#52d8dc;background:#12303a;box-shadow:0 0 7px rgba(82,216,220,.3)}
   #topbar .tsep{width:1px;height:20px;background:#1b3a42;margin:0 3px}
+  #modebadge{padding:4px 12px;border-radius:3px;font-size:12px;letter-spacing:2px;border:1px solid #8a7a2c;
+    color:#e0c85a;background:#151509;user-select:none}
+  #modebadge.bp{border-color:#d8cfa8;color:#efe6c8;background:#0b0b09}
   #brushrow{display:flex;gap:4px}
   #tabrow button{letter-spacing:2px;color:#e6d9a8;border-color:#b89b4a}
   #tabrow button.active{border-color:#52d8dc;background:#12303a;color:#bfeff5;box-shadow:0 0 7px rgba(82,216,220,.3)}
@@ -128,7 +131,8 @@
   </div>
   <button id="palettebtn">&#9646; PALETTE / STYLES</button>
   <div id="side_sketch">
-  <button id="modebtn">&#9670; BLUEPRINT VIEW (M)</button>
+  <span id="modebadge" title="Which view you are in right now">EDIT</span>
+  <button id="modebtn" title="Toggle blueprint view (M)">&#9670; BLUEPRINT VIEW (M)</button>
   <div id="tools"></div>
   <details id="conngrp"><summary>CONNECTORS</summary><div id="conntools"></div></details>
   <hr>
@@ -595,6 +599,7 @@ function setMode(mode){
     sel=sketchKeep.sel; clip=sketchKeep.clip; blueprint=sketchKeep.blueprint;
   }
   uiMode=mode;
+  updateModeUI();
   document.getElementById("tab_sketch").classList.toggle("active",mode==="sketch");
   document.getElementById("tab_masks").classList.toggle("active",mode==="mask");
   document.getElementById("side_sketch").style.display=mode==="sketch"?"":"none";
@@ -888,9 +893,15 @@ window.addEventListener("keydown", e=>{
   }
 });
 window.addEventListener("keyup", e=>{ if(e.code==="Space"){ spaceHeld=false; cv.style.cursor="crosshair"; } });
+function updateModeUI(){
+  document.getElementById("modebtn").classList.toggle("active",blueprint);
+  const g=document.getElementById("modebadge");
+  g.textContent=blueprint?"BLUEPRINT":"EDIT";
+  g.classList.toggle("bp",blueprint);
+}
 function toggleMode(){
   blueprint=!blueprint;
-  document.getElementById("modebtn").textContent = blueprint ? "✎ EDIT VIEW (M)" : "◆ BLUEPRINT VIEW (M)";
+  updateModeUI();
   draw();
 }
 document.getElementById("modebtn").onclick=toggleMode;
