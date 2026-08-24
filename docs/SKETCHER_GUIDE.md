@@ -1,9 +1,9 @@
 # LOK Sketcher
 
-A map-drawing tool for Stormhalter. You sketch the map, export it, and Claude's generator
-turns the sketch into a real region file. No install — double-click `lok_sketcher.html`
-and it opens in your browser. Works offline. Keep `tiles_ledger.js` in the same folder;
-that's the file with all the game's tile pictures in it.
+The drawing surface inside LOK Studio. You sketch the map, and the built-in generator
+turns it into a real region file — IMPORT REGION and ▶ BUILD R# in the sidebar run the
+whole loop, no Claude session needed. (The same HTML still opens in a plain browser as
+a fallback, with reduced saving features.)
 
 ## The basics
 
@@ -11,7 +11,7 @@ Draw with the left mouse button. The tools run down the right side, and each one
 hotkey (shown on the button). Right-drag or hold SPACE to pan around, scroll wheel to
 zoom. Ctrl+Z undoes, Ctrl+Y redoes.
 
-Your work saves itself in the browser as you go — close the tab, come back tomorrow,
+Your work saves itself to disk as you go — close the app, come back tomorrow,
 it's still there.
 
 The dark canvas is blank space. You only paint the parts you want built; everything you
@@ -104,15 +104,11 @@ automatically from how that id is actually used in the live maps (`companions.js
 mined by `Generator/mine_companions.py`). If you use an id no map has ever used, the
 build stops and asks rather than guessing.
 
-Fill in a set of numbers you like? Hit **Save** and name it — it becomes a saved style
-you can recall from the dropdown any time. In **Chrome or Edge** (not Firefox — it
-doesn't support folder access), the first Save on each machine asks you to pick your
-styles folder ONCE — pick `Claude Worldforge Testing\Generator\styles`. After that,
-every Save writes the style straight into that folder, and the dropdown lists the
-folder's styles from any machine (OneDrive carries them). Depending on browser
-settings you may get a one-click "allow" after a browser restart. **Export** still
-downloads a copy by hand, and **Defaults** resets the whole board. Each wall, corner,
-and door row also has an **×** button — one click sets it to 0 (none) for bare styles.
+Fill in a set of numbers you like? Hit **Save** and name it — it lands in
+`generator\styles\` as a file, appears in the dropdown on any machine after a push,
+and **Delete** removes it (with a confirmation). **Export** saves a copy wherever you
+like, and **Defaults** resets the whole board. Each wall, corner, and door row also
+has an **×** button — one click sets it to 0 (none) for bare styles.
 
 Below all that is the **tile ledger**: every terrain tile in the game, with its picture —
 1,432 of them. Type in the filter box to narrow it down by number or name, click any tile
@@ -137,57 +133,46 @@ one mask over another takes the tile). EXPORT MASKS produces a file you hand bac
 Claude, and the generator restyles exactly those areas — nothing else on the map is
 touched. Your sketch on the other tab is completely unaffected by any of this.
 
-## Imports and Exports folders
+## Getting maps in and out
 
-**Imports\** is where map sections pulled from region files land, ready to IMPORT JSON
-into the sketcher. **Exports\** is where you save your edited maps (EXPORT JSON).
-Keep that direction: never overwrite a file in Imports — the untouched import copy is
-what Claude diffs your export against, so only your changes get written to the region.
+**IMPORT REGION…** (sidebar) is the way in: browse to a region XML, see its id, name
+and bounds, optionally give a window (`x0 y0 x1 y1`), and it lands on the canvas with
+the R# box stamped. The app silently keeps a full-region backup and the untouched
+context it will diff your changes against.
 
-**Make Import.bat** (beside this file) makes imports without Claude: drag a region
-.xml onto it, optionally type a window (`x0 y0 x1 y1`), and the JSON appears in
-Imports\. Needs Python installed.
+**▶ BUILD R#** is the way out: pre-flight first (target, mode, tile count, palette
+line — read that line first whenever a build looks wrong), then only explicit
+buttons. Merges are dry-run → CONFIRM & WRITE, a missing file restores from the
+import backup before merging, and an unused number is a plain CREATE NEW. Backups go
+to `Regions\_pre-fix\` before every write; HaDeZs Test is refused.
 
-Imports carry the LAYOUT only, never a palette — the look is yours to set. After
-importing, pick or build a style on the palette screen; your export carries those
-numbers and anything NEW you painted builds with them. Tiles you didn't touch keep
-their exact original look in the file no matter what style is loaded.
+## Saving and where things live
 
-## Saving and moving around
+Your work autosaves to disk as you draw (`workspace\` in the LOK Studio folder) and
+comes back when you reopen the app. EXPORT JSON opens a real save dialog (defaults to
+`workspace\Exports`); IMPORT JSON opens in `workspace\Imports`. Styles save straight
+into `generator\styles\` — no folder linking, no browser storage — and travel to
+your other machine with every git push.
 
-The sketch autosaves to the browser on the machine you're using. To move to another
-computer: **Export JSON** into this folder (OneDrive syncs it), then **Import JSON** over
-there. Same trick to keep a permanent copy of any map — the export IS the map.
+## When Claude is still involved
 
-## Handing a map to Claude
-
-Export the JSON into this folder with a real name (`region12_outdoor.json`, not
-`lok_sketch.json`), then tell Claude which region it's for. Claude runs it through the
-generator, shows you a preview picture of what will be built, and only writes to the
-region file after you've seen it.
-
-Built maps can come back too: ask Claude to pull an existing region (or a coordinate
-window of one) into the sketcher. You'll see the existing layout, build your new stuff
-over and around it, and export. Claude compares your export against the copy it kept:
-only what you changed or added gets written to the map — anything you didn't touch stays
-exactly as it was in the file, decorations and all. Erasing something that was there
-counts as a change too (that's how you move an existing wall).
+Routine builds and merges don't need a Claude session anymore. Claude sessions are
+for: applying MASKS to a region (paint and export works in-app; the applier isn't a
+button yet), new rule corrections after you fix something in WorldForge, and changes
+to the tools themselves.
 
 ## Applying masks — the full sequence
 
-1. **You name the target** — a region and roughly which part of it ("region 7, the west
-   dungeons"). In a chat or Cowork session.
-2. **Claude preps the context** — pulls that window out of the region file into a JSON in
-   the `Maps` folder, and keeps an exact copy (that copy is the restyle base).
-3. **You mask it** — import the JSON into the sketch, flip to MASKS, add a mask per area,
-   bind each to a saved style, paint. EXPORT MASKS into the `Maps` folder. The export
-   carries the style numbers with it, so it's self-contained.
-4. **Claude applies** — runs the masks over the region. Only masked tiles whose look
-   actually changes get rewritten; unmasked tiles and decorations aren't touched. Masks
-   recolor what exists — they never create tiles. You see the dry-run report first;
-   nothing is written until you say so.
-5. **You check it in WorldForge** — seams where two styles meet are the part still being
-   learned; your corrections there get captured as rules, same as the door and junction
+1. **Get the area on canvas** — IMPORT REGION with a window covering the part to
+   restyle.
+2. **Mask it** — flip to MASKS, add a mask per area, bind each to a saved style,
+   paint. EXPORT MASKS (the export carries the style numbers, so it's self-contained).
+3. **Claude applies** — the masks applier isn't a button yet, so hand the export to a
+   Claude session. Only masked tiles whose look actually changes get rewritten;
+   unmasked tiles and decorations aren't touched; masks recolor what exists, never
+   create tiles. Dry-run report first, nothing written until you say so.
+4. **Check it in WorldForge** — seams where two styles meet are the part still being
+   learned; corrections there get captured as rules, same as the door and junction
    rules were.
 
 ---
@@ -200,27 +185,27 @@ connector layers `spawn / portal / stairs_up / stairs_down` as `[x, y, "tag"]`, 
 `labels` and `palette` (role → id map). Coordinates are absolute region coordinates.
 Older files (v1–v4) import fine; legacy `floor` loads as `room`.
 
-Generator: `Claude Worldforge Testing/Generator/sketch_build.py` (sketch → region XML,
+Generator: `generator/sketch_build.py` (sketch → region XML,
 locked build process, `--new` or `--merge`, dry-run by default) and `xml_to_sketch.py`
 (region → sketch). Palette precedence, later wins: gray-box defaults < sketch palette <
-`--style <name>` < `--palette <file>`. Style files live in `Generator/styles/`;
+`--style <name>` < `--palette <file>`. Style files live in `generator/styles/`;
 `graybox.json` is the template.
 
 Captured ids (2026-08-23): stairs up 127, stairs down 123, portal egress 318, spawn-in =
 floor ground 2, boss tile = floor ground 5, deep water = water + obstruction 19, tree
 wall = obstruction 266 blockVision, tree default 98.
 
-Ledger: `tiles_ledger.js`, baked by `Generator/bake_ledger.py <worldforge_dir> <this
+Ledger: `app/ui/tiles_ledger.js`, baked by `generator/bake_ledger.py <worldforge_dir> <this
 folder>` from Data.bin + Kesmai.bin/Stormhalter.bin. Re-bake after a WorldForge update.
 
-Companions: single-number palette entries expand via `Generator/companions.json`
+Companions: single-number palette entries expand via `generator/companions.json`
 (mined from the live maps by `mine_companions.py`); unknown ids are a hard stop.
 
 Diff merge: `sketch_build.py <export> --merge <region> --base <context>` writes only
 tiles whose built result differs from the context; erased context tiles are cleared.
 
 Masks: export is `{kind:"masks", source:{…}, styles:{name:values}, masks:[{name, style,
-tiles:[[x,y],…]}]}`. Applied by `Generator/apply_masks.py <masks> <context> --merge
+tiles:[[x,y],…]}]}`. Applied by `generator/apply_masks.py <masks> <context> --merge
 <region> [--write]` — per-mask resolved palettes, only actually-changed tiles written.
 PREP NOTE (Claude): set the context sketch's `palette` from the region's real ids (the
 xml_to_sketch histograms) so the base render reproduces the file — otherwise lossy

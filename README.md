@@ -10,6 +10,28 @@ Double-click **`run.bat`**. Needs Python installed (python.org, "Add to PATH" ti
 First run installs one small dependency, then the LOK Studio window opens with the
 sketcher inside.
 
+First time on a machine: press **▶ BUILD R#** once and point it at your Regions
+folder (the sandbox segment, e.g. `Claude Worldforge Testing\Regions`) — remembered
+per machine in `workspace\settings.json`.
+
+## The loop
+
+**IMPORT REGION…** pulls a region XML (or a coordinate window of it) onto the canvas,
+stamps the **R#** box, and silently keeps a full-region backup plus the untouched
+context that later merges diff against. Draw and style as usual — the palette screen's
+numbers travel inside the sketch. **▶ BUILD R#** opens the pre-flight: target, mode,
+tile count, and the palette line (read that line first when a build looks wrong).
+Then only explicit buttons: merge dry-run → CONFIRM & WRITE, restore-from-backup +
+merge if the file went missing, or CREATE NEW for an unused number. Blueprint view
+(M) also renders the face walls the builder will add along structural masses, so
+joins read the way they build.
+
+## Second machine
+
+GitHub Desktop → clone this repo → `run.bat` → point BUILD at that machine's Regions
+folder once. Styles live in `generator/styles/`, so they travel with pushes;
+`workspace/` (autosaves, imports, settings) stays per-machine.
+
 ## What's in here
 
 | Folder | What it is |
@@ -29,6 +51,7 @@ sketcher inside.
 
 ## Status
 
-Phase 1 — productionizing. The browser-era sketcher runs inside the shell; the
-storage and build buttons are moving from browser workarounds onto the Python bridge.
-See `docs/HANDOFF.md` for the living state.
+Phase 1 complete (2026-08-24): the full loop — import region, edit, pre-flight,
+dry-run merge, confirmed write — runs in-app with no Claude session, verified against
+live maps. Open: masks apply as a button, packaged .exe via GitHub Actions, procedural
+layout generation. `docs/HANDOFF.md` is the living state and rules history.
