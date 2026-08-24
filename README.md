@@ -4,7 +4,24 @@ Map-making studio for Stormhalter (Legends of Kesmai revival): sketch dungeon an
 outdoor layouts, style them with real game tiles, and build WorldForge region XML —
 one desktop app, no browser, no Claude session needed at runtime.
 
-## Run it
+## Download (Windows)
+
+### ➜ [**Download LOK Studio**](https://github.com/HaDeZs530/LOK-Studio/releases/latest/download/LOK-Studio-win64.zip)
+
+No install, no Python, no account needed.
+
+1. Download the zip above (or grab it from [Releases](https://github.com/HaDeZs530/LOK-Studio/releases/latest)).
+2. **Unzip the whole folder** somewhere you'll keep it — Documents is fine.
+3. Run **`LOK-Studio.exe`** from inside that folder.
+
+Windows will say *"Windows protected your PC"* the first time, because the app isn't
+code-signed: click **More info → Run anyway**. Keep the exe inside its folder — the
+`_internal` folder beside it holds everything the app needs.
+
+First launch: press **▶ BUILD R#** once and point it at the Regions folder of the
+segment you build into — use a sandbox copy, never your live game data.
+
+## Run from source instead
 
 Double-click **`run.bat`**. Needs Python installed (python.org, "Add to PATH" ticked).
 First run installs one small dependency, then the LOK Studio window opens with the
