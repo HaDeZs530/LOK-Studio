@@ -1,5 +1,22 @@
 # LOK STUDIO — the app era (2026-08-24 on)
 
+## 2026-08-24 (evening) — PHASE 2 DONE: MASKS APPLY + PACKAGED APP
+
+- **▶ APPLY MASKS** button on the MASKS tab: needs R# + the region imported via
+  IMPORT REGION (kept context = restyle base); dry-run report → CONFIRM & WRITE.
+  Verified headlessly (56-tile restyle, carriers correct, audit clean). Mask style
+  dropdowns now read the disk style list (was empty in-app — browser-storage leftover).
+- **PACKAGED APP WORKS — first CI run, green in 58s.** GitHub Actions (Build Windows
+  package workflow, manual or v* tag → Release) → PyInstaller onedir → 
+  LOK-Studio-win64.zip. Tony ran the exe cold: drew, made a palette, BUILT a map —
+  the frozen paths (bundled ui/generator via _MEIPASS, exe --script re-exec for
+  generator subprocesses, %LOCALAPPDATA%\LOK Studio workspace, styles seeded from
+  bundle) all proven. Anyone can now run LOK Studio from a zip: no Python, no repo.
+- Remaining light: in-app masks APPLY not yet user-tested in WorldForge · action
+  version bumps uncommitted at time of writing · tag v0.2.0 when a shareable Release
+  is wanted. Procedural generation parked deliberately (Tony's call — later).
+
+
 The pipeline is now a desktop app: this repo (GitHub tosie/LOK-Studio) is the live
 line; the OneDrive sketcher/generator copies are frozen fallbacks. pywebview shell
 (app/main.py) hosts the sketcher UI with the generator behind a Python bridge.
