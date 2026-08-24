@@ -9,7 +9,7 @@ set "PY=python"
 where python >nul 2>nul || set "PY=py"
 %PY% -c "import webview" 2>nul || (
   echo First run: installing pywebview...
-  %PY% -m pip install --quiet pywebview
+  %PY% -m pip install --quiet --no-warn-script-location pywebview
 )
 %PY% app\main.py %*
 if errorlevel 1 pause
