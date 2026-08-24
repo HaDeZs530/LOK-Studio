@@ -689,7 +689,7 @@ function maskPaint(e){
 function maskColor(i){ return MASK_COLS[i%MASK_COLS.length]; }
 function renderMaskList(){
   const div=document.getElementById("masklist"); div.innerHTML="";
-  const styles=Object.keys(loadStyles()).sort();
+  const styles=Object.keys(APP()?styleCache:loadStyles()).sort();
   masks.forEach((m,i)=>{
     const r=document.createElement("div"); r.className="maskrow"+(i===activeMask?" active":"");
     const sw=document.createElement("span"); sw.className="msw"; sw.style.background=maskColor(i);
