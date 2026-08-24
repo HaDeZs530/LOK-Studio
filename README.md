@@ -10,9 +10,9 @@ Double-click **`run.bat`**. Needs Python installed (python.org, "Add to PATH" ti
 First run installs one small dependency, then the LOK Studio window opens with the
 sketcher inside.
 
-First time on a machine: press **▶ BUILD R#** once and point it at your Regions
-folder (the sandbox segment, e.g. `Claude Worldforge Testing\Regions`) — remembered
-per machine in `workspace\settings.json`.
+First time on a machine: press **▶ BUILD R#** once and point it at the Regions
+folder of the segment you build into (a sandbox copy, never your live game data) —
+remembered per machine in `workspace\settings.json`.
 
 ## The loop
 
