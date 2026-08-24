@@ -5,6 +5,9 @@ on:
   push:
     tags: ['v*']               # or tag a version (v0.2.0) to also cut a Release
 
+permissions:
+  contents: write              # required for the tag build to create the Release
+
 jobs:
   build:
     runs-on: windows-latest
