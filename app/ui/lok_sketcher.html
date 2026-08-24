@@ -13,6 +13,44 @@
   #modebadge{padding:4px 12px;border-radius:3px;font-size:12px;letter-spacing:2px;border:1px solid #8a7a2c;
     color:#e0c85a;background:#151509;user-select:none}
   #modebadge.bp{border-color:#d8cfa8;color:#efe6c8;background:#0b0b09}
+  #buildbtns{margin-top:8px}
+  #buildbtns button{width:100%;margin-bottom:6px;padding:8px;border:1px solid #8a7a2c;background:#151509;
+    color:#e0c85a;border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px;letter-spacing:1px}
+  #buildbtns button:hover{border-color:#e0c85a}
+  #buildpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:55;display:none;align-items:center;justify-content:center}
+  #buildpanel.open{display:flex}
+  #buildbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:780px;max-width:94vw;
+    max-height:88vh;display:flex;flex-direction:column;padding:18px 22px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
+  #buildhead{color:#e0c85a;font-size:15px;letter-spacing:2px;margin-bottom:10px}
+  #buildreport{flex:1;overflow:auto;background:#0a1418;border:1px solid #17333b;border-radius:4px;
+    color:#bfd8da;font:12px/1.55 Consolas,monospace;padding:10px 12px;white-space:pre-wrap;margin-bottom:12px;min-height:180px}
+  #buildreport .warn{color:#e08a5a}
+  #buildactions{text-align:right}
+  #buildactions button{margin-left:8px;padding:7px 18px;border:1px solid #234f57;background:#0f1d24;
+    color:#8fb0b5;border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px}
+  #buildactions button:hover{border-color:#52d8dc;color:#bfeff5}
+  #buildactions button.go{border-color:#8a7a2c;color:#e0c85a}
+  #buildactions button.danger{border-color:#8a3a2a;color:#d9a08a}
+  #importpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:55;display:none;align-items:center;justify-content:center}
+  #importpanel.open{display:flex}
+  #importbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:560px;max-width:92vw;
+    padding:20px 24px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
+  #importhead{color:#e0c85a;font-size:15px;letter-spacing:2px;margin-bottom:14px}
+  #irrow{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+  #irrow button{padding:7px 16px;border:1px solid #234f57;background:#0f1d24;color:#8fb0b5;border-radius:3px;
+    cursor:pointer;font-family:Georgia,serif;font-size:13px}
+  #irrow button:hover{border-color:#52d8dc;color:#bfeff5}
+  #irfile{flex:1;color:#cfe4e6;font-size:12px;word-break:break-all}
+  #irinfo{color:#e0c85a;font-size:13px;min-height:20px;margin-bottom:12px;white-space:pre-wrap}
+  #importbox label{display:block;color:#5d8a90;font-size:11px;letter-spacing:2px;margin-bottom:5px}
+  #irwin{width:100%;box-sizing:border-box;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;
+    border-radius:3px;padding:8px 10px;font-family:inherit;font-size:14px;margin-bottom:16px}
+  #iractions{text-align:right}
+  #iractions button{margin-left:8px;padding:7px 18px;border:1px solid #234f57;background:#0f1d24;color:#8fb0b5;
+    border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px}
+  #iractions button:hover{border-color:#52d8dc;color:#bfeff5}
+  #iractions #irgo{border-color:#8a7a2c;color:#e0c85a}
+  #iractions #irgo:disabled{opacity:.45;cursor:default}
   #brushrow{display:flex;gap:4px}
   #tabrow button{letter-spacing:2px;color:#e6d9a8;border-color:#b89b4a}
   #tabrow button.active{border-color:#52d8dc;background:#12303a;color:#bfeff5;box-shadow:0 0 7px rgba(82,216,220,.3)}
@@ -154,6 +192,10 @@
     <button id="importbtn">IMPORT JSON</button>
     <input type="file" id="importfile" accept=".json" style="display:none">
     <button id="clear" style="border-color:#8a3a2a;color:#d9a08a">CLEAR ALL</button>
+  </div>
+  <div id="buildbtns">
+    <button id="importregion" title="Pull a region XML (or a window of it) into the sketcher">IMPORT REGION&hellip;</button>
+    <button id="buildbtn" title="Build this sketch into the region named in the R# box">&#9654; BUILD R#</button>
   </div>
   </div>
   <div id="side_masks" style="display:none">
@@ -411,6 +453,22 @@ function drawBlueprint(){
       cx.fillStyle=BPCOL[t];
       cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
       cx.shadowBlur=0;
+    }
+  }
+  // IMPLIED FACE WALLS (Tony 2026-08-24): the generator dresses every structural
+  // block's north and west neighbor with the mass's face wall when that neighbor is
+  // ground. Blueprint shows them so structural-to-interior joins read the way they
+  // will build. Preview approximation: corner caps, T-join stacks and door-recess
+  // carve-outs are the builder's exact business — the build report stays final.
+  const GROUNDY=t=>t&&t!=="wall"&&t!=="structural"&&t!=="door";
+  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
+    if(terrain.get(key(gx,gy))!=="structural") continue;
+    for(const [nx,ny] of [[gx,gy-1],[gx-1,gy]]){
+      if(!GROUNDY(terrain.get(key(nx,ny)))) continue;
+      cx.fillStyle="#e8dcc0";
+      cx.fillRect(panX+nx*zoom,panY+ny*zoom,zoom,zoom);
+      cx.fillStyle="rgba(0,0,0,0.14)";
+      cx.fillRect(panX+nx*zoom,panY+ny*zoom+zoom*0.65,zoom,zoom*0.35);
     }
   }
   // walls as cream slabs with a subtle inner shade
@@ -868,6 +926,15 @@ window.addEventListener("keydown", e=>{
     if(e.key==="Escape"){ modalDone(false); e.preventDefault(); }
     else if(e.key==="Enter"){ modalDone(true); e.preventDefault(); }
     return;                                    // dialog swallows everything else
+  }
+  if(document.getElementById("importpanel").classList.contains("open")){
+    if(e.key==="Escape"){ document.getElementById("importpanel").classList.remove("open"); e.preventDefault(); }
+    if(document.activeElement&&document.activeElement.id==="irwin") return;
+    return;
+  }
+  if(document.getElementById("buildpanel").classList.contains("open")){
+    if(e.key==="Escape"){ document.getElementById("buildpanel").classList.remove("open"); e.preventDefault(); }
+    return;                                    // build panel swallows hotkeys
   }
   if(document.getElementById("palscreen").classList.contains("open")){
     if(e.key==="Escape"){ document.getElementById("palscreen").classList.remove("open"); e.preventDefault(); }
@@ -1344,6 +1411,98 @@ document.getElementById("clear").onclick=async()=>{
   }
 };
 document.getElementById("maptitle").addEventListener("input", ()=>{ save(); if(blueprint) draw(); });
+// ================= BUILD (generator behind buttons — app mode only) =================
+const bPanel=()=>document.getElementById("buildpanel");
+const bRep=()=>document.getElementById("buildreport");
+const bAct=()=>document.getElementById("buildactions");
+function buildClose(){ bPanel().classList.remove("open"); }
+function actButton(label,cls,fn){
+  const b=document.createElement("button"); b.textContent=label; if(cls) b.className=cls;
+  b.onclick=fn; bAct().appendChild(b); return b;
+}
+let irPicked=null;
+document.getElementById("importregion").onclick=()=>{
+  if(!APP()){ uiAlert("Region import runs in the LOK Studio app."); return; }
+  irPicked=null;
+  document.getElementById("irfile").textContent="no file chosen";
+  document.getElementById("irinfo").textContent="";
+  document.getElementById("irwin").value="";
+  document.getElementById("irgo").disabled=true;
+  document.getElementById("importpanel").classList.add("open");
+};
+window.addEventListener("DOMContentLoaded",()=>{
+document.getElementById("irbrowse").onclick=async()=>{
+  const f=await APP().pick_region_file();
+  if(!f) return;
+  irPicked=f;
+  document.getElementById("irfile").textContent=f.path;
+  document.getElementById("irinfo").textContent=
+    (f.region_id!==undefined?"region "+f.region_id:"")
+    +(f.region_name?"  ·  \""+f.region_name+"\"":"")
+    +(f.bounds?"\nbounds "+f.bounds:"");
+  document.getElementById("irgo").disabled=false;
+};
+document.getElementById("irgo").onclick=async()=>{
+  if(!irPicked) return;
+  const r=await APP().import_region(irPicked.path,document.getElementById("irwin").value.trim());
+  if(!r) return;
+  if(r.error){ uiAlert(r.error); return; }
+  document.getElementById("importpanel").classList.remove("open");
+  loadData(JSON.parse(r.json));
+  uiAlert("Imported "+r.name+(r.region!==null&&r.region!==undefined?"  (region "+r.region+")":"")+
+          "\n\nA full-region backup and the diff base were kept automatically.");
+};
+});
+document.getElementById("buildbtn").onclick=async()=>{
+  if(!APP()){ uiAlert("Building runs in the LOK Studio app."); return; }
+  const data=JSON.stringify(exportData());
+  let pf=await APP().build_preflight(data);
+  if(pf&&pf.need_dir){
+    const pick=await APP().pick_regions_dir();
+    if(!pick) return;
+    if(pick.error){ uiAlert(pick.error); return; }
+    pf=await APP().build_preflight(data);
+  }
+  if(!pf) return;
+  if(pf.error){ uiAlert(pf.error); return; }
+  bRep().textContent="";
+  bAct().innerHTML="";
+  const head=[
+    "PRE-FLIGHT — region "+pf.region+(pf.title?"  ·  \""+pf.title+"\"":""),
+    "target:  "+pf.target,
+    "mode:    "+(pf.mode==="merge"?"MERGE (file exists — dry run first, nothing written without confirm)"
+               :pf.mode==="restore_merge"?"RESTORE + MERGE (file missing — import backup will be restored first)"
+               :"CREATE NEW (no file with this number)"),
+    "sketch:  "+pf.tiles+" placed tiles",
+    "palette: "+pf.palette,
+  ].concat(pf.notes.length?["",...pf.notes.map(n=>"⚠ "+n)]:[]).join("\n");
+  bRep().textContent=head+"\n";
+  actButton("Close","",buildClose);
+  if(pf.mode==="merge"||pf.mode==="restore_merge"){
+    const dry=actButton(pf.mode==="merge"?"MERGE (DRY RUN)":"RESTORE + MERGE (DRY RUN)","go",async()=>{
+      dry.disabled=true;
+      const r=await APP().build_run(data,pf.mode,false);
+      bRep().textContent+="\n"+r.report+"\n";
+      bRep().scrollTop=bRep().scrollHeight;
+      if(r.ok){
+        actButton("CONFIRM & WRITE","danger",async ev=>{
+          const r2=await APP().build_run(data,"merge",true);
+          bRep().textContent+="\n"+r2.report+"\n"+(r2.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
+          bRep().scrollTop=bRep().scrollHeight;
+          bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.disabled=true; });
+        });
+      }
+    });
+  } else {
+    actButton("CREATE NEW "+pf.region+".xml","go",async()=>{
+      const r=await APP().build_run(data,"new",true);
+      bRep().textContent+="\n"+r.report+"\n"+(r.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
+      bRep().scrollTop=bRep().scrollHeight;
+      bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.disabled=true; });
+    });
+  }
+  bPanel().classList.add("open");
+};
 const APP=()=>window.pywebview&&window.pywebview.api;
 let _saveT=null;
 function save(){
@@ -1371,6 +1530,19 @@ window.addEventListener("pywebviewready", async()=>{      // app mode: disk is t
   }catch(e){}
 });
 </script>
+<div id="importpanel"><div id="importbox">
+  <div id="importhead">IMPORT REGION</div>
+  <div id="irrow"><button id="irbrowse">Browse&hellip;</button><span id="irfile">no file chosen</span></div>
+  <div id="irinfo"></div>
+  <label>WINDOW &middot; X0 Y0 X1 Y1 &middot; BLANK = WHOLE REGION</label>
+  <input type="text" id="irwin" placeholder="e.g.  -33 -75 35 -37">
+  <div id="iractions"><button id="irgo" disabled>IMPORT</button><button id="ircancel" onclick="document.getElementById('importpanel').classList.remove('open')">Cancel</button></div>
+</div></div>
+<div id="buildpanel"><div id="buildbox">
+  <div id="buildhead">BUILD</div>
+  <div id="buildreport"></div>
+  <div id="buildactions"></div>
+</div></div>
 <div id="modal"><div id="modalbox">
   <div id="modalmsg"></div>
   <input type="text" id="modalinput">

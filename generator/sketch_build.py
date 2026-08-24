@@ -1026,11 +1026,14 @@ def main():
                        f"{untouched} untouched (no writes)")
             if not M_write and not clear_keys:
                 rep.append("  nothing differs from the base — no merge needed")
-        txt, intended = merge(M_write, pal, src, rep, write="--write" in a,
-                              clear_window=cw,
-                              preserve_extras="--no-preserve-extras" not in a,
-                              clear_keys=clear_keys)
-        audit(txt, M_write, pal, rep, intended)
+        if M_write or clear_keys:
+            txt, intended = merge(M_write, pal, src, rep, write="--write" in a,
+                                  clear_window=cw,
+                                  preserve_extras="--no-preserve-extras" not in a,
+                                  clear_keys=clear_keys)
+            audit(txt, M_write, pal, rep, intended)
+        else:
+            rep.append("NO CHANGES TO WRITE — the target file is untouched.")
     else:
         rep.append("no --new or --merge given: model + layout only")
     print("\n".join(rep))
