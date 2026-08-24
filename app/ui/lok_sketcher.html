@@ -31,6 +31,7 @@
   #buildactions button:hover{border-color:#52d8dc;color:#bfeff5}
   #buildactions button.go{border-color:#8a7a2c;color:#e0c85a}
   #buildactions button.danger{border-color:#8a3a2a;color:#d9a08a}
+  #buildactions button:disabled{opacity:.35;cursor:default}
   #importpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:55;display:none;align-items:center;justify-content:center}
   #importpanel.open{display:flex}
   #importbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:560px;max-width:92vw;
@@ -1416,6 +1417,22 @@ const bPanel=()=>document.getElementById("buildpanel");
 const bRep=()=>document.getElementById("buildreport");
 const bAct=()=>document.getElementById("buildactions");
 function buildClose(){ bPanel().classList.remove("open"); }
+async function runAction(btn,fn){
+  btn.disabled=true;
+  const t0=Date.now();
+  bRep().textContent+="\n⏳ running…";
+  bRep().scrollTop=bRep().scrollHeight;
+  try{
+    await fn();
+    bRep().textContent=bRep().textContent.replace("\n⏳ running…","\n· done in "+((Date.now()-t0)/1000).toFixed(1)+"s");
+  }catch(err){
+    bRep().textContent=bRep().textContent.replace("\n⏳ running…","")
+      +"\n✗ ERROR: "+(err&&err.message?err.message:String(err))
+      +"\n(run.bat --debug shows the full console)";
+    btn.disabled=false;
+  }
+  bRep().scrollTop=bRep().scrollHeight;
+}
 function actButton(label,cls,fn){
   const b=document.createElement("button"); b.textContent=label; if(cls) b.className=cls;
   b.onclick=fn; bAct().appendChild(b); return b;
@@ -1479,27 +1496,24 @@ document.getElementById("buildbtn").onclick=async()=>{
   bRep().textContent=head+"\n";
   actButton("Close","",buildClose);
   if(pf.mode==="merge"||pf.mode==="restore_merge"){
-    const dry=actButton(pf.mode==="merge"?"MERGE (DRY RUN)":"RESTORE + MERGE (DRY RUN)","go",async()=>{
-      dry.disabled=true;
+    const dry=actButton(pf.mode==="merge"?"MERGE (DRY RUN)":"RESTORE + MERGE (DRY RUN)","go",()=>runAction(dry,async()=>{
       const r=await APP().build_run(data,pf.mode,false);
       bRep().textContent+="\n"+r.report+"\n";
       bRep().scrollTop=bRep().scrollHeight;
       if(r.ok){
-        actButton("CONFIRM & WRITE","danger",async ev=>{
+        const wr=actButton("CONFIRM & WRITE","danger",()=>runAction(wr,async()=>{
           const r2=await APP().build_run(data,"merge",true);
           bRep().textContent+="\n"+r2.report+"\n"+(r2.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
-          bRep().scrollTop=bRep().scrollHeight;
-          bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.disabled=true; });
-        });
+          bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
+        }));
       }
-    });
+    }));
   } else {
-    actButton("CREATE NEW "+pf.region+".xml","go",async()=>{
+    const cr=actButton("CREATE NEW "+pf.region+".xml","go",()=>runAction(cr,async()=>{
       const r=await APP().build_run(data,"new",true);
       bRep().textContent+="\n"+r.report+"\n"+(r.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
-      bRep().scrollTop=bRep().scrollHeight;
-      bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.disabled=true; });
-    });
+      bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
+    }));
   }
   bPanel().classList.add("open");
 };
@@ -1517,6 +1531,9 @@ function save(){
   maskRestore();
   document.getElementById("zfit").click();
 })();
+window.addEventListener("unhandledrejection", e=>{
+  try{ uiAlert("Something failed behind the scenes:\n"+(e.reason&&e.reason.message?e.reason.message:String(e.reason))); }catch(_){}
+});
 window.addEventListener("pywebviewready", async()=>{      // app mode: disk is the truth
   try{
     const api=window.pywebview.api;

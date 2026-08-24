@@ -1,3 +1,29 @@
+# LOK STUDIO — the app era (2026-08-24 on)
+
+The pipeline is now a desktop app: this repo (GitHub tosie/LOK-Studio) is the live
+line; the OneDrive sketcher/generator copies are frozen fallbacks. pywebview shell
+(app/main.py) hosts the sketcher UI with the generator behind a Python bridge.
+
+PROVEN END TO END BY TONY (2026-08-24): import region (panel: browse -> id/name/
+bounds -> window) -> edit -> BUILD pre-flight (3-path: merge dry-run/confirm-write ·
+restore-from-import-backup+merge · create-new) -> correct region verified in
+WorldForge. Storage on disk (autosave, styles in generator/styles, real file
+dialogs), centered app dialogs, mode badge, R# region field (imports auto-stamp it),
+blueprint view renders implied N/W face walls (preview approximation — corner caps,
+T-join stacks, door carve-outs remain build-only). Fixed along the way: UTF-8 forced
+on subprocesses (cp1252 pipes), zero-change merges exit clean, consumed action
+buttons remove themselves, unhandled promise rejections surface as dialogs.
+
+Lesson enshrined: when a build looks wrong, READ THE PRE-FLIGHT PALETTE LINE FIRST
+(a leftover wall-ns=0 from x-button testing silently stripped 148 walls; the line
+had named it all along).
+
+STILL OPEN: masks apply not yet behind a button (paint/export works in-app; applying
+goes through Claude) · restore path untested by Tony · home-machine clone ritual ·
+packaged .exe via GitHub Actions (Phase 2) · procedural layout generation (Phase 2).
+
+---
+
 # Dungeon Generator — session handoff (updated 2026-08-24)
 
 ## 2026-08-24 — REGION 9 CONTEXT PREPPED · IMPORTS/EXPORTS FOLDERS · Make Import.bat
