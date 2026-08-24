@@ -116,6 +116,19 @@ class Api:
         p = WORKSPACE / f"autosave_{kind}.json"
         return p.read_text(encoding="utf-8") if p.exists() else None
 
+    # ---- interface scale (per machine: a 4K panel wants a bigger UI than a laptop)
+    def ui_scale_get(self):
+        try:
+            return float(_settings().get("ui_scale", 1))
+        except Exception:
+            return 1
+
+    def ui_scale_set(self, scale):
+        st = _settings()
+        st["ui_scale"] = max(0.5, min(3.0, float(scale)))
+        _save_settings(st)
+        return st["ui_scale"]
+
     # ---- generator
     def import_region(self, region_xml, window=None):
         """Region XML -> sketch JSON in workspace/Imports (layout only, no palette)."""
@@ -379,9 +392,17 @@ def main():
         for f in (GEN / "styles").glob("*.json"):
             if not (STYLES / f.name).exists():
                 shutil.copy2(f, STYLES / f.name)
+    # size to the screen it opens on — 1500x950 is a postage stamp on a 4K panel
+    w, h = 1500, 950
+    try:
+        scr = webview.screens[0]
+        w, h = int(scr.width * 0.8), int(scr.height * 0.85)
+        w, h = max(1200, min(w, 2600)), max(800, min(h, 1600))
+    except Exception:
+        pass
     window = webview.create_window(
         "LOK Studio", UI.as_uri(), js_api=Api(),
-        width=1500, height=950, background_color="#0a1014")
+        width=w, height=h, background_color="#0a1014")
     webview.start(debug="--debug" in sys.argv)
 
 
