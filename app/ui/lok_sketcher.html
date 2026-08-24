@@ -74,6 +74,18 @@
   .rst:hover{border-color:#52d8dc;color:#bfeff5}
   .rst.ghost{visibility:hidden;pointer-events:none}
   .rst.dw.active{border-color:#e0c85a;color:#e0c85a}
+  #modal{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:60;display:none;align-items:center;justify-content:center}
+  #modal.open{display:flex}
+  #modalbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;min-width:360px;max-width:600px;
+    padding:22px 26px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
+  #modalmsg{color:#cfe4e6;font-size:14px;letter-spacing:.5px;line-height:1.5;margin-bottom:16px;white-space:pre-wrap}
+  #modalinput{width:100%;box-sizing:border-box;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;
+    border-radius:3px;padding:8px 10px;font-family:inherit;font-size:14px;margin-bottom:16px;display:none}
+  #modalbtns{text-align:right}
+  #modalbtns button{margin-left:8px;padding:7px 20px;border:1px solid #234f57;background:#0f1d24;color:#8fb0b5;
+    border-radius:3px;cursor:pointer;font-size:14px;font-family:Georgia,serif}
+  #modalbtns button:hover{border-color:#52d8dc;color:#bfeff5}
+  #modalbtns #modalok{border-color:#8a7a2c;color:#e0c85a}
   #ledgersearch{width:320px;box-sizing:border-box;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;border-radius:3px;
     padding:6px 10px;font-family:Georgia,serif;font-size:13px;letter-spacing:1px;margin-bottom:14px}
   #ledgergrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px;max-width:1500px}
@@ -224,6 +236,34 @@ let labels  = new Map();   // "x,y" -> text
 let connectors = new Map(); // "x,y" -> {t:"spawn"|"portal"|"stairs_up"|"stairs_down", tag:""}
 let tool="wall", brush=1, blueprint=false;
 let zoom=8, panX=20, panY=20;
+// ---- centered app dialogs (replace the browser's native alert/confirm/prompt) ----
+let modalResolve=null;
+function uiDialog(msg,opts){
+  opts=opts||{};
+  return new Promise(res=>{
+    modalResolve=res;
+    document.getElementById("modalmsg").textContent=msg;
+    const inp=document.getElementById("modalinput");
+    const hasInput=(opts.input!==undefined&&opts.input!==null);
+    inp.style.display=hasInput?"block":"none";
+    if(hasInput) inp.value=opts.input;
+    document.getElementById("modalcancel").style.display=(opts.cancel||hasInput)?"":"none";
+    document.getElementById("modal").classList.add("open");
+    setTimeout(()=>{ if(hasInput){ inp.focus(); inp.select(); } else document.getElementById("modalok").focus(); },0);
+  });
+}
+function modalDone(ok){
+  const r=modalResolve; if(!r) return;
+  modalResolve=null;
+  document.getElementById("modal").classList.remove("open");
+  const inp=document.getElementById("modalinput");
+  const hasInput=inp.style.display!=="none";
+  r(ok ? (hasInput?inp.value:true) : (hasInput?null:false));
+}
+const uiAlert=(m)=>uiDialog(m);
+const uiConfirm=(m)=>uiDialog(m,{cancel:true});
+const uiPrompt=(m,def)=>uiDialog(m,{input:(def===undefined?"":def)});
+
 let undoStack=[], redoStack=[], curStroke=null;
 let sel=null, selDrag=null, clip=null, pasteMode=false;
 function snapKeys(ks){
@@ -588,7 +628,7 @@ function renderMaskList(){
     st.innerHTML='<option value="">(style?)</option>'+styles.map(s=>'<option'+(m.style===s?' selected':'')+'>'+s+'</option>').join("");
     st.onchange=()=>{ m.style=st.value; maskSave(); };
     const del=document.createElement("button"); del.className="mdel"; del.textContent="×"; del.title="delete mask";
-    del.onclick=ev=>{ ev.stopPropagation(); if(confirm("Delete mask '"+m.name+"'?")){ masks.splice(i,1); if(activeMask>=masks.length) activeMask=masks.length-1; renderMaskList(); draw(); maskSave(); } };
+    del.onclick=async ev=>{ ev.stopPropagation(); if(await uiConfirm("Delete mask '"+m.name+"'?")){ masks.splice(i,1); if(activeMask>=masks.length) activeMask=masks.length-1; renderMaskList(); draw(); maskSave(); } };
     r.append(sw,nm,st,del);
     r.onclick=ev=>{ if(ev.target===nm||ev.target===st||ev.target===del) return; activeMask=i; renderMaskList(); draw(); };
     div.appendChild(r);
@@ -617,8 +657,8 @@ document.getElementById("maskpaint").onclick=()=>{ maskErase=false;
   document.getElementById("maskpaint").classList.add("active"); document.getElementById("maskerase").classList.remove("active"); };
 document.getElementById("maskerase").onclick=()=>{ maskErase=true;
   document.getElementById("maskerase").classList.add("active"); document.getElementById("maskpaint").classList.remove("active"); };
-document.getElementById("maskadd").onclick=()=>{
-  const name=prompt("Mask name (what is this area?):","area "+(masks.length+1));
+document.getElementById("maskadd").onclick=async()=>{
+  const name=await uiPrompt("Mask name (what is this area?):","area "+(masks.length+1));
   if(name===null) return;
   masks.push({name:name.trim()||("area "+(masks.length+1)),style:"",tiles:new Set()});
   activeMask=masks.length-1; maskErase=false;
@@ -637,9 +677,9 @@ document.getElementById("maskbasefile").addEventListener("change",ev=>{
     maskSave();
   });
 });
-document.getElementById("maskexport").onclick=()=>{
+document.getElementById("maskexport").onclick=async()=>{
   const noStyle=masks.filter(m=>!m.style&&m.tiles.size);
-  if(noStyle.length&&!confirm("Masks without a style bound: "+noStyle.map(m=>m.name).join(", ")+". Export anyway?")) return;
+  if(noStyle.length&&!await uiConfirm("Masks without a style bound: "+noStyle.map(m=>m.name).join(", ")+". Export anyway?")) return;
   const all=loadStyles(), used={};
   for(const m of masks) if(m.style&&all[m.style]) used[m.style]=all[m.style];
   const out={app:"lok-sketcher",kind:"masks",version:1,
@@ -656,7 +696,7 @@ document.getElementById("maskimportfile").addEventListener("change",ev=>{
   const f=ev.target.files[0]; if(!f) return;
   f.text().then(txt=>{
     const d=JSON.parse(txt);
-    if(d.kind!=="masks"){ alert("Not a masks file."); return; }
+    if(d.kind!=="masks"){ uiAlert("Not a masks file."); return; }
     const ox=(uiMode==="mask")?OX:(d.source&&d.source.x0!==undefined?d.source.x0:-100);
     const oy=(uiMode==="mask")?OY:(d.source&&d.source.y0!==undefined?d.source.y0:-100);
     masks=(d.masks||[]).map(m=>({name:m.name,style:m.style||"",
@@ -725,8 +765,9 @@ cv.addEventListener("mousedown", e=>{
     const k=key(gx,gy);
     const prev=connectors.get(k)||null;
     if(prev && prev.t===tool){
-      const tag=prompt("Link tag (same tag on two connectors = linked, e.g. A, L3). Empty = none:", prev.tag||"");
-      if(tag!==null){ prev.tag=tag.trim(); }
+      uiPrompt("Link tag (same tag on two connectors = linked, e.g. A, L3). Empty = none:", prev.tag||"")
+        .then(tag=>{ if(tag!==null){ prev.tag=tag.trim(); draw(); save(); } });
+      return;
     } else {
       const s=new Map(); s.set(k,{t:terrain.get(k)||null,m:marks.get(k)||null,l:labels.get(k)||null,c:prev});
       pushUndo(s);
@@ -739,10 +780,12 @@ cv.addEventListener("mousedown", e=>{
     if(gx<0||gy<0||gx>=GW||gy>=GH) return;
     const k=key(gx,gy);
     if(labels.has(k)){ labelDrag={from:k, moved:false}; return; }   // drag to move, click to edit
-    const txt=prompt("Label text (empty removes):", "");
-    if(txt===null) return;
-    if(txt.trim()!=="") labels.set(k,txt.trim());
-    draw(); save(); return;
+    uiPrompt("Label text (empty removes):", "").then(txt=>{
+      if(txt===null) return;
+      if(txt.trim()!=="") labels.set(k,txt.trim());
+      draw(); save();
+    });
+    return;
   }
   curStroke=new Map();
   down=true; paint(e,false);
@@ -774,8 +817,9 @@ window.addEventListener("mouseup", ()=>{
   if(labelDrag){
     if(!labelDrag.moved){    // plain click on an existing label: edit its text
       const k=labelDrag.from;
-      const txt=prompt("Label text (empty removes):", labels.get(k)||"");
-      if(txt!==null){ if(txt.trim()==="") labels.delete(k); else labels.set(k,txt.trim()); draw(); }
+      uiPrompt("Label text (empty removes):", labels.get(k)||"").then(txt=>{
+        if(txt!==null){ if(txt.trim()==="") labels.delete(k); else labels.set(k,txt.trim()); draw(); save(); }
+      });
     }
     labelDrag=null; save(); return;
   }
@@ -795,6 +839,11 @@ cv.addEventListener("wheel", e=>{
   draw();
 },{passive:false});
 window.addEventListener("keydown", e=>{
+  if(document.getElementById("modal").classList.contains("open")){
+    if(e.key==="Escape"){ modalDone(false); e.preventDefault(); }
+    else if(e.key==="Enter"){ modalDone(true); e.preventDefault(); }
+    return;                                    // dialog swallows everything else
+  }
   if(document.getElementById("palscreen").classList.contains("open")){
     if(e.key==="Escape"){ document.getElementById("palscreen").classList.remove("open"); e.preventDefault(); }
     return;                                    // palette screen swallows all other hotkeys
@@ -1092,7 +1141,7 @@ document.getElementById("stylesel").addEventListener("change",e=>{
 });
 document.getElementById("stylesave").onclick=async()=>{
   const cur=document.getElementById("stylesel").value;
-  const name=(prompt("Style name:",cur||"")||"").trim();
+  const name=((await uiPrompt("Style name:",cur||""))||"").trim();
   if(!name) return;
   const obj=palObj();
   const styles=loadStyles(); styles[name]=obj;
@@ -1100,14 +1149,14 @@ document.getElementById("stylesave").onclick=async()=>{
   styleCache[name]=obj;
   refreshStyleSel(name);
   if(!await styleToFolder(name,obj))
-    alert(window.showDirectoryPicker
+    uiAlert(window.showDirectoryPicker
       ? "Saved in this browser only — styles folder not linked. Save again and pick Claude Worldforge Testing\\Generator\\styles, or use Export."
       : "This browser can't write folders — saved locally; use Export to share.");
 };
 document.getElementById("styledel").onclick=async()=>{
   const name=document.getElementById("stylesel").value;
-  if(!name){ alert("Pick a style in the dropdown first."); return; }
-  if(!confirm('Delete style "'+name+'" from this browser AND the styles folder?')) return;
+  if(!name){ uiAlert("Pick a style in the dropdown first."); return; }
+  if(!await uiConfirm('Delete style "'+name+'" from this browser AND the styles folder?')) return;
   const styles=loadStyles(); delete styles[name];
   try{ localStorage.setItem("lok_styles",JSON.stringify(styles)); }catch(e){}
   delete styleCache[name];
@@ -1116,7 +1165,7 @@ document.getElementById("styledel").onclick=async()=>{
     try{ await dir.removeEntry(name.toLowerCase().replace(/[^a-z0-9]+/g,"_")+".json"); }
     catch(e){}                                   // file may not exist in the folder — fine
   }else if(window.showDirectoryPicker){
-    alert("Removed from this browser. The styles folder isn't linked from here, so its copy (if any) will still show on other machines until deleted there.");
+    uiAlert("Removed from this browser. The styles folder isn't linked from here, so its copy (if any) will still show on other machines until deleted there.");
   }
   refreshStyleSel("");
 };
@@ -1135,8 +1184,8 @@ function selectTool(id){ tool=id; if(id!=="select") pasteMode=false; for(const t
 document.getElementById("tb_undo").onclick=undo;
 document.getElementById("tb_redo").onclick=redo;
 document.getElementById("tb_select").onclick=()=>selectTool("select");
-document.getElementById("tb_copy").onclick=()=>{ if(sel) copySel(); else alert("Drag a selection box first (Select tool, C)."); };
-document.getElementById("tb_paste").onclick=()=>{ if(clip){ pasteMode=true; selectTool("select"); } else alert("Nothing copied yet — select a box and Copy first."); };
+document.getElementById("tb_copy").onclick=()=>{ if(sel) copySel(); else uiAlert("Drag a selection box first (Select tool, C)."); };
+document.getElementById("tb_paste").onclick=()=>{ if(clip){ pasteMode=true; selectTool("select"); } else uiAlert("Nothing copied yet — select a box and Copy first."); };
 document.querySelectorAll("#brushrow button").forEach(b=>b.onclick=()=>{
   brush=+b.dataset.b; document.querySelectorAll("#brushrow button").forEach(x=>x.classList.toggle("active",x===b)); draw();
 });
@@ -1158,7 +1207,7 @@ document.getElementById("applygrid").onclick=()=>{
   // the origin delta so exports are identical before and after. If the requested
   // window would drop drawn tiles, the canvas GROWS symmetrically around the chosen
   // center until everything has 25 tiles of clearance (never clips, never refuses).
-  if(uiMode==="mask"){ alert("Switch to the SKETCH tab to change the grid."); return; }
+  if(uiMode==="mask"){ uiAlert("Switch to the SKETCH tab to change the grid."); return; }
   let gw=Math.max(10,+document.getElementById("gw").value||200);
   let gh=Math.max(10,+document.getElementById("gh").value||200);
   const cx=Math.round(+document.getElementById("cx").value||0);
@@ -1175,7 +1224,7 @@ document.getElementById("applygrid").onclick=()=>{
     while(Math.floor(gw2/2)<cx-minX+PAD || gw2-1-Math.floor(gw2/2)<maxX-cx+PAD) gw2++;
     while(Math.floor(gh2/2)<cy-minY+PAD || gh2-1-Math.floor(gh2/2)<maxY-cy+PAD) gh2++;
     if(gw2>gw||gh2>gh){
-      alert("Canvas grown to "+gw2+"×"+gh2+" so all drawn tiles stay in view with 25 tiles of clearance.");
+      uiAlert("Canvas grown to "+gw2+"×"+gh2+" so all drawn tiles stay in view with 25 tiles of clearance.");
       gw=gw2; gh=gh2;
       document.getElementById("gw").value=gw; document.getElementById("gh").value=gh;
     }
@@ -1236,8 +1285,8 @@ function loadData(d){
   if(d.palette) palSet(d.palette);
   draw(); save();
 }
-document.getElementById("clear").onclick=()=>{
-  if(confirm("Clear the entire sketch AND all masks?")){
+document.getElementById("clear").onclick=async()=>{
+  if(await uiConfirm("Clear the entire sketch AND all masks?")){
     terrain=new Map(); marks=new Map(); labels=new Map(); connectors=new Map();
     undoStack=[]; redoStack=[]; sel=null; clip=null; pasteMode=false;
     masks=[]; activeMask=-1; maskBaseRaw=null;
@@ -1258,5 +1307,10 @@ function save(){
   document.getElementById("zfit").click();
 })();
 </script>
+<div id="modal"><div id="modalbox">
+  <div id="modalmsg"></div>
+  <input type="text" id="modalinput">
+  <div id="modalbtns"><button id="modalcancel" onclick="modalDone(false)">Cancel</button><button id="modalok" onclick="modalDone(true)">OK</button></div>
+</div></div>
 </body>
 </html>
