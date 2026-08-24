@@ -109,6 +109,32 @@ class Api:
             args += ["--style", style]
         return _run("sketch_build.py", *args)
 
+    # ---- real file dialogs (replace the browser download/upload dance)
+    def export_json(self, suggested, data):
+        """Save dialog defaulting to workspace/Exports; returns the written path or None."""
+        import webview
+        w = webview.windows[0]
+        res = w.create_file_dialog(webview.SAVE_DIALOG, directory=str(EXPORTS),
+                                   save_filename=suggested)
+        if not res:
+            return None
+        p = Path(res if isinstance(res, str) else res[0])
+        p.write_text(data, encoding="utf-8")
+        return str(p)
+
+    def import_json(self, start="imports"):
+        """Open dialog defaulting to workspace/Imports (or Exports); returns
+        {name, text} or None."""
+        import webview
+        w = webview.windows[0]
+        d = EXPORTS if start == "exports" else IMPORTS
+        res = w.create_file_dialog(webview.OPEN_DIALOG, directory=str(d),
+                                   file_types=("JSON files (*.json)", "All files (*.*)"))
+        if not res:
+            return None
+        p = Path(res[0])
+        return {"name": p.name, "text": p.read_text(encoding="utf-8")}
+
     def version(self):
         return "LOK Studio 0.1.0"
 

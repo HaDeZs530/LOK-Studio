@@ -175,7 +175,7 @@
     <b>Keys:</b> W wall (partition) &middot; X structural &middot; D door &middot; F room floor &middot; R hall floor &middot; I dirt floor &middot; G grass &middot; A water &middot; Q deep water &middot; T road &middot; V dead &middot; B boss &middot; P path &middot; Y tree &middot; H tree wall &middot; L label &middot; E erase &middot; M view<br>
     Wall = partition (1-thick). Structural = block mass / enclosure &mdash; the generator builds walls exactly as drawn and never auto-encloses the map.<br>
     Deep water and Tree wall are impassable. Tree is a walkable overlay &mdash; the style set picks the species.<br><br>
-    Autosaves to this browser. Export JSON into the LOK Sketcher folder to move machines or hand to Claude.
+    Your work autosaves as you go. Export JSON to keep a named copy or hand a map to the generator.
   </div>
 </div>
 </div>
@@ -634,10 +634,13 @@ function renderMaskList(){
     div.appendChild(r);
   });
 }
+let _maskT=null;
 function maskSave(){
-  try{ localStorage.setItem("lok_masks_autosave",JSON.stringify({
+  const data=JSON.stringify({
     base:maskBaseRaw, masks:masks.map(m=>({name:m.name,style:m.style,tiles:[...m.tiles].map(k=>k.split(",").map(Number))}))
-  })); }catch(e){}
+  });
+  try{ localStorage.setItem("lok_masks_autosave",data); }catch(e){}
+  if(APP()){ clearTimeout(_maskT); _maskT=setTimeout(()=>APP().autosave_write("masks",data),250); }
 }
 function maskRestore(){
   try{
@@ -665,45 +668,56 @@ document.getElementById("maskadd").onclick=async()=>{
   document.getElementById("maskpaint").classList.add("active"); document.getElementById("maskerase").classList.remove("active");
   renderMaskList(); maskSave();
 };
-document.getElementById("maskbasebtn").onclick=()=>document.getElementById("maskbasefile").click();
+function loadBaseFromText(txt){
+  const d=JSON.parse(txt);
+  const wasMask = uiMode==="mask";
+  if(wasMask) setMode("sketch");                // restore sketch state properly first
+  loadData(d);                                  // loads into the SKETCH (both areas share it)
+  if(wasMask) setMode("mask");                  // re-enter: sketch snapshots as the base
+  maskSave();
+}
+document.getElementById("maskbasebtn").onclick=()=>{
+  if(APP()){ APP().import_json("imports").then(r=>{ if(r) loadBaseFromText(r.text); }); return; }
+  document.getElementById("maskbasefile").click();
+};
 document.getElementById("maskbasefile").addEventListener("change",ev=>{
   const f=ev.target.files[0]; if(!f) return;
-  f.text().then(txt=>{
-    const d=JSON.parse(txt);
-    const wasMask = uiMode==="mask";
-    if(wasMask) setMode("sketch");                // restore sketch state properly first
-    loadData(d);                                  // loads into the SKETCH (both areas share it)
-    if(wasMask) setMode("mask");                  // re-enter: sketch snapshots as the base
-    maskSave();
-  });
+  f.text().then(loadBaseFromText);
 });
 document.getElementById("maskexport").onclick=async()=>{
   const noStyle=masks.filter(m=>!m.style&&m.tiles.size);
   if(noStyle.length&&!await uiConfirm("Masks without a style bound: "+noStyle.map(m=>m.name).join(", ")+". Export anyway?")) return;
-  const all=loadStyles(), used={};
+  const all=(APP()?styleCache:loadStyles()), used={};
   for(const m of masks) if(m.style&&all[m.style]) used[m.style]=all[m.style];
   const out={app:"lok-sketcher",kind:"masks",version:1,
     source:{title:maskBaseRaw?maskBaseRaw.title||"":"",width:GW,height:GH,x0:OX,y0:OY},
     styles:used,                                   // style VALUES ride with the file
     masks:masks.map(m=>({name:m.name,style:m.style,
       tiles:[...m.tiles].map(k=>{const [x,y]=k.split(",").map(Number);return [x+OX,y+OY];})}))};
-  const blob=new Blob([JSON.stringify(out)],{type:"application/json"});
+  const data=JSON.stringify(out);
+  const fname=((maskBaseRaw&&maskBaseRaw.title)?maskBaseRaw.title.toLowerCase().replace(/[^a-z0-9]+/g,"_"):"map")+"_masks.json";
+  if(APP()){ APP().export_json(fname,data).then(pth=>{ if(pth) uiAlert("Masks exported:\n"+pth); }); return; }
+  const blob=new Blob([data],{type:"application/json"});
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
-  a.download=((maskBaseRaw&&maskBaseRaw.title)?maskBaseRaw.title.toLowerCase().replace(/[^a-z0-9]+/g,"_"):"map")+"_masks.json"; a.click();
+  a.download=fname; a.click();
 };
-document.getElementById("maskimport").onclick=()=>document.getElementById("maskimportfile").click();
+function loadMasksFromText(txt){
+  const d=JSON.parse(txt);
+  if(d.kind!=="masks"){ uiAlert("Not a masks file."); return; }
+  const ox=(uiMode==="mask")?OX:(d.source&&d.source.x0!==undefined?d.source.x0:-100);
+  const oy=(uiMode==="mask")?OY:(d.source&&d.source.y0!==undefined?d.source.y0:-100);
+  masks=(d.masks||[]).map(m=>({name:m.name,style:m.style||"",
+    tiles:new Set(m.tiles.map(([x,y])=>key(x-ox,y-oy)))}));
+  activeMask=masks.length?0:-1;
+  renderMaskList(); draw(); maskSave();
+}
+document.getElementById("maskimport").onclick=()=>{
+  if(APP()){ APP().import_json("exports").then(r=>{ if(r) loadMasksFromText(r.text); }); return; }
+  document.getElementById("maskimportfile").click();
+};
 document.getElementById("maskimportfile").addEventListener("change",ev=>{
   const f=ev.target.files[0]; if(!f) return;
-  f.text().then(txt=>{
-    const d=JSON.parse(txt);
-    if(d.kind!=="masks"){ uiAlert("Not a masks file."); return; }
-    const ox=(uiMode==="mask")?OX:(d.source&&d.source.x0!==undefined?d.source.x0:-100);
-    const oy=(uiMode==="mask")?OY:(d.source&&d.source.y0!==undefined?d.source.y0:-100);
-    masks=(d.masks||[]).map(m=>({name:m.name,style:m.style||"",
-      tiles:new Set(m.tiles.map(([x,y])=>key(x-ox,y-oy)))}));
-    activeMask=masks.length?0:-1;
-    renderMaskList(); draw(); maskSave();
-  });
+  f.text().then(loadMasksFromText);
 });
 function drawGhost(bp){
   if(sel){
@@ -1023,7 +1037,9 @@ document.getElementById("ledgersearch").addEventListener("input",e=>{
     c.style.display=(!q||(c.dataset.k||"").includes(q))?"":"none";
 });
 const palScreen=document.getElementById("palscreen");
-document.getElementById("palettebtn").onclick=()=>{ buildLedger(); palScreen.classList.add("open"); stylesFromFolder(false); };
+document.getElementById("palettebtn").onclick=()=>{ buildLedger(); palScreen.classList.add("open");
+  if(APP()){ APP().styles_list().then(st=>{ if(st){ styleCache=st; refreshStyleSel(document.getElementById("stylesel").value); } }); }
+  else stylesFromFolder(false); };
 document.getElementById("palclose").onclick=()=>palScreen.classList.remove("open");
 function palParse(k,shape,str){
   if(shape==="nl"){                        // floor roles: comma list = random per-tile mix,
@@ -1133,6 +1149,7 @@ function refreshStyleSel(selName){
   }
 }
 document.getElementById("stylesel").addEventListener("mousedown",()=>{
+  if(APP()) return;                                        // app mode: styles come from disk
   if(!styleSyncTried){ styleSyncTried=true; stylesFromFolder(true); } // first click links/reloads the folder
 });
 document.getElementById("stylesel").addEventListener("change",e=>{
@@ -1144,6 +1161,7 @@ document.getElementById("stylesave").onclick=async()=>{
   const name=((await uiPrompt("Style name:",cur||""))||"").trim();
   if(!name) return;
   const obj=palObj();
+  if(APP()){ await APP().style_save(name,obj); styleCache[name]=obj; refreshStyleSel(name); return; }
   const styles=loadStyles(); styles[name]=obj;
   try{ localStorage.setItem("lok_styles",JSON.stringify(styles)); }catch(e){}
   styleCache[name]=obj;
@@ -1156,7 +1174,9 @@ document.getElementById("stylesave").onclick=async()=>{
 document.getElementById("styledel").onclick=async()=>{
   const name=document.getElementById("stylesel").value;
   if(!name){ uiAlert("Pick a style in the dropdown first."); return; }
-  if(!await uiConfirm('Delete style "'+name+'" from this browser AND the styles folder?')) return;
+  if(!await uiConfirm(APP() ? 'Delete style "'+name+'" from the styles folder?'
+                             : 'Delete style "'+name+'" from this browser AND the styles folder?')) return;
+  if(APP()){ await APP().style_delete(name); delete styleCache[name]; refreshStyleSel(""); return; }
   const styles=loadStyles(); delete styles[name];
   try{ localStorage.setItem("lok_styles",JSON.stringify(styles)); }catch(e){}
   delete styleCache[name];
@@ -1172,10 +1192,12 @@ document.getElementById("styledel").onclick=async()=>{
 document.getElementById("styleexp").onclick=()=>{
   const name=document.getElementById("stylesel").value||"style";
   const p=palObj();
-  p._comment="LOK Sketcher style export — drop into Claude Worldforge Testing/Generator/styles/ and build with --style "+name;
+  const fname=name.toLowerCase().replace(/[^a-z0-9]+/g,"_")+".json";
+  if(APP()){ APP().export_json(fname,JSON.stringify(p,null,2)).then(pth=>{ if(pth) uiAlert("Style exported:\n"+pth); }); return; }
+  p._comment="LOK Sketcher style export — drop into Generator/styles/ and build with --style "+name;
   const blob=new Blob([JSON.stringify(p,null,2)],{type:"application/json"});
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
-  a.download=name.toLowerCase().replace(/[^a-z0-9]+/g,"_")+".json"; a.click();
+  a.download=fname; a.click();
 };
 document.getElementById("styledef").onclick=()=>{ palSet(null); document.getElementById("stylesel").value=""; save(); };
 refreshStyleSel();
@@ -1256,12 +1278,18 @@ function exportData(){
           width:GW,height:GH,x0:OX,y0:OY,layers,labels:labs,palette:palObj()};
 }
 document.getElementById("export").onclick=()=>{
-  const blob=new Blob([JSON.stringify(exportData())],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
   const t=document.getElementById("maptitle").value.trim();
-  a.download=(t? t.toLowerCase().replace(/[^a-z0-9]+/g,"_") : "lok_sketch")+".json"; a.click();
+  const fname=(t? t.toLowerCase().replace(/[^a-z0-9]+/g,"_") : "lok_sketch")+".json";
+  const data=JSON.stringify(exportData());
+  if(APP()){ APP().export_json(fname,data).then(pth=>{ if(pth) uiAlert("Exported:\n"+pth); }); return; }
+  const blob=new Blob([data],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=fname; a.click();
 };
-document.getElementById("importbtn").onclick=()=>document.getElementById("importfile").click();
+document.getElementById("importbtn").onclick=()=>{
+  if(APP()){ APP().import_json("imports").then(r=>{ if(r) loadData(JSON.parse(r.text)); }); return; }
+  document.getElementById("importfile").click();
+};
 document.getElementById("importfile").addEventListener("change", ev=>{
   const f=ev.target.files[0]; if(!f) return;
   f.text().then(txt=>loadData(JSON.parse(txt)));
@@ -1296,9 +1324,13 @@ document.getElementById("clear").onclick=async()=>{
   }
 };
 document.getElementById("maptitle").addEventListener("input", ()=>{ save(); if(blueprint) draw(); });
+const APP=()=>window.pywebview&&window.pywebview.api;
+let _saveT=null;
 function save(){
   if(uiMode==="mask"){ maskSave(); return; }     // never write the base map over the sketch autosave
-  try{ localStorage.setItem("lok_sketch_autosave", JSON.stringify(exportData())); }catch(e){}
+  const data=JSON.stringify(exportData());
+  try{ localStorage.setItem("lok_sketch_autosave", data); }catch(e){}
+  if(APP()){ clearTimeout(_saveT); _saveT=setTimeout(()=>APP().autosave_write("sketch",data),250); }
 }
 (function init(){
   resize();
@@ -1306,11 +1338,23 @@ function save(){
   maskRestore();
   document.getElementById("zfit").click();
 })();
+window.addEventListener("pywebviewready", async()=>{      // app mode: disk is the truth
+  try{
+    const api=window.pywebview.api;
+    const st=await api.styles_list();
+    if(st&&Object.keys(st).length){ styleCache=st; refreshStyleSel(document.getElementById("stylesel").value); }
+    const a=await api.autosave_read("sketch");
+    if(a){ loadData(JSON.parse(a)); }
+    const m=await api.autosave_read("masks");
+    if(m){ try{ localStorage.setItem("lok_masks_autosave",m); }catch(e){} maskRestore(); }
+    document.getElementById("zfit").click();
+  }catch(e){}
+});
 </script>
 <div id="modal"><div id="modalbox">
   <div id="modalmsg"></div>
   <input type="text" id="modalinput">
-  <div id="modalbtns"><button id="modalcancel" onclick="modalDone(false)">Cancel</button><button id="modalok" onclick="modalDone(true)">OK</button></div>
+  <div id="modalbtns"><button id="modalok" onclick="modalDone(true)">OK</button><button id="modalcancel" onclick="modalDone(false)">Cancel</button></div>
 </div></div>
 </body>
 </html>
