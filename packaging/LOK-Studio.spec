@@ -28,6 +28,7 @@ exe = EXE(
     strip=False,
     upx=False,
     console=False,          # windowed app — no console flash
+    icon='lok.ico',         # multi-res 16-256 (source: crystal-icon-1024.png + icon.svg)
 )
 coll = COLLECT(
     exe,
