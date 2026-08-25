@@ -93,11 +93,11 @@
   hr{border:0;border-top:1px solid #1b3a42;margin:10px 0}
   #bigbtns button{width:100%;margin:3px 0;padding:8px;border:1px solid #b89b4a;background:#101d24;color:#e6d9a8;border-radius:3px;cursor:pointer;font-size:13px;font-family:Georgia,serif;letter-spacing:2px}
   #modebtn{width:100%;margin:3px 0;padding:9px;border:1px solid #b89b4a;background:#101d24;color:#bfeff5;border-radius:3px;cursor:pointer;font-size:13px;font-family:Georgia,serif;letter-spacing:2px}
-  details#conngrp{margin:3px 0}
-  details#conngrp summary{cursor:pointer;padding:6px 9px;border:1px solid #234f57;background:#0f1d24;border-radius:3px;
+  details#conngrp,details#accgrp{margin:3px 0}
+  details#conngrp summary,details#accgrp summary{cursor:pointer;padding:6px 9px;border:1px solid #234f57;background:#0f1d24;border-radius:3px;
     font-size:13px;letter-spacing:1px;color:#cfe4e6;list-style:none}
-  details#conngrp summary::before{content:"\25B8  "}
-  details#conngrp[open] summary::before{content:"\25BE  "}
+  details#conngrp summary::before,details#accgrp summary::before{content:"\25B8  "}
+  details#conngrp[open] summary::before,details#accgrp[open] summary::before{content:"\25BE  "}
   #palscreen{position:fixed;inset:0;background:#0a1014;z-index:10;display:none;overflow-y:auto;padding:26px 44px 44px 44px}
   #palscreen.open{display:block}
   #palscreen h2{font-size:20px;color:#e0c85a;letter-spacing:4px;font-weight:normal;margin:0 0 2px 0}
@@ -247,7 +247,7 @@
   </div>
   <button id="palettebtn">&#9646; PALETTE / STYLES</button>
   <div id="side_sketch">
-  <button id="modebtn" title="Cycle view: Edit / Blueprint / Iso (M)">&#9670; VIEW (M)</button>
+  <button id="modebtn" title="Toggle Edit / Iso view (M)">&#9670; ISO VIEW (M)</button>
   <div id="tools"></div>
   <details id="accgrp"><summary>ACCENT FLOORS</summary><div id="acctools"></div></details>
   <details id="conngrp"><summary>CONNECTORS</summary><div id="conntools"></div></details>
@@ -378,13 +378,13 @@
 <script>
 const TOOLS = [
   {id:"wall",  name:"Wall",       key:"w", col:"#b9c7d2", bp:"#e8dcc0"},
-  {id:"structural", name:"Structural", key:"x", col:"#78848f", bp:"#c9ba92"},
+  {id:"structural", name:"Structural", key:"s", col:"#78848f", bp:"#c9ba92"},
   {id:"door",  name:"Door",       key:"d", col:"#c24a2a", bp:"#d0622e"},
   {id:"room",  name:"Room floor", key:"f", col:"#3a4a56", bp:"#332c22"},
-  {id:"hall",  name:"Hall floor", key:"r", col:"#55687a", bp:"#403729"},
+  {id:"hall",  name:"Hall floor", key:"t", col:"#55687a", bp:"#403729"},
   {id:"dirtfloor", name:"Dirt floor", key:"i", col:"#8a6a3c", bp:"#4f3f26"},
   {id:"grass", name:"Grass",      key:"g", col:"#4d7a3d", bp:"#3d5c31"},
-  {id:"dirt",  name:"Road",       key:"t", col:"#6d5433", bp:"#4a3d28"},
+  {id:"dirt",  name:"Road",       key:"r", col:"#6d5433", bp:"#4a3d28"},
   {id:"accent1", name:"Accent floor 1", key:"j", col:"#7e8b98", bp:"#57534a"},
   {id:"accent2", name:"Accent floor 2", key:"k", col:"#4a6fb0", bp:"#3d4f66"},
   {id:"accent3", name:"Accent floor 3", key:"z", col:"#a0764a", bp:"#5c4a33"},
@@ -397,10 +397,10 @@ const TOOLS = [
   {id:"treewall", name:"Tree wall (block)", key:"h", col:"#1d5c26", bp:"#2e8b3a"},
   {id:"label", name:"Label (text)",key:"l", col:"#c9a648", bp:"#e8dcc0"},
   {id:"select",name:"Select",     key:"c", col:"#e0c85a", bp:"#e0c85a"},
-  {id:"erase", name:"Erase",      key:"e", col:"#0d0b09", bp:"#0d0b09"},
+  {id:"erase", name:"Erase",      key:"x", col:"#0d0b09", bp:"#0d0b09"},
 ];
 const CONN = [
-  {id:"spawn",       name:"Spawn",       key:"s", col:"#e0c85a", glyph:"\u2726"},
+  {id:"spawn",       name:"Spawn",       key:"e", col:"#e0c85a", glyph:"\u2726"},
   {id:"portal",      name:"Portal",      key:"o", col:"#b06ae0", glyph:"\u25CE"},
   {id:"stairs_up",   name:"Stairs Up",   key:"u", col:"#d0d8dc", glyph:"\u25B2"},
   {id:"stairs_down", name:"Stairs Down", key:"n", col:"#d0d8dc", glyph:"\u25BC"},
@@ -414,7 +414,7 @@ let terrain = new Map();   // "x,y" -> terrain id
 let marks   = new Map();   // "x,y" -> boss|path
 let labels  = new Map();   // "x,y" -> text
 let connectors = new Map(); // "x,y" -> {t:"spawn"|"portal"|"stairs_up"|"stairs_down", tag:""}
-let tool="wall", brush=1, viewMode="edit";   // edit | blueprint | iso
+let tool="wall", brush=1, viewMode="edit";   // edit | iso (blueprint retired 2026-08-25)
 let zoom=8, panX=20, panY=20;
 // ---- centered app dialogs (replace the browser's native alert/confirm/prompt) ----
 let modalResolve=null;
@@ -643,7 +643,7 @@ function bounds(){
   const x2=Math.min(GW,Math.ceil((cv.width-panX)/zoom)), y2=Math.min(GH,Math.ceil((cv.height-panY)/zoom));
   return [x1,y1,x2,y2];
 }
-function draw(){ viewMode==="edit" ? drawEdit() : viewMode==="blueprint" ? drawBlueprint() : drawIso(); }
+function draw(){ viewMode==="edit" ? drawEdit() : drawIso(); }
 function drawEdit(){
   cx.shadowBlur=0;
   cx.fillStyle="#0a1014"; cx.fillRect(0,0,cv.width,cv.height);
@@ -692,122 +692,8 @@ function drawEdit(){
   cx.strokeRect(panX,panY,GW*zoom,GH*zoom);
   rulers();
 }
-function drawBlueprint(){
-  cx.shadowBlur=0;
-  cx.fillStyle="#0d0b09"; cx.fillRect(0,0,cv.width,cv.height);
-  const [x1,y1,x2,y2]=bounds();
-  // faint parchment grid
-  if(zoom>=4){
-    cx.strokeStyle="rgba(201,166,72,0.05)"; cx.lineWidth=1; cx.beginPath();
-    for(let gx=x1; gx<=x2; gx++){ cx.moveTo(panX+gx*zoom+.5,panY+y1*zoom); cx.lineTo(panX+gx*zoom+.5,panY+y2*zoom); }
-    for(let gy=y1; gy<=y2; gy++){ cx.moveTo(panX+x1*zoom,panY+gy*zoom+.5); cx.lineTo(panX+x2*zoom,panY+gy*zoom+.5); }
-    cx.stroke();
-  }
-  // terrain: floors/grass/water/dirt first
-  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
-    const t=terrain.get(key(gx,gy));
-    if(t && t!=="wall" && t!=="structural" && t!=="door"){
-      if(t==="water"||t==="deepwater"){ cx.shadowColor="#3d84c9"; cx.shadowBlur=zoom*0.8; }
-      cx.fillStyle=BPCOL[t];
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
-      cx.shadowBlur=0;
-    }
-  }
-  // IMPLIED FACE WALLS (Tony 2026-08-24): the generator dresses every structural
-  // block's north and west neighbor with the mass's face wall when that neighbor is
-  // ground. Blueprint shows them so structural-to-interior joins read the way they
-  // will build. Preview approximation: corner caps, T-join stacks and door-recess
-  // carve-outs are the builder's exact business — the build report stays final.
-  const GROUNDY=t=>t&&t!=="wall"&&t!=="structural"&&t!=="door";
-  // Each strip leaves a QUARTER of its carrier tile as floor (north faces the top
-  // quarter, west faces the left quarter — measured in-game, Tony picked 1/4), the NW
-  // diagonal carries the L-piece (sprite spill), and strip ENDS get a 45° corner cut
-  // back to floor — NE end of north strips, SW end of west strips — imitating the
-  // isometric lean while the view stays flat (Tony's design, 2026-08-24).
-  const TRIM=0.25, CUT=0.75;
-  const nset=new Set(), wset=new Set(), nwset=new Set();
-  for(let gx=x1-1; gx<x2+1; gx++) for(let gy=y1-1; gy<y2+1; gy++){  // pad: edge cuts stay honest
-    if(terrain.get(key(gx,gy))!=="structural") continue;
-    if(GROUNDY(terrain.get(key(gx,gy-1)))) nset.add(key(gx,gy-1));
-    if(GROUNDY(terrain.get(key(gx-1,gy)))) wset.add(key(gx-1,gy));
-    if(GROUNDY(terrain.get(key(gx-1,gy-1)))) nwset.add(key(gx-1,gy-1));
-  }
-  // a cut only makes sense against OPEN ground — anything that renders cream
-  // (blocks, drawn walls, doors, other strips, NW L-pieces) counts as solid,
-  // otherwise the cut carves a stranded floor notch against a cream neighbor
-  const solidK=k=>{ const t=terrain.get(k);
-    return t==="structural"||t==="wall"||t==="door"
-         ||nset.has(k)||wset.has(k)||nwset.has(k); };
-  const gcol=k=>BPCOL[terrain.get(k)]||"#332c22";
-  const tri=(a,b,c,col)=>{ cx.fillStyle=col; cx.beginPath();
-    cx.moveTo(a[0],a[1]); cx.lineTo(b[0],b[1]); cx.lineTo(c[0],c[1]); cx.closePath(); cx.fill(); };
-  for(const k of nwset){                          // NW L-pieces first; strips overlay them
-    const [nx,ny]=k.split(",").map(Number);
-    const px=panX+nx*zoom, py=panY+ny*zoom;
-    cx.fillStyle="#e8dcc0";
-    cx.fillRect(px+zoom*TRIM,py+zoom*TRIM,zoom*(1-TRIM),zoom*(1-TRIM));
-    cx.fillStyle="rgba(0,0,0,0.14)";
-    cx.fillRect(px+zoom*TRIM,py+zoom*0.65,zoom*(1-TRIM),zoom*0.35);
-  }
-  const cuts=[];                                  // cuts paint LAST — a later strip on a
-  for(const k of nset){                           // both-strips tile must not repaint them
-    const [nx,ny]=k.split(",").map(Number);
-    const px=panX+nx*zoom, py=panY+ny*zoom;
-    cx.fillStyle="#e8dcc0";
-    cx.fillRect(px,py+zoom*TRIM,zoom,zoom*(1-TRIM));
-    cx.fillStyle="rgba(0,0,0,0.14)";
-    cx.fillRect(px,py+zoom*0.65,zoom,zoom*0.35);
-    if(!solidK(key(nx+1,ny)))                     // NE corner cut at the run's end
-      cuts.push([[px+zoom-zoom*CUT-1,py+zoom*TRIM-1],[px+zoom+1,py+zoom*TRIM-1],
-                 [px+zoom+1,py+zoom+1],gcol(k)]);
-  }
-  for(const k of wset){                           // west strips
-    const [nx,ny]=k.split(",").map(Number);
-    const px=panX+nx*zoom, py=panY+ny*zoom;
-    cx.fillStyle="#e8dcc0";
-    cx.fillRect(px+zoom*TRIM,py,zoom*(1-TRIM),zoom);
-    cx.fillStyle="rgba(0,0,0,0.14)";
-    cx.fillRect(px+zoom*TRIM,py+zoom*0.65,zoom*(1-TRIM),zoom*0.35);
-    if(!solidK(key(nx,ny+1)))                     // SW corner cut at the run's end
-      cuts.push([[px+zoom*TRIM-1,py+zoom-zoom*CUT-1],[px+zoom*TRIM-1,py+zoom+1],
-                 [px+zoom*CUT+zoom*TRIM+1,py+zoom+1],gcol(k)]);
-  }
-  for(const [a,b,c,col] of cuts) tri(a,b,c,col);  // 1px bleed swallows AA seams; a cut
-                                                  // only fires beside open floor, so the
-                                                  // bleed lands on floor color anyway
-  // walls as cream slabs with a subtle inner shade
-  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
-    const t=terrain.get(key(gx,gy));
-    if(t==="wall"||t==="structural"){
-      cx.fillStyle= t==="wall" ? "#e8dcc0" : "#c9ba92";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
-      cx.fillStyle= t==="wall" ? "rgba(0,0,0,0.14)" : "rgba(0,0,0,0.28)";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom+zoom*0.65,zoom,zoom*0.35);
-    } else if(t==="door"){
-      cx.fillStyle="#332c22";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
-      cx.shadowColor="#d0622e"; cx.shadowBlur=zoom*0.7;
-      cx.fillStyle="#d0622e";
-      cx.fillRect(panX+gx*zoom+zoom*0.15,panY+gy*zoom+zoom*0.3,zoom*0.7,zoom*0.4);
-      cx.shadowBlur=0;
-    }
-  }
-  drawMarks(x1,y1,x2,y2,true);
-  drawConnectors(true);
-  drawLabels(true);
-  drawGhost(true);
-  // title block
-  const title=document.getElementById("maptitle").value.trim();
-  if(title){
-    cx.fillStyle="#8a7a55"; cx.font="11px Georgia"; cx.textAlign="left";
-    cx.fillText("S T O R M H A L T E R", 54, cv.height-52);
-    cx.fillStyle="#e8dcc0"; cx.font="26px Georgia";
-    cx.fillText(title.toUpperCase().split("").join(" "), 54, cv.height-26);
-  }
-  rulers();
-}
 function drawIso(){
-  // ISO view (Tony 2026-08-24): blueprint styling, but structural masses render as
+  // ISO view (Tony 2026-08-24): presentation styling, structural masses render as
   // merged isometric cubes — top faces shifted up-left by S, 45-degree side faces on
   // the SE edges — matching how the game actually sits the mass on the map.
   cx.shadowBlur=0;
@@ -1443,11 +1329,10 @@ function updateModeUI(){
   document.getElementById("modebtn").classList.toggle("active",viewMode!=="edit");
   const g=document.getElementById("modebadge");
   g.textContent=viewMode.toUpperCase();
-  g.classList.toggle("bp",viewMode==="blueprint");
   g.classList.toggle("iso",viewMode==="iso");
 }
 function toggleMode(){
-  viewMode = viewMode==="edit" ? "blueprint" : viewMode==="blueprint" ? "iso" : "edit";
+  viewMode = viewMode==="edit" ? "iso" : "edit";
   updateModeUI();
   draw();
 }
