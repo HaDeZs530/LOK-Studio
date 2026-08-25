@@ -702,7 +702,12 @@ function drawBlueprint(){
     if(GROUNDY(terrain.get(key(gx-1,gy)))) wset.add(key(gx-1,gy));
     if(GROUNDY(terrain.get(key(gx-1,gy-1)))) nwset.add(key(gx-1,gy-1));
   }
-  const solidK=k=>terrain.get(k)==="structural"||nset.has(k)||wset.has(k);
+  // a cut only makes sense against OPEN ground — anything that renders cream
+  // (blocks, drawn walls, doors, other strips, NW L-pieces) counts as solid,
+  // otherwise the cut carves a stranded floor notch against a cream neighbor
+  const solidK=k=>{ const t=terrain.get(k);
+    return t==="structural"||t==="wall"||t==="door"
+         ||nset.has(k)||wset.has(k)||nwset.has(k); };
   const gcol=k=>BPCOL[terrain.get(k)]||"#332c22";
   const tri=(a,b,c,col)=>{ cx.fillStyle=col; cx.beginPath();
     cx.moveTo(a[0],a[1]); cx.lineTo(b[0],b[1]); cx.lineTo(c[0],c[1]); cx.closePath(); cx.fill(); };
