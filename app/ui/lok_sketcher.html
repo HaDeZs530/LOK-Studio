@@ -689,22 +689,50 @@ function drawBlueprint(){
   // will build. Preview approximation: corner caps, T-join stacks and door-recess
   // carve-outs are the builder's exact business — the build report stays final.
   const GROUNDY=t=>t&&t!=="wall"&&t!=="structural"&&t!=="door";
-  // The face strip leaves a QUARTER of the carrier tile as visible floor — north
-  // faces keep their top quarter, west faces their left quarter — matching the
-  // in-game surviving sliver (measured ~1/5-1/4; Tony picked 1/4, 2026-08-24).
-  const TRIM=0.25;
-  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
+  // Each strip leaves a QUARTER of its carrier tile as floor (north faces the top
+  // quarter, west faces the left quarter — measured in-game, Tony picked 1/4), the NW
+  // diagonal carries the L-piece (sprite spill), and strip ENDS get a 45° corner cut
+  // back to floor — NE end of north strips, SW end of west strips — imitating the
+  // isometric lean while the view stays flat (Tony's design, 2026-08-24).
+  const TRIM=0.25, CUT=0.75;
+  const nset=new Set(), wset=new Set(), nwset=new Set();
+  for(let gx=x1-1; gx<x2+1; gx++) for(let gy=y1-1; gy<y2+1; gy++){  // pad: edge cuts stay honest
     if(terrain.get(key(gx,gy))!=="structural") continue;
-    for(const [nx,ny,north] of [[gx,gy-1,true],[gx-1,gy,false]]){
-      if(!GROUNDY(terrain.get(key(nx,ny)))) continue;
-      const px=panX+nx*zoom, py=panY+ny*zoom;
-      cx.fillStyle="#e8dcc0";
-      if(north) cx.fillRect(px,py+zoom*TRIM,zoom,zoom*(1-TRIM));
-      else      cx.fillRect(px+zoom*TRIM,py,zoom*(1-TRIM),zoom);
-      cx.fillStyle="rgba(0,0,0,0.14)";
-      if(north) cx.fillRect(px,py+zoom*0.65,zoom,zoom*0.35);
-      else      cx.fillRect(px+zoom*TRIM,py+zoom*0.65,zoom*(1-TRIM),zoom*0.35);
-    }
+    if(GROUNDY(terrain.get(key(gx,gy-1)))) nset.add(key(gx,gy-1));
+    if(GROUNDY(terrain.get(key(gx-1,gy)))) wset.add(key(gx-1,gy));
+    if(GROUNDY(terrain.get(key(gx-1,gy-1)))) nwset.add(key(gx-1,gy-1));
+  }
+  const solidK=k=>terrain.get(k)==="structural"||nset.has(k)||wset.has(k);
+  const gcol=k=>BPCOL[terrain.get(k)]||"#332c22";
+  const tri=(a,b,c,col)=>{ cx.fillStyle=col; cx.beginPath();
+    cx.moveTo(a[0],a[1]); cx.lineTo(b[0],b[1]); cx.lineTo(c[0],c[1]); cx.closePath(); cx.fill(); };
+  for(const k of nwset){                          // NW L-pieces first; strips overlay them
+    const [nx,ny]=k.split(",").map(Number);
+    const px=panX+nx*zoom, py=panY+ny*zoom;
+    cx.fillStyle="#e8dcc0";
+    cx.fillRect(px+zoom*TRIM,py+zoom*TRIM,zoom*(1-TRIM),zoom*(1-TRIM));
+    cx.fillStyle="rgba(0,0,0,0.14)";
+    cx.fillRect(px+zoom*TRIM,py+zoom*0.65,zoom*(1-TRIM),zoom*0.35);
+  }
+  for(const k of nset){                           // north strips
+    const [nx,ny]=k.split(",").map(Number);
+    const px=panX+nx*zoom, py=panY+ny*zoom;
+    cx.fillStyle="#e8dcc0";
+    cx.fillRect(px,py+zoom*TRIM,zoom,zoom*(1-TRIM));
+    cx.fillStyle="rgba(0,0,0,0.14)";
+    cx.fillRect(px,py+zoom*0.65,zoom,zoom*0.35);
+    if(!solidK(key(nx+1,ny)))                     // NE corner cut at the run's end
+      tri([px+zoom-zoom*CUT,py+zoom*TRIM],[px+zoom,py+zoom*TRIM],[px+zoom,py+zoom],gcol(k));
+  }
+  for(const k of wset){                           // west strips
+    const [nx,ny]=k.split(",").map(Number);
+    const px=panX+nx*zoom, py=panY+ny*zoom;
+    cx.fillStyle="#e8dcc0";
+    cx.fillRect(px+zoom*TRIM,py,zoom*(1-TRIM),zoom);
+    cx.fillStyle="rgba(0,0,0,0.14)";
+    cx.fillRect(px+zoom*TRIM,py+zoom*0.65,zoom*(1-TRIM),zoom*0.35);
+    if(!solidK(key(nx,ny+1)))                     // SW corner cut at the run's end
+      tri([px+zoom*TRIM,py+zoom-zoom*CUT],[px+zoom*TRIM,py+zoom],[px+zoom*CUT+zoom*TRIM,py+zoom],gcol(k));
   }
   // walls as cream slabs with a subtle inner shade
   for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){

@@ -17,6 +17,19 @@ keep the top quarter, west faces the left quarter (TRIM=0.25 in drawBlueprint;
 measured ~1/5-1/4 surviving sliver from an in-game close-up, Tony chose 1/4 over 1/3).
 The two orientations now read differently, and a 1-wide hall against mass shows its
 true sliver instead of a solid cream band. Drawn walls/structural tiles unchanged.
+BOTH-FACES TILES (mass south AND east): the two strips stack and only the top-left
+quarter-corner shows floor — reviewed with Tony, ACCEPTED AS-IS (a cleaner combined
+shape was mocked up and declined as indistinguishable). Don't "fix" the overlap.
+EVOLVED SAME NIGHT (Tony's design, mocked and approved): (1) the NW DIAGONAL of every
+block is a third carrier — an L-piece, floor on its top-left quarter edges, cream in
+the SE bulk (the sprite spill blueprint previously ignored); (2) strip ENDS get a 45°
+corner cut back to the tile's own ground color — NE end of north strips, SW end of
+west strips, cut spans CUT=0.75 — imitating the isometric lean while the view stays
+flat. Cuts appear ONLY where a run truly ends (next tile isn't a block or another
+N/W carrier), so runs and N-meets-W junctions stay solid — Tony's tileability rule.
+Carrier sets are collected with a 1-tile pad past the viewport so edge cuts stay
+honest. A full-iso cube render (shifted top faces + 45° side parallelograms) was
+sketched and REJECTED — it abandons the flat view; don't re-propose.
 
 ## 2026-08-24 (night) — UI SCALE · APP ICON · INSTALLER · RELEASE FIX · README
 
