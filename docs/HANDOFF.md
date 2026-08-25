@@ -1,5 +1,54 @@
 # LOK STUDIO — the app era (2026-08-24 on)
 
+## 2026-08-24 (night) — UI SCALE · APP ICON · INSTALLER · RELEASE FIX · README
+
+- **INTERFACE SCALE (Tony moved to a 3840x2160 panel; the fixed-px UI read small).**
+  CSS `zoom` on the document root, stepped Ctrl+= / Ctrl+− / Ctrl+0 through
+  75/90/100/110/125/150/175/200/250%, brief toast readout, persisted PER MACHINE via
+  new `ui_scale_get` / `ui_scale_set` (settings.json) with a localStorage fallback in
+  browser mode. Shortcuts bound in CAPTURE phase so they work on the palette screen
+  and while a text box has focus. **`resize()` now measures `getBoundingClientRect()`
+  instead of clientWidth** — the canvas bitmap must match painted pixels or the map
+  goes soft above 100%; `tileAt()` was already zoom-safe. Window opens at 80% of the
+  screen it lands on (clamped 1200-2600 x 800-1600) instead of a fixed 1500x950.
+  Commit `0e0c906`.
+- **APP ICON.** Tony's crystal-island design (Claude Design) → `packaging/lok.ico`,
+  seven resolutions 16-256 downscaled LANCZOS from the 1024 render, wired as
+  `icon='lok.ico'` in the spec (paths there are relative to the spec file). Sources
+  kept: `crystal-icon-1024.png` (the richer render — shading/glow) and `icon.svg`
+  (flat vector fallback; compared both at 16px, PNG downscale won). First PNG export
+  from Claude Design arrived FULLY TRANSPARENT — if that recurs, ask for the SVG
+  source instead, it can't arrive blank.
+- **RELEASE FIX.** v0.2.0 built clean (17.9 MB artifact) but the Release step failed:
+  *"Resource not accessible by integration"* — the workflow token was read-only.
+  Added `permissions: contents: write` at workflow level (better than the repo
+  setting: travels with the repo). A failed tag build can't be fixed by re-running —
+  the run uses that commit's workflow file, so cut a NEW tag.
+- **INSTALLER.** `packaging/installer.iss` (Inno Setup) + workflow step: each Release
+  now ships `LOK-Studio-Setup.exe` beside the zip. Program Files, Start Menu entry,
+  optional desktop shortcut, clean uninstall; user data stays in
+  `%LOCALAPPDATA%\LOK Studio` so reinstalls never touch maps or styles. Step falls
+  back to `choco install innosetup` if the runner image lacks ISCC. Version comes
+  from the tag (`/DAppVersion`), defaults 0.0.0 on manual runs.
+  **Onefile exe was considered and REJECTED:** the app re-launches itself as a
+  subprocess for every generator call, so a onefile build would re-extract the whole
+  bundle on every build/import/mask — installer gives the same one-click share
+  without that cost.
+- **README REWRITTEN** for a stranger, on Tony's direction (it read like a system
+  document, then like a sales pitch — both rejected). Now: the isometric offset
+  problem stated plainly, what the tool does, his own scoping line ("not a
+  start-to-finish map creator"), then Sketch / Styles / Build R# / Import. Download
+  section offers installer and zip via `releases/latest/download/...` permalinks —
+  those 404 until a Release exists.
+- **PROCESS NOTE FOR FUTURE COWORK SESSIONS: do NOT run git in this repo.** The
+  sandbox mount can't delete inside `.git`, so every `git add`/`commit` leaves a
+  stale `index.lock` that blocks GitHub Desktop ("A lock file already exists").
+  Claude edits files; TONY commits and pushes. If a lock appears, delete
+  `.git\index.lock` (hidden — reach it by pasting the path in Explorer's address bar).
+  Also: the repo stores LF but the working tree is CRLF, so a Linux-side `git status`
+  flags all 20 files as modified — that's an artifact, not a change. Normalize any
+  file you edit to LF so Tony's diff shows only real edits.
+
 ## 2026-08-24 (evening) — PHASE 2 DONE: MASKS APPLY + PACKAGED APP
 
 - **▶ APPLY MASKS** button on the MASKS tab: needs R# + the region imported via
