@@ -1,82 +1,95 @@
+<img src="packaging/crystal-icon-1024.png" width="120" align="right" alt="LOK Studio">
+
 # LOK Studio
 
-Map-making studio for Stormhalter (Legends of Kesmai revival): sketch dungeon and
-outdoor layouts, style them with real game tiles, and build WorldForge region XML —
-one desktop app, no browser, no Claude session needed at runtime.
+**Draw a map. Get a working game region.**
 
-## Download (Windows)
+LOK Studio is a map-making tool for [Stormhalter](https://stormhalter.com), the Legends
+of Kesmai revival. You sketch a layout on a grid — rooms, corridors, walls, doors,
+water, forest — pick which real game tiles it should be built from, and the app writes
+the WorldForge region file for you.
 
-### ➜ [**Download LOK Studio**](https://github.com/HaDeZs530/LOK-Studio/releases/latest/download/LOK-Studio-win64.zip)
+The part that usually eats the day is the part it takes off your hands: isometric maps
+have fussy rules about where wall faces render, which tile carries a corner piece, how a
+door in a thick wall gets framed. You draw the shape you want. The builder handles the
+rest, the same way every time.
 
-No install, no Python, no account needed.
+---
 
-1. Download the zip above (or grab it from [Releases](https://github.com/HaDeZs530/LOK-Studio/releases/latest)).
-2. **Unzip the whole folder** somewhere you'll keep it — Documents is fine.
-3. Run **`LOK-Studio.exe`** from inside that folder.
+## Download
 
-Windows will say *"Windows protected your PC"* the first time, because the app isn't
-code-signed: click **More info → Run anyway**. Keep the exe inside its folder — the
-`_internal` folder beside it holds everything the app needs.
+### ➜ [**Download LOK Studio for Windows**](https://github.com/HaDeZs530/LOK-Studio/releases/latest/download/LOK-Studio-win64.zip)
 
-First launch: press **▶ BUILD R#** once and point it at the Regions folder of the
-segment you build into — use a sandbox copy, never your live game data.
+Nothing to install. No Python, no accounts.
 
-## Run from source instead
+1. Download the zip.
+2. **Unzip the whole folder** somewhere you'll keep it.
+3. Run **`LOK-Studio.exe`** from inside it.
 
-Double-click **`run.bat`**. Needs Python installed (python.org, "Add to PATH" ticked).
-First run installs one small dependency, then the LOK Studio window opens with the
-sketcher inside.
+Windows will warn you the first time — *"Windows protected your PC"* — because the app
+isn't code-signed. Click **More info → Run anyway**. Keep the exe inside its folder;
+the `_internal` folder next to it is the app.
 
-First time on a machine: press **▶ BUILD R#** once and point it at the Regions
-folder of the segment you build into (a sandbox copy, never your live game data) —
-remembered per machine in `workspace\settings.json`.
+---
 
-## The loop
+## How it works
 
-**IMPORT REGION…** pulls a region XML (or a coordinate window of it) onto the canvas,
-stamps the **R#** box, and silently keeps a full-region backup plus the untouched
-context that later merges diff against. Draw and style as usual — the palette screen's
-numbers travel inside the sketch. **▶ BUILD R#** opens the pre-flight: target, mode,
-tile count, and the palette line (read that line first when a build looks wrong).
-Then only explicit buttons: merge dry-run → CONFIRM & WRITE, restore-from-backup +
-merge if the file went missing, or CREATE NEW for an unused number. Blueprint view
-(M) also renders the face walls the builder will add along structural masses, so
-joins read the way they build.
+**Draw.** Sixteen brushes: room and hall floors, thin walls, thick structural masses,
+doors, grass, water, roads, trees, stairs and portals. Pan, zoom, copy-paste, undo.
+Everything autosaves.
 
-## Second machine
+**Choose your tiles.** The palette screen shows every terrain tile in the game — over
+1,400 of them, with pictures — and lets you say which one plays each role. Type `176`
+next to Room floor and you see the tile you just picked. Save a set as a named style
+and reuse it on any map.
 
-GitHub Desktop → clone this repo → `run.bat` → point BUILD at that machine's Regions
-folder once. Styles live in `generator/styles/`, so they travel with pushes;
-`workspace/` (autosaves, imports, settings) stays per-machine.
+**Build.** Press build and the app shows you what it's about to do before it does it:
+which region, how many tiles, which tiles it's using. Building into an existing map is
+always a dry run first — it tells you exactly what would change, and nothing is written
+until you click confirm. Your file is backed up before every write.
 
-## What's in here
+**Come back later.** Pull an existing region back onto the canvas, move a wall, add a
+room, and rebuild — only what you actually changed gets rewritten. Decorations you
+placed by hand in WorldForge survive untouched.
 
-| Folder | What it is |
+**Restyle without redrawing.** Paint areas of a finished map and assign each one a
+style — one wing in dungeon stone, another in marble — and the app repaints just those
+tiles.
+
+---
+
+## Run from source
+
+Clone the repo and double-click **`run.bat`**. Needs [Python](https://python.org) with
+"Add to PATH" ticked; the first run installs one dependency and opens the app.
+
+Working on two machines? Clone on both. Your saved tile styles live in the repo and
+travel with it; your maps-in-progress stay local.
+
+---
+
+## What's inside
+
+| | |
 |---|---|
-| `app/` | The desktop shell (`main.py`) and the sketcher UI (`ui/lok_sketcher.html` + `ui/tiles_ledger.js`, the baked game-tile catalog) |
-| `generator/` | The build engine: `sketch_build.py` (sketch → region XML, new builds and diff merges, full audit battery), `xml_to_sketch.py` (region → sketch), `apply_masks.py` (area restyles), `stage_a.py` (canon isometric rules engine), `mine_companions.py` + `companions.json` (wall/door family ids mined from live maps), `bake_ledger.py` (rebuilds the tile catalog from a WorldForge install), `styles/` (named tile-id sets) |
-| `docs/` | `HANDOFF.md` — the full rules history and project state. `SKETCHER_GUIDE.md` — how to use the sketcher. |
-| `workspace/` | Your working files (Imports / Exports / autosaves). Local only, never committed. |
+| `app/` | The desktop app — a native window wrapped around the sketcher |
+| `generator/` | The build engine: sketch to region XML, region back to sketch, area restyling, and the tile catalog baked from a WorldForge install |
+| `docs/` | `SKETCHER_GUIDE.md` for using it, `HANDOFF.md` for the full design history |
+| `packaging/` | Icon and build spec for the Windows package |
 
-## Ground rules (enforced by the tools)
+## How it protects your maps
 
-- Merges into existing regions are **dry-run first, explicit confirm to write**,
-  backup before every write. HaDeZs Test is refused outright.
-- The sketch is the source of truth — never hand-edit generated XML.
-- Region XML stays UTF-8 BOM + CRLF, floor-first component order, full wall child
-  sets. The audit battery runs on every build.
-
-## Packaged version (no Python needed)
-
-The Actions tab builds a double-clickable Windows package: run the **Build Windows
-package** workflow (or push a `v*` tag to also cut a Release), download
-`LOK-Studio-win64.zip`, unzip anywhere, run `LOK-Studio.exe`. User files live in
-`%LOCALAPPDATA%\LOK Studio`. Needs Microsoft's WebView2 runtime, which Windows 11
-and updated Windows 10 machines already have.
+- Writing into an existing region is dry-run first, explicit confirm second, backed up
+  always.
+- The sketch is the source of truth. Generated XML is never hand-edited — you change
+  the drawing and rebuild.
+- Every build is checked before it's saved: no duplicated components, no walls missing
+  the pieces WorldForge needs, correct file encoding.
+- The tool refuses to write to live game folders. Point it at a sandbox copy.
 
 ## Status
 
-Phase 1 complete (2026-08-24): the full loop — import region, edit, pre-flight,
-dry-run merge, confirmed write — runs in-app with no Claude session, verified against
-live maps. Open: masks apply as a button, packaged .exe via GitHub Actions, procedural
-layout generation. `docs/HANDOFF.md` is the living state and rules history.
+The full loop works and is in daily use: import a region, edit it, build it back,
+restyle areas, all inside the app. Procedural layout generation is the next big piece.
+
+Built by HaDeZs for the Stormhalter dev community. Issues and ideas welcome.
