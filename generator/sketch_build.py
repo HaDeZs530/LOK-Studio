@@ -621,14 +621,60 @@ def strip_disabled(M, S, pal, rep):
 # ---------------------------------------------------------------- 4 BUILD ONCE
 def _wall_lines(pal, role, indent="    "):
     w, d, r = pal[role]
-    ln = [f'{indent}<component type="WallComponent">',
-          f'{indent}  <wall>{w}</wall>',
+    ln = [f'{indent}<component type="WallComponent">']
+    t = _tint(pal, role)
+    if t:
+        ln.append(_color_line(t, indent + "  "))
+    ln += [f'{indent}  <wall>{w}</wall>',
           f'{indent}  <destroyed>{d}</destroyed>',
           f'{indent}  <ruins>{r}</ruins>']
-    if role == "structural" or pal.get("indestructible"):
+    if role == "structural" or _opt(pal, role, "indestructible") or pal.get("indestructible"):
         ln.append(f'{indent}  <indestructible>true</indestructible>')
     ln.append(f'{indent}</component>')
     return ln
+
+
+def _tint(pal, role):
+    """TINTS (Tony 2026-08-25): style palettes may carry {"tint": {role: [r,g,b,a]}} —
+    WorldForge's multiplicative color sliders. 255,255,255,255 = untinted = omitted.
+    Serialization captured from region 9: <color r=".." g=".." b=".." a=".." /> as the
+    FIRST child of the component."""
+    t = (pal.get("tint") or {}).get(role)
+    if role == "floor" and not t:                  # seen floor follows the room tint
+        t = (pal.get("tint") or {}).get("room")
+    if not t:
+        return None
+    t = [int(x) for x in t]
+    return None if t == [255, 255, 255, 255] else t
+
+
+def _opt(pal, role, key, default=None):
+    """COMPONENT OPTIONS (Tony 2026-08-25): style palettes may carry
+    {"opts": {role: {key: value}}} — WorldForge's non-colour properties. Element names
+    are CAPTURED from live regions — region 1 holds Tony's calibration tiles. Beware:
+    WorldForge's UI labels don't match the file. "IsDecayed" -> <decayed>,
+    "IsIndestructible" -> <indestructible>, but isOpen/isSecret/isDestroyed keep the Is.
+    Absent = default, so untouched styles emit exactly what they always did."""
+    o = (pal.get("opts") or {}).get(role) or {}
+    return o.get(key, default)
+
+
+def _flag_lines(pal, role, keys, indent="      "):
+    ln = []
+    for k in keys:
+        v = _opt(pal, role, k)
+        if v is None:
+            continue
+        if isinstance(v, bool):
+            if v:
+                ln.append(f'{indent}<{k}>true</{k}>')
+        else:
+            ln.append(f'{indent}<{k}>{v}</{k}>')
+    return ln
+
+
+def _color_line(t, indent="      "):
+    return f'{indent}<color r="{t[0]}" g="{t[1]}" b="{t[2]}" a="{t[3]}" />'
 
 
 def _gid(v, c):
@@ -648,10 +694,15 @@ def tile_lines(c, m, pal):
     if g is not None:
         if g in ("water", "deepwater"):
             wtr = pal[g]
-            ln += ['    <component type="WaterComponent">',
-                   f'      <ground>{wtr["ground"]}</ground>',
-                   f'      <movementCost>{wtr["movementCost"]}</movementCost>',
-                   '    </component>']
+            ln += ['    <component type="WaterComponent">']
+            tw = _tint(pal, g)
+            if tw:
+                ln.append(_color_line(tw))
+            mc = _opt(pal, g, "movementCost", wtr["movementCost"])
+            ln += [f'      <ground>{wtr["ground"]}</ground>',
+                   f'      <movementCost>{mc}</movementCost>']
+            ln += _flag_lines(pal, g, ("depth",))
+            ln.append('    </component>')
             if g == "deepwater":
                 ln += ['    <component type="ObstructionComponent">',
                        f'      <obstruction>{wtr["obstruction"]}</obstruction>',
@@ -663,37 +714,59 @@ def tile_lines(c, m, pal):
                 gid = pal["spawn_ground"]
             else:
                 gid = _gid(pal["structural_floor"] if g == "structural_floor" else pal[g], c)
-            ln += ['    <component type="FloorComponent">',
-                   f'      <ground>{gid}</ground>',
-                   '    </component>']
+            ln += ['    <component type="FloorComponent">']
+            tf = _tint(pal, "structural_floor" if g == "structural_floor" else g)
+            if tf and not m.get("boss") and not (m["conn"] and m["conn"][0] == "spawn"):
+                ln.append(_color_line(tf))
+            ln += [f'      <ground>{gid}</ground>']
+            ln += _flag_lines(pal, "structural_floor" if g == "structural_floor" else g,
+                              ("movementCost",))
+            ln.append('    </component>')
     for role in m["stack"]:
         if pal.get(role) is None:                # bare style: disabled role, emit nothing
             continue
         if role.startswith("door"):
             o, cl, se, de = pal[role]
-            ln += ['    <component type="DoorComponent">',
-                   f'      <openId>{o}</openId>', f'      <closedId>{cl}</closedId>',
-                   f'      <secretId>{se}</secretId>', f'      <destroyedId>{de}</destroyedId>',
-                   '    </component>']
+            ln += ['    <component type="DoorComponent">']
+            td = _tint(pal, role)
+            if td:
+                ln.append(_color_line(td))
+            ln += [f'      <openId>{o}</openId>', f'      <closedId>{cl}</closedId>',
+                   f'      <secretId>{se}</secretId>', f'      <destroyedId>{de}</destroyedId>']
+            ln += _flag_lines(pal, role, ("isOpen", "isSecret", "isDestroyed",
+                                          "indestructible"))
+            ln.append('    </component>')
         else:
             ln += _wall_lines(pal, role)
     if m.get("tree"):
         tp = pal["tree"]
-        ln += ['    <component type="TreeComponent">',
-               f'      <tree>{tp["tree"]}</tree>',
-               f'      <canGrow>{tp["canGrow"]}</canGrow>',
-               '    </component>']
+        ln += ['    <component type="TreeComponent">']
+        tt = _tint(pal, "tree")
+        if tt:
+            ln.append(_color_line(tt))
+        cg = _opt(pal, "tree", "canGrow", tp["canGrow"])
+        ln += [f'      <tree>{tp["tree"]}</tree>',
+               f'      <canGrow>{"true" if cg in (True, "true") else "false"}</canGrow>']
+        ln += _flag_lines(pal, "tree", ("decayed",))
+        ln.append('    </component>')
     if m.get("treewall"):
         tw = pal["treewall"]
-        ln += ['    <component type="ObstructionComponent">',
-               f'      <obstruction>{tw["obstruction"]}</obstruction>',
-               f'      <blockVision>{tw["blockVision"]}</blockVision>',
+        ln += ['    <component type="ObstructionComponent">']
+        to = _tint(pal, "treewall")
+        if to:
+            ln.append(_color_line(to))
+        bv = _opt(pal, "treewall", "blockVision", tw["blockVision"])
+        ln += [f'      <obstruction>{tw["obstruction"]}</obstruction>',
+               f'      <blockVision>{"true" if bv in (True, "true") else "false"}</blockVision>',
                '    </component>']
     if m["conn"]:
         t, tag = m["conn"]
         if t in ("stairs_up", "stairs_down"):
-            ln += ['    <component type="StaircaseComponent">',
-                   f'      <teleporterId>{pal[t]}</teleporterId>',
+            ln += ['    <component type="StaircaseComponent">']
+            ts = _tint(pal, t)
+            if ts:
+                ln.append(_color_line(ts))
+            ln += [f'      <teleporterId>{pal[t]}</teleporterId>',
                    '    </component>']
         elif t == "portal":
             ln += ['    <component type="EgressComponent">',

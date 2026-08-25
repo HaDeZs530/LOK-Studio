@@ -111,7 +111,7 @@
   #palgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:5px 40px;max-width:1100px}
   .palrow{display:flex;align-items:center;justify-content:space-between;padding:3px 2px;border-bottom:1px solid #12242a}
   .palrow label{flex:1 1 auto;text-transform:none;letter-spacing:1px;font-size:13px;color:#8fb0b5}
-  .palrow input{width:84px;flex-shrink:0;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;border-radius:3px;
+  .palrow input{width:76px;flex-shrink:0;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;border-radius:3px;
     padding:5px 8px;font-family:inherit;font-size:13px;text-align:right;letter-spacing:1px}
   #palettebtn{width:100%;margin:3px 0;padding:9px;border:1px solid #b89b4a;background:#101d24;color:#e6d9a8;border-radius:3px;
     cursor:pointer;font-size:13px;font-family:Georgia,serif;letter-spacing:2px}
@@ -122,6 +122,31 @@
   .rst:hover{border-color:#52d8dc;color:#bfeff5}
   .rst.ghost{visibility:hidden;pointer-events:none}
   .rst.dw.active{border-color:#e0c85a;color:#e0c85a}
+  .rst.tinted{border-color:#e0c85a;color:#e0c85a}
+  #tintpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:62;display:none;align-items:center;justify-content:center}
+  #tintpanel.open{display:flex}
+  #tintbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:430px;max-width:92vw;
+    padding:20px 24px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
+  #tinthead{color:#e0c85a;font-size:15px;letter-spacing:2px;margin-bottom:12px}
+  #tintprev{display:block;margin:0 auto 14px auto;width:128px;height:128px;image-rendering:pixelated;
+    background:#000;border:1px solid #17333b;border-radius:4px}
+  .trow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .trow label{width:16px;font-size:14px;font-weight:bold}
+  .trow input[type=range]{flex:1}
+  .trow .tval{width:38px;text-align:right;font-size:14px}
+  #tintbtns{text-align:right;margin-top:12px}
+  #tintbtns button{margin-left:8px;padding:7px 16px;border:1px solid #234f57;background:#0f1d24;color:#8fb0b5;
+    border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px}
+  #tintbtns button:hover{border-color:#52d8dc;color:#bfeff5}
+  #tintbtns #tintok{border-color:#8a7a2c;color:#e0c85a}
+  .opthead{color:#5d8a90;font-size:11px;letter-spacing:2px;margin:16px 0 8px 0;
+    border-top:1px solid #17333b;padding-top:12px}
+  .orow{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-size:13px;color:#cfe4e6}
+  .orow label{flex:1}
+  .orow input[type=number]{width:84px;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;
+    border-radius:3px;padding:5px 8px;font-family:inherit;font-size:13px;text-align:right}
+  .orow input[type=checkbox]{width:16px;height:16px;accent-color:#e0c85a}
+  .orow.locked{opacity:.55}
   #menubtn{font-size:16px;line-height:1;padding:4px 10px}
   #menubtn.open{border-color:#52d8dc;background:#12303a}
   #menupanel{display:none;position:absolute;top:38px;left:8px;z-index:70;min-width:190px;
@@ -1370,6 +1395,10 @@ window.addEventListener("keydown", e=>{
     else if(e.key==="Enter"){ modalDone(true); e.preventDefault(); }
     return;                                    // dialog swallows everything else
   }
+  if(document.getElementById("tintpanel").classList.contains("open")){
+    if(e.key==="Escape"){ document.getElementById("tintpanel").classList.remove("open"); e.preventDefault(); }
+    return;
+  }
   if(document.getElementById("importpanel").classList.contains("open")){
     if(e.key==="Escape"){ document.getElementById("importpanel").classList.remove("open"); e.preventDefault(); }
     if(document.activeElement&&document.activeElement.id==="irwin") return;
@@ -1488,11 +1517,57 @@ function updateIcon(k){
   }
   const first=(raw.match(/-?\d+/)||[raw])[0];   // comma lists: icon shows the first id
   const e=ledgerEntry(first);
-  if(e){ img.src=e.i; img.title=e.n||""; img.classList.remove("none"); }
+  if(e){
+    const t=palTint[k];
+    if(t){
+      const im=new Image();
+      im.onload=()=>{ const c=document.createElement("canvas"); c.width=im.naturalWidth; c.height=im.naturalHeight;
+        tintApply(c.getContext("2d"),im,t,c.width,c.height); img.src=c.toDataURL(); };
+      im.src=e.i;
+    } else img.src=e.i;
+    img.title=e.n||""; img.classList.remove("none");
+  }
   else { img.removeAttribute("src"); img.classList.add("none"); img.title=""; }
+  const g=document.getElementById("tint_"+k);
+  if(g&&!g.classList.contains("ghost"))
+    g.classList.toggle("tinted",!!palTint[k]||!!palOpts[k]);
 }
 const palRows=document.getElementById("palgrid");
 const NONE_ROLES=["wall-ns","wall-ew","corner","door-ns","door-ew"]; // 0 = none (bare style)
+const NO_TINT=["boss_ground","spawn_ground","portal_egress"];
+let palTint={};                                    // role -> [r,g,b,a], absent = untinted
+let palOpts={};                                    // role -> {flag/value}, absent = default
+// WorldForge's non-colour component properties (Tony 2026-08-25). Element names are
+// CAPTURED, not guessed: indestructible / canGrow / blockVision / movementCost from his
+// live region XML. ALL names verified from region 1 (Tony's 2026-08-25 test tiles):
+// note WorldForge's labels lie — "IsDecayed" serializes as <decayed>, "IsIndestructible"
+// as <indestructible>, but "IsDestroyed"/"IsOpen"/"IsSecret" keep their Is. Never guess.
+// Style-level: every tile built with this style gets these.
+const FLOOR_ROLES=["room","hall","dirtfloor","grass","dirt","accent1","accent2","accent3","structural_floor"];
+const ROLE_OPTS={};
+for(const r of FLOOR_ROLES) ROLE_OPTS[r]=[["movementCost","Movement cost","num",1]];
+ROLE_OPTS["water"]=[["movementCost","Movement cost","num",3],["depth","Depth","num",""]];
+ROLE_OPTS["deepwater"]=[["movementCost","Movement cost","num",3],["depth","Depth","num",""]];
+for(const r of ["wall-ns","wall-ew","corner"]) ROLE_OPTS[r]=[["indestructible","Indestructible","bool",false]];
+ROLE_OPTS["structural"]=[["indestructible","Indestructible (always on for structural)","lockedTrue",true]];
+for(const r of ["door-ns","door-ew"]) ROLE_OPTS[r]=[["isOpen","Starts open","bool",false],
+                                                    ["isSecret","Secret","bool",false],
+                                                    ["isDestroyed","Starts destroyed","bool",false],
+                                                    ["indestructible","Indestructible","bool",false]];
+ROLE_OPTS["tree"]=[["canGrow","Can grow","bool",true],["decayed","Decayed","bool",false]];
+ROLE_OPTS["treewall"]=[["blockVision","Blocks vision","bool",true]];
+function optsOf(k){ return palOpts[k]||{}; }
+function tintOf(k){ return palTint[k]||[255,255,255,255]; }
+function tintApply(ctx2,img,t,w,h){
+  ctx2.clearRect(0,0,w,h);
+  ctx2.globalAlpha=t[3]/255;
+  ctx2.drawImage(img,0,0,w,h);
+  ctx2.globalCompositeOperation="multiply";
+  ctx2.fillStyle="rgb("+t[0]+","+t[1]+","+t[2]+")"; ctx2.fillRect(0,0,w,h);
+  ctx2.globalCompositeOperation="destination-in";
+  ctx2.drawImage(img,0,0,w,h);
+  ctx2.globalCompositeOperation="source-over"; ctx2.globalAlpha=1;
+}
 function syncDw(){
   const v=String(document.getElementById("pal_deepwater").value).trim();
   document.getElementById("dw19").classList.toggle("active",v==="19");
@@ -1507,11 +1582,12 @@ for(const [k,label,def] of PAL_FIELDS){
       +'<input type="hidden" id="pal_'+k+'" value="'+def+'">'
       +'<button class="rst dw" id="dw19" title="Obstruction 19">19</button>'
       +'<button class="rst dw" id="dw605" title="Obstruction 605">605</button>'
-      +'<button class="rst ghost" tabindex="-1">&#215;</button>';
+      +'<button class="rst" id="tint_'+k+'" title="Color — WorldForge RGBA sliders">&#9881;</button>';
     palRows.appendChild(r);
     const setdw=v=>{ document.getElementById("pal_deepwater").value=v; syncDw(); updateIcon(k); save(); };
     document.getElementById("dw19").onclick=()=>setdw("19");
     document.getElementById("dw605").onclick=()=>setdw("605");
+    document.getElementById("tint_"+k).onclick=()=>openTint(k);
     syncDw();
     continue;
   }
@@ -1519,14 +1595,19 @@ for(const [k,label,def] of PAL_FIELDS){
     +'<input type="text" id="pal_'+k+'" value="'+def+'">'
     +'<button class="rst" id="rst_'+k+'" title="Reset to default ('+def+')">&#8634;</button>'
     +(NONE_ROLES.includes(k)?'<button class="rst" id="off_'+k+'" title="Set to 0 — none, not emitted (bare style)">&#215;</button>'
-                            :'<button class="rst ghost" tabindex="-1">&#215;</button>');
+                            :'<button class="rst ghost" tabindex="-1">&#215;</button>')
+    +(NO_TINT.includes(k)?'<button class="rst ghost" tabindex="-1">&#9881;</button>'
+                         :'<button class="rst" id="tint_'+k+'" title="Color — WorldForge RGBA sliders">&#9881;</button>');
   palRows.appendChild(r);
   document.getElementById("rst_"+k).onclick=()=>{
-    document.getElementById("pal_"+k).value=def; updateIcon(k); save();
+    document.getElementById("pal_"+k).value=def;
+    delete palTint[k]; delete palOpts[k];             // reset clears colour AND options
+    updateIcon(k); save();
   };
   if(NONE_ROLES.includes(k)) document.getElementById("off_"+k).onclick=()=>{
     document.getElementById("pal_"+k).value="0"; updateIcon(k); save();
   };
+  if(!NO_TINT.includes(k)) document.getElementById("tint_"+k).onclick=()=>openTint(k);
 }
 palRows.addEventListener("input",e=>{
   const m=(e.target.id||"").match(/^pal_(.+)$/);
@@ -1600,13 +1681,90 @@ function palObj(){
     const v=palParse(k,shape,document.getElementById("pal_"+k).value||def);
     if(v!==undefined) p[k]=v;
   }
+  if(Object.keys(palTint).length) p.tint=JSON.parse(JSON.stringify(palTint));
+  if(Object.keys(palOpts).length) p.opts=JSON.parse(JSON.stringify(palOpts));
   return p;
 }
+// ---- WorldForge color sliders (Tony 2026-08-25): multiplicative RGB + alpha,
+// exactly the game's recolor. Preview = ledger tile x multiply, live.
+let tintRole=null;
+function tintVals(){ return ["tr","tg","tb","ta"].map(i=>+document.getElementById(i).value); }
+function tintPrev(){
+  const t=tintVals();
+  ["trv","tgv","tbv","tav"].forEach((i,n)=>document.getElementById(i).textContent=t[n]);
+  const first=(String(document.getElementById("pal_"+tintRole).value).match(/-?\d+/)||["1"])[0];
+  const e=ledgerEntry(first);
+  const cv2=document.getElementById("tintprev"), c2=cv2.getContext("2d");
+  c2.clearRect(0,0,128,128);
+  if(!e) return;
+  const im=new Image();
+  im.onload=()=>tintApply(c2,im,t,128,128);
+  im.src=e.i;
+}
+function renderOpts(k){
+  const spec=ROLE_OPTS[k]||[], box=document.getElementById("optrows");
+  document.getElementById("optsec").style.display=spec.length?"":"none";
+  box.innerHTML="";
+  const cur=optsOf(k);
+  for(const [key,label,kind,def] of spec){
+    const r=document.createElement("div");
+    r.className="orow"+(kind==="lockedTrue"?" locked":"");
+    const v=(cur[key]!==undefined)?cur[key]:def;
+    if(kind==="num")
+      r.innerHTML='<label>'+label+'</label><input type="number" id="opt_'+key+'" value="'+(v===""?"":v)+'" placeholder="'+(def===""?"—":def)+'">';
+    else
+      r.innerHTML='<label>'+label+'</label><input type="checkbox" id="opt_'+key+'"'+((kind==="lockedTrue"||v===true||v==="true")?" checked":"")+(kind==="lockedTrue"?" disabled":"")+'>';
+    box.appendChild(r);
+  }
+}
+function collectOpts(k){
+  const spec=ROLE_OPTS[k]||[], out={};
+  for(const [key,label,kind,def] of spec){
+    if(kind==="lockedTrue") continue;                 // role decides; never stored
+    const el=document.getElementById("opt_"+key);
+    if(!el) continue;
+    if(kind==="num"){
+      const raw=el.value.trim();
+      if(raw==="") continue;                          // blank = leave it to the default
+      const n=parseInt(raw,10);
+      if(!isNaN(n)&&n!==def) out[key]=n;
+    } else if(el.checked!==def) out[key]=el.checked;
+  }
+  return out;
+}
+function openTint(k){
+  tintRole=k;
+  const t=tintOf(k);
+  ["tr","tg","tb","ta"].forEach((i,n)=>document.getElementById(i).value=t[n]);
+  document.getElementById("tinthead").textContent=(PAL_FIELDS.find(f=>f[0]===k)||[,k])[1].toUpperCase();
+  renderOpts(k);
+  document.getElementById("tintpanel").classList.add("open");
+  tintPrev();
+}
+window.addEventListener("DOMContentLoaded",()=>{      // panel sits after the script
+["tr","tg","tb","ta"].forEach(i=>document.getElementById(i).addEventListener("input",tintPrev));
+document.getElementById("tintreset").onclick=()=>{
+  ["tr","tg","tb","ta"].forEach(i=>document.getElementById(i).value=255);
+  delete palOpts[tintRole]; renderOpts(tintRole); tintPrev();   // colour AND options back to default
+};
+document.getElementById("tintok").onclick=()=>{
+  const t=tintVals();
+  if(t[0]===255&&t[1]===255&&t[2]===255&&t[3]===255) delete palTint[tintRole];
+  else palTint[tintRole]=t;
+  const o=collectOpts(tintRole);
+  if(Object.keys(o).length) palOpts[tintRole]=o; else delete palOpts[tintRole];
+  document.getElementById("tintpanel").classList.remove("open");
+  updateIcon(tintRole); save();
+};
+document.getElementById("tintcancel").onclick=()=>document.getElementById("tintpanel").classList.remove("open");
+});
 function palSet(p){
   for(const [k,_,def,shape] of PAL_FIELDS){
     const s=palToStr(shape,p?p[k]:undefined);
     document.getElementById("pal_"+k).value = s!==null ? s : def;
   }
+  palTint=(p&&p.tint)?JSON.parse(JSON.stringify(p.tint)):{};
+  palOpts=(p&&p.opts)?JSON.parse(JSON.stringify(p.opts)):{};
   palIcons(); syncDw();
 }
 function loadStyles(){ try{ return JSON.parse(localStorage.getItem("lok_styles")||"{}"); }catch(e){ return {}; } }
@@ -2041,6 +2199,16 @@ window.addEventListener("pywebviewready", async()=>{      // app mode: disk is t
   <label>WINDOW &middot; X0 Y0 X1 Y1 &middot; BLANK = WHOLE REGION</label>
   <input type="text" id="irwin" placeholder="e.g.  -33 -75 35 -37">
   <div id="iractions"><button id="irgo" disabled>IMPORT</button><button id="ircancel" onclick="document.getElementById('importpanel').classList.remove('open')">Cancel</button></div>
+</div></div>
+<div id="tintpanel"><div id="tintbox">
+  <div id="tinthead">COLOR</div>
+  <canvas id="tintprev" width="128" height="128"></canvas>
+  <div class="trow"><label style="color:#e05a5a">R</label><input type="range" id="tr" min="0" max="255" value="255"><span class="tval" style="color:#e05a5a" id="trv">255</span></div>
+  <div class="trow"><label style="color:#57c96a">G</label><input type="range" id="tg" min="0" max="255" value="255"><span class="tval" style="color:#57c96a" id="tgv">255</span></div>
+  <div class="trow"><label style="color:#52d8dc">B</label><input type="range" id="tb" min="0" max="255" value="255"><span class="tval" style="color:#52d8dc" id="tbv">255</span></div>
+  <div class="trow"><label style="color:#cfe4e6">A</label><input type="range" id="ta" min="0" max="255" value="255"><span class="tval" style="color:#cfe4e6" id="tav">255</span></div>
+  <div id="optsec"><div class="opthead">OPTIONS</div><div id="optrows"></div></div>
+  <div id="tintbtns"><button id="tintreset">&#8634; 255</button><button id="tintok">OK</button><button id="tintcancel">Cancel</button></div>
 </div></div>
 <div id="buildpanel"><div id="buildbox">
   <div id="buildhead">BUILD</div>
