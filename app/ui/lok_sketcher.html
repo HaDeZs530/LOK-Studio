@@ -893,8 +893,12 @@ function drawIso(){
     const door=q==="door";
     const top=door?"#e88c50":"#e8dcc0", shS=door?"#b5622f":"#a39470", shE=door?"#9c5426":"#8c7e5e";
     if(o.indexOf("h")>=0){                           // south-edge panel
+      // START CUT (Tony 2026-08-25): no wall continuing west -> the run ends flush at
+      // the tile's true west edge instead of overhanging by S (matches the game, where
+      // the corner piece closes the run).
+      const Lx = wallish(gx-1,gy) ? X-S*z : X;
       cx.fillStyle=shS; cx.beginPath();              // south face
-      cx.moveTo(X-S*z,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+      cx.moveTo(Lx,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
       cx.closePath(); cx.fill();
       if(!wallish(gx+1,gy)){                         // east end cap
         cx.fillStyle=shE; cx.beginPath();
@@ -902,11 +906,12 @@ function drawIso(){
         cx.closePath(); cx.fill();
       }
       cx.fillStyle=top;
-      cx.fillRect(X-S*z,Y+(1-T)*z-S*z,z,T*z);        // top band
+      cx.fillRect(Lx,Y+(1-T)*z-S*z,(X+z-S*z)-Lx,T*z); // top band
     }
     if(o.indexOf("v")>=0){                           // east-edge panel
+      const Ty = wallish(gx,gy-1) ? Y-S*z : Y;       // START CUT: flush north edge
       cx.fillStyle=shE; cx.beginPath();              // east face
-      cx.moveTo(X+z-S*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
+      cx.moveTo(X+z-S*z,Ty); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
       cx.closePath(); cx.fill();
       if(!wallish(gx,gy+1)){                         // south end cap
         cx.fillStyle=shS; cx.beginPath();
@@ -914,7 +919,7 @@ function drawIso(){
         cx.closePath(); cx.fill();
       }
       cx.fillStyle=top;
-      cx.fillRect(X+(1-T)*z-S*z,Y-S*z,T*z,z);        // top band
+      cx.fillRect(X+(1-T)*z-S*z,Ty,T*z,(Y+z-S*z)-Ty); // top band
     }
   }
   drawMarks(x1,y1,x2,y2,true);
