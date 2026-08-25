@@ -13,6 +13,7 @@
   #modebadge{padding:4px 12px;border-radius:3px;font-size:12px;letter-spacing:2px;border:1px solid #8a7a2c;
     color:#e0c85a;background:#151509;user-select:none}
   #modebadge.bp{border-color:#d8cfa8;color:#efe6c8;background:#0b0b09}
+  #modebadge.iso{border-color:#a39470;color:#e8dcc0;background:#12100a}
   #buildbtns{margin-top:8px}
   #buildbtns button{width:100%;margin-bottom:6px;padding:8px;border:1px solid #8a7a2c;background:#151509;
     color:#e0c85a;border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px;letter-spacing:1px}
@@ -221,7 +222,7 @@
   </div>
   <button id="palettebtn">&#9646; PALETTE / STYLES</button>
   <div id="side_sketch">
-  <button id="modebtn" title="Toggle blueprint view (M)">&#9670; BLUEPRINT VIEW (M)</button>
+  <button id="modebtn" title="Cycle view: Edit / Blueprint / Iso (M)">&#9670; VIEW (M)</button>
   <div id="tools"></div>
   <details id="conngrp"><summary>CONNECTORS</summary><div id="conntools"></div></details>
   <hr>
@@ -384,7 +385,7 @@ let terrain = new Map();   // "x,y" -> terrain id
 let marks   = new Map();   // "x,y" -> boss|path
 let labels  = new Map();   // "x,y" -> text
 let connectors = new Map(); // "x,y" -> {t:"spawn"|"portal"|"stairs_up"|"stairs_down", tag:""}
-let tool="wall", brush=1, blueprint=false;
+let tool="wall", brush=1, viewMode="edit";   // edit | blueprint | iso
 let zoom=8, panX=20, panY=20;
 // ---- centered app dialogs (replace the browser's native alert/confirm/prompt) ----
 let modalResolve=null;
@@ -613,7 +614,7 @@ function bounds(){
   const x2=Math.min(GW,Math.ceil((cv.width-panX)/zoom)), y2=Math.min(GH,Math.ceil((cv.height-panY)/zoom));
   return [x1,y1,x2,y2];
 }
-function draw(){ blueprint ? drawBlueprint() : drawEdit(); }
+function draw(){ viewMode==="edit" ? drawEdit() : viewMode==="blueprint" ? drawBlueprint() : drawIso(); }
 function drawEdit(){
   cx.shadowBlur=0;
   cx.fillStyle="#0a1014"; cx.fillRect(0,0,cv.width,cv.height);
@@ -776,6 +777,79 @@ function drawBlueprint(){
   }
   rulers();
 }
+function drawIso(){
+  // ISO view (Tony 2026-08-24): blueprint styling, but structural masses render as
+  // merged isometric cubes — top faces shifted up-left by S, 45-degree side faces on
+  // the SE edges — matching how the game actually sits the mass on the map.
+  cx.shadowBlur=0;
+  cx.fillStyle="#0d0b09"; cx.fillRect(0,0,cv.width,cv.height);
+  const [x1,y1,x2,y2]=bounds();
+  if(zoom>=4){
+    cx.strokeStyle="rgba(201,166,72,0.05)"; cx.lineWidth=1; cx.beginPath();
+    for(let gx=x1; gx<=x2; gx++){ cx.moveTo(panX+gx*zoom+.5,panY+y1*zoom); cx.lineTo(panX+gx*zoom+.5,panY+y2*zoom); }
+    for(let gy=y1; gy<=y2; gy++){ cx.moveTo(panX+x1*zoom,panY+gy*zoom+.5); cx.lineTo(panX+x2*zoom,panY+gy*zoom+.5); }
+    cx.stroke();
+  }
+  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
+    const t=terrain.get(key(gx,gy));
+    if(t && t!=="wall" && t!=="structural" && t!=="door"){
+      if(t==="water"||t==="deepwater"){ cx.shadowColor="#3d84c9"; cx.shadowBlur=zoom*0.8; }
+      cx.fillStyle=BPCOL[t];
+      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
+      cx.shadowBlur=0;
+    }
+  }
+  // cubes: pad past the viewport so shifted tops of just-offscreen blocks appear
+  const S=0.75, isB=(x,y)=>terrain.get(key(x,y))==="structural";
+  const bl=[];
+  for(let gx=x1-1; gx<x2+2; gx++) for(let gy=y1-1; gy<y2+2; gy++) if(isB(gx,gy)) bl.push([gx,gy]);
+  for(const [gx,gy] of bl){                        // side faces first
+    const X=panX+gx*zoom, Y=panY+gy*zoom, z=zoom;
+    if(!isB(gx+1,gy)||!isB(gx+1,gy-1)){            // east shoulder
+      cx.fillStyle="#8c7e5e"; cx.beginPath();
+      cx.moveTo(X+(1-S)*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z);
+      cx.closePath(); cx.fill();
+    }
+    if(!isB(gx,gy+1)||!isB(gx-1,gy+1)){            // south shoulder
+      cx.fillStyle="#a39470"; cx.beginPath();
+      cx.moveTo(X-S*z,Y+(1-S)*z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+      cx.closePath(); cx.fill();
+    }
+  }
+  cx.fillStyle="#e8dcc0";
+  for(const [gx,gy] of bl){                        // shifted tops merge across the mass
+    const X=panX+gx*zoom, Y=panY+gy*zoom, z=zoom;
+    cx.fillRect(X-S*z,Y-S*z,z,z);
+  }
+  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
+    const t=terrain.get(key(gx,gy));
+    if(t==="wall"){
+      cx.fillStyle="#e8dcc0";
+      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
+      cx.fillStyle="rgba(0,0,0,0.14)";
+      cx.fillRect(panX+gx*zoom,panY+gy*zoom+zoom*0.65,zoom,zoom*0.35);
+    } else if(t==="door"){
+      cx.fillStyle="#332c22";
+      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
+      cx.shadowColor="#d0622e"; cx.shadowBlur=zoom*0.7;
+      cx.fillStyle="#d0622e";
+      cx.fillRect(panX+gx*zoom+zoom*0.15,panY+gy*zoom+zoom*0.3,zoom*0.7,zoom*0.4);
+      cx.shadowBlur=0;
+    }
+  }
+  drawMarks(x1,y1,x2,y2,true);
+  drawConnectors(true);
+  drawLabels(true);
+  drawGhost(true);
+  const title=document.getElementById("maptitle").value.trim();
+  if(title){
+    cx.fillStyle="#8a7a55"; cx.font="11px Georgia"; cx.textAlign="left";
+    cx.fillText("S T O R M H A L T E R", 54, cv.height-52);
+    cx.fillStyle="#e8dcc0"; cx.font="26px Georgia";
+    cx.fillText(title.toUpperCase().split("").join(" "), 54, cv.height-26);
+  }
+  rulers();
+}
 function drawMarks(x1,y1,x2,y2,bp){
   for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
     const m=marks.get(key(gx,gy));
@@ -926,15 +1000,15 @@ function setMode(mode){
     maskBaseRaw=exportData();                     // the SKETCH is the mask base, always
     document.getElementById("maskbaseinfo").textContent=
       "base: "+(maskBaseRaw.title||"current sketch")+" ("+maskBaseRaw.width+"×"+maskBaseRaw.height+")";
-    sketchKeep={GW,GH,OX,OY,terrain,marks,labels,connectors,undoStack,redoStack,sel,clip,blueprint};
+    sketchKeep={GW,GH,OX,OY,terrain,marks,labels,connectors,undoStack,redoStack,sel,clip,viewMode};
     const b=maskBaseRaw?parseBase(maskBaseRaw):{GW:200,GH:200,OX:-100,OY:-100,terrain:new Map(),marks:new Map(),labels:new Map(),connectors:new Map()};
     ({GW,GH,OX,OY}=b); terrain=b.terrain; marks=b.marks; labels=b.labels; connectors=b.connectors;
-    undoStack=[]; redoStack=[]; sel=null; pasteMode=false; blueprint=false;
+    undoStack=[]; redoStack=[]; sel=null; pasteMode=false; viewMode="edit"; updateModeUI();
   } else {
     ({GW,GH,OX,OY}=sketchKeep); terrain=sketchKeep.terrain; marks=sketchKeep.marks;
     labels=sketchKeep.labels; connectors=sketchKeep.connectors;
     undoStack=sketchKeep.undoStack; redoStack=sketchKeep.redoStack;
-    sel=sketchKeep.sel; clip=sketchKeep.clip; blueprint=sketchKeep.blueprint;
+    sel=sketchKeep.sel; clip=sketchKeep.clip; viewMode=sketchKeep.viewMode||"edit"; updateModeUI();
   }
   uiMode=mode;
   updateModeUI();
@@ -1251,13 +1325,14 @@ window.addEventListener("keydown", e=>{
 });
 window.addEventListener("keyup", e=>{ if(e.code==="Space"){ spaceHeld=false; cv.style.cursor="crosshair"; } });
 function updateModeUI(){
-  document.getElementById("modebtn").classList.toggle("active",blueprint);
+  document.getElementById("modebtn").classList.toggle("active",viewMode!=="edit");
   const g=document.getElementById("modebadge");
-  g.textContent=blueprint?"BLUEPRINT":"EDIT";
-  g.classList.toggle("bp",blueprint);
+  g.textContent=viewMode.toUpperCase();
+  g.classList.toggle("bp",viewMode==="blueprint");
+  g.classList.toggle("iso",viewMode==="iso");
 }
 function toggleMode(){
-  blueprint=!blueprint;
+  viewMode = viewMode==="edit" ? "blueprint" : viewMode==="blueprint" ? "iso" : "edit";
   updateModeUI();
   draw();
 }
@@ -1694,7 +1769,7 @@ document.getElementById("clear").onclick=async()=>{
     draw(); save();
   }
 };
-document.getElementById("maptitle").addEventListener("input", ()=>{ save(); if(blueprint) draw(); });
+document.getElementById("maptitle").addEventListener("input", ()=>{ save(); if(viewMode!=="edit") draw(); });
 // ================= BUILD (generator behind buttons — app mode only) =================
 const bPanel=()=>document.getElementById("buildpanel");
 const bRep=()=>document.getElementById("buildreport");

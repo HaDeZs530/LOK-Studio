@@ -28,8 +28,18 @@ west strips, cut spans CUT=0.75 — imitating the isometric lean while the view 
 flat. Cuts appear ONLY where a run truly ends (next tile isn't a block or another
 N/W carrier), so runs and N-meets-W junctions stay solid — Tony's tileability rule.
 Carrier sets are collected with a 1-tile pad past the viewport so edge cuts stay
-honest. A full-iso cube render (shifted top faces + 45° side parallelograms) was
-sketched and REJECTED — it abandons the flat view; don't re-propose.
+honest. Cuts paint in a FINAL pass with ~1px bleed (a later strip on a both-strips
+tile was repainting over an earlier cut; AA left hairlines) and any cream-rendered
+neighbor (block/wall/door/strip/NW piece) counts as solid so no cut strands a floor
+notch. The full-iso cube render was first rejected as a blueprint REPLACEMENT, then
+adopted as a THIRD VIEW MODE (Tony: "edit, blueprint, iso"):
+**ISO MODE — M now cycles EDIT → BLUEPRINT → ISO.** `viewMode` string replaced the
+`blueprint` bool everywhere (sketchKeep, mask enter/exit, badge, title redraw).
+drawIso = blueprint styling, but structural masses render as merged isometric cubes:
+top faces shifted up-left S=0.75, east shoulder "#8c7e5e", south shoulder "#a39470",
+tops "#e8dcc0", block list padded past the viewport so offscreen tops still show.
+Partition walls/doors/marks/labels stay blueprint-style. Verified against Test 3 in
+a three-mode test render matching Tony's WorldForge screenshots.
 
 ## 2026-08-24 (night) — UI SCALE · APP ICON · INSTALLER · RELEASE FIX · README
 
