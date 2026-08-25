@@ -224,6 +224,7 @@
   <div id="side_sketch">
   <button id="modebtn" title="Cycle view: Edit / Blueprint / Iso (M)">&#9670; VIEW (M)</button>
   <div id="tools"></div>
+  <details id="accgrp"><summary>ACCENT FLOORS</summary><div id="acctools"></div></details>
   <details id="conngrp"><summary>CONNECTORS</summary><div id="conntools"></div></details>
   <hr>
   <label>Grid W&times;H &middot; center X/Y</label><br>
@@ -359,6 +360,9 @@ const TOOLS = [
   {id:"dirtfloor", name:"Dirt floor", key:"i", col:"#8a6a3c", bp:"#4f3f26"},
   {id:"grass", name:"Grass",      key:"g", col:"#4d7a3d", bp:"#3d5c31"},
   {id:"dirt",  name:"Road",       key:"t", col:"#6d5433", bp:"#4a3d28"},
+  {id:"accent1", name:"Accent floor 1", key:"j", col:"#7e8b98", bp:"#57534a"},
+  {id:"accent2", name:"Accent floor 2", key:"k", col:"#4a6fb0", bp:"#3d4f66"},
+  {id:"accent3", name:"Accent floor 3", key:"z", col:"#a0764a", bp:"#5c4a33"},
   {id:"water", name:"Water",      key:"a", col:"#2f6fb8", bp:"#3d84c9"},
   {id:"deepwater", name:"Deep water (block)", key:"q", col:"#1d4a80", bp:"#255a9e"},
   {id:"dead",  name:"Dead space", key:"v", col:"#000000", bp:"#080706"},
@@ -799,42 +803,118 @@ function drawIso(){
       cx.shadowBlur=0;
     }
   }
-  // cubes: pad past the viewport so shifted tops of just-offscreen blocks appear
-  const S=0.75, isB=(x,y)=>terrain.get(key(x,y))==="structural";
-  const bl=[];
-  for(let gx=x1-1; gx<x2+2; gx++) for(let gy=y1-1; gy<y2+2; gy++) if(isB(gx,gy)) bl.push([gx,gy]);
-  for(const [gx,gy] of bl){                        // side faces first
-    const X=panX+gx*zoom, Y=panY+gy*zoom, z=zoom;
-    if(!isB(gx+1,gy)||!isB(gx+1,gy-1)){            // east shoulder
-      cx.fillStyle="#8c7e5e"; cx.beginPath();
-      cx.moveTo(X+(1-S)*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z);
-      cx.closePath(); cx.fill();
-    }
-    if(!isB(gx,gy+1)||!isB(gx-1,gy+1)){            // south shoulder
-      cx.fillStyle="#a39470"; cx.beginPath();
-      cx.moveTo(X-S*z,Y+(1-S)*z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
-      cx.closePath(); cx.fill();
-    }
+  // ONE back-to-front pass (Tony 2026-08-25): cubes AND wall panels sorted NW->SE, so
+  // the up-left lean layers truthfully — walls own their tile, masses spill onto part
+  // of the tile behind them. Partitions = cubes squashed thin (T) on the edge the game
+  // draws them: h-runs hug the SOUTH edge (south face shown), v-runs the EAST edge
+  // (east face shown); junction tiles carry both and form the corner L. Doors are the
+  // same panel in ember. Approved from the 2026-08-25 mock.
+  const S=0.75, T=0.30, tv=(x,y)=>terrain.get(key(x,y));
+  const isB=(x,y)=>tv(x,y)==="structural";
+  const wallish=(x,y)=>{const q=tv(x,y); return q==="wall"||q==="door"||q==="structural";};
+  const isTW=(x,y)=>marks.get(key(x,y))==="treewall";
+  // doors piercing a structural run: the generator CARVES the flank block into a
+  // divider — east flank for a NS door, south flank for an EW door (canon gap-door
+  // form). The iso view previews that carve: flank cube suppressed, panel drawn.
+  const carved=new Map();
+  for(let gx=x1-2; gx<x2+2; gx++) for(let gy=y1-2; gy<y2+2; gy++){
+    if(tv(gx,gy)!=="door") continue;
+    if(tv(gx-1,gy)==="structural"&&tv(gx+1,gy)==="structural") carved.set(key(gx+1,gy),"pv");
+    else if(tv(gx,gy-1)==="structural"&&tv(gx,gy+1)==="structural") carved.set(key(gx,gy+1),"ph");
   }
-  cx.fillStyle="#e8dcc0";
-  for(const [gx,gy] of bl){                        // shifted tops merge across the mass
-    const X=panX+gx*zoom, Y=panY+gy*zoom, z=zoom;
-    cx.fillRect(X-S*z,Y-S*z,z,z);
+  const items=[];
+  for(let gx=x1-2; gx<x2+2; gx++) for(let gy=y1-2; gy<y2+2; gy++){
+    const q=tv(gx,gy);
+    if(carved.has(key(gx,gy))) items.push([gx,gy,carved.get(key(gx,gy))]);
+    else if(q==="structural"||q==="wall"||q==="door") items.push([gx,gy,q]);
+    else if(isTW(gx,gy)) items.push([gx,gy,"tw"]);
+    else if(marks.get(key(gx,gy))==="tree") items.push([gx,gy,"tr"]);
   }
-  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
-    const t=terrain.get(key(gx,gy));
-    if(t==="wall"){
+  items.sort((a,b)=>a[1]-b[1]||a[0]-b[0]);
+  for(const [gx,gy,q] of items){
+    const X=panX+gx*zoom, Y=panY+gy*zoom, z=zoom;
+    if(q==="tr"){                                  // walkable tree: Tony's sprite
+      cx.fillStyle="rgba(8,16,8,0.38)";
+      cx.beginPath(); cx.ellipse(X+0.18*z,Y+0.52*z,0.62*z,0.4*z,0,0,7); cx.fill();
+      if(TREE_IMG.complete&&TREE_IMG.naturalWidth)
+        cx.drawImage(TREE_IMG, X-0.92*z, Y-0.98*z, 1.9*z, 1.9*z);
+      continue;
+    }
+    if(q==="tw"){                                  // tree wall: the structural cube, green
+      if(!isTW(gx+1,gy)||!isTW(gx+1,gy-1)){
+        cx.fillStyle="#225628"; cx.beginPath();
+        cx.moveTo(X+(1-S)*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z);
+        cx.closePath(); cx.fill();
+      }
+      if(!isTW(gx,gy+1)||!isTW(gx-1,gy+1)){
+        cx.fillStyle="#306e36"; cx.beginPath();
+        cx.moveTo(X-S*z,Y+(1-S)*z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+        cx.closePath(); cx.fill();
+      }
+      cx.fillStyle="#469646";
+      cx.fillRect(X-S*z,Y-S*z,z,z);
+      continue;
+    }
+    if(q==="pv"||q==="ph"){                          // carved door flank: derived divider
+      cx.fillStyle=BPCOL.floor||"#332c22";           // seen floor under it
+      cx.fillRect(X,Y,z,z);
+      if(q==="pv"){
+        cx.fillStyle="#8c7e5e"; cx.beginPath();
+        cx.moveTo(X+z-S*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
+        cx.closePath(); cx.fill();
+        cx.fillStyle="#e8dcc0";
+        cx.fillRect(X+(1-T)*z-S*z,Y-S*z,T*z,z);
+      } else {
+        cx.fillStyle="#a39470"; cx.beginPath();
+        cx.moveTo(X-S*z,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+        cx.closePath(); cx.fill();
+        cx.fillStyle="#e8dcc0";
+        cx.fillRect(X-S*z,Y+(1-T)*z-S*z,z,T*z);
+      }
+      continue;
+    }
+    if(q==="structural"){
+      if(!isB(gx+1,gy)||!isB(gx+1,gy-1)){            // east shoulder
+        cx.fillStyle="#8c7e5e"; cx.beginPath();
+        cx.moveTo(X+(1-S)*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z);
+        cx.closePath(); cx.fill();
+      }
+      if(!isB(gx,gy+1)||!isB(gx-1,gy+1)){            // south shoulder
+        cx.fillStyle="#a39470"; cx.beginPath();
+        cx.moveTo(X-S*z,Y+(1-S)*z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+        cx.closePath(); cx.fill();
+      }
       cx.fillStyle="#e8dcc0";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
-      cx.fillStyle="rgba(0,0,0,0.14)";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom+zoom*0.65,zoom,zoom*0.35);
-    } else if(t==="door"){
-      cx.fillStyle="#332c22";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
-      cx.shadowColor="#d0622e"; cx.shadowBlur=zoom*0.7;
-      cx.fillStyle="#d0622e";
-      cx.fillRect(panX+gx*zoom+zoom*0.15,panY+gy*zoom+zoom*0.3,zoom*0.7,zoom*0.4);
-      cx.shadowBlur=0;
+      cx.fillRect(X-S*z,Y-S*z,z,z);
+      continue;
+    }
+    const h=wallish(gx+1,gy)||wallish(gx-1,gy), v=wallish(gx,gy-1)||wallish(gx,gy+1);
+    const o=(h&&!v)?"h":(v&&!h)?"v":(h&&v)?"hv":"h";
+    const door=q==="door";
+    const top=door?"#e88c50":"#e8dcc0", shS=door?"#b5622f":"#a39470", shE=door?"#9c5426":"#8c7e5e";
+    if(o.indexOf("h")>=0){                           // south-edge panel
+      cx.fillStyle=shS; cx.beginPath();              // south face
+      cx.moveTo(X-S*z,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+      cx.closePath(); cx.fill();
+      if(!wallish(gx+1,gy)){                         // east end cap
+        cx.fillStyle=shE; cx.beginPath();
+        cx.moveTo(X+z-S*z,Y+(1-T)*z-S*z); cx.lineTo(X+z,Y+(1-T)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
+        cx.closePath(); cx.fill();
+      }
+      cx.fillStyle=top;
+      cx.fillRect(X-S*z,Y+(1-T)*z-S*z,z,T*z);        // top band
+    }
+    if(o.indexOf("v")>=0){                           // east-edge panel
+      cx.fillStyle=shE; cx.beginPath();              // east face
+      cx.moveTo(X+z-S*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
+      cx.closePath(); cx.fill();
+      if(!wallish(gx,gy+1)){                         // south end cap
+        cx.fillStyle=shS; cx.beginPath();
+        cx.moveTo(X+(1-T)*z-S*z,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-T)*z,Y+z);
+        cx.closePath(); cx.fill();
+      }
+      cx.fillStyle=top;
+      cx.fillRect(X+(1-T)*z-S*z,Y-S*z,T*z,z);        // top band
     }
   }
   drawMarks(x1,y1,x2,y2,true);
@@ -863,6 +943,7 @@ function drawMarks(x1,y1,x2,y2,bp){
       cx.fillRect(-s/2,-s/2,s,s); cx.restore();
       cx.shadowBlur=0;
     } else if(m==="tree"||m==="treewall"){
+      if(viewMode==="iso") continue;                   // iso: sprite (tree) / green cube (treewall)
       const col=(bp?BPCOL:TCOL)[m];
       const s=Math.max(3,zoom*(m==="treewall"?0.46:0.32));
       if(bp&&m==="treewall"){ cx.shadowColor=col; cx.shadowBlur=zoom*0.5; }
@@ -1338,13 +1419,14 @@ function toggleMode(){
 }
 document.getElementById("modebtn").onclick=toggleMode;
 const toolsDiv=document.getElementById("tools");
+const accDiv=document.getElementById("acctools");
 for(const t of TOOLS){
   const b=document.createElement("button");
   b.className="tool"+(t.id===tool?" active":""); b.id="t_"+t.id;
   const shp = t.id==="boss" ? " diamond" : ((t.id==="path"||t.id==="tree") ? " dot" : "");
   b.innerHTML='<span class="sw'+shp+'" style="background:'+t.col+'"></span>'+t.name+' <span style="margin-left:auto;color:#4d6d73">'+t.key.toUpperCase()+"</span>";
   b.onclick=()=>selectTool(t.id);
-  toolsDiv.appendChild(b);
+  (t.id.indexOf("accent")===0?accDiv:toolsDiv).appendChild(b);
 }
 const connDiv=document.getElementById("conntools");
 for(const t of CONN){
@@ -1367,6 +1449,9 @@ const PAL_FIELDS=[
   ["dirtfloor","Dirt floor","12","nl"],
   ["grass","Grass","13","nl"],
   ["dirt","Road","184","nl"],
+  ["accent1","Accent floor 1","1","nl"],
+  ["accent2","Accent floor 2","1","nl"],
+  ["accent3","Accent floor 3","1","nl"],
   ["water","Water","22","n"],
   ["deepwater","Deep water","19","dw"],
   ["structural_floor","Structural wall floor","12","nl"],
@@ -1645,7 +1730,7 @@ document.getElementById("styleexp").onclick=()=>{
 document.getElementById("styledef").onclick=()=>{ palSet(null); document.getElementById("stylesel").value=""; save(); };
 refreshStyleSel();
 stylesFromFolder(false);   // silent folder load at boot if permission is already granted
-function selectTool(id){ tool=id; if(id!=="select") pasteMode=false; for(const t of TOOLS.concat(CONN)) document.getElementById("t_"+t.id).classList.toggle("active",t.id===id); document.getElementById("tb_select").classList.toggle("active",id==="select"); if(CONNIDS.includes(id)) document.getElementById("conngrp").open=true; draw(); }
+function selectTool(id){ tool=id; if(id!=="select") pasteMode=false; for(const t of TOOLS.concat(CONN)) document.getElementById("t_"+t.id).classList.toggle("active",t.id===id); document.getElementById("tb_select").classList.toggle("active",id==="select"); if(CONNIDS.includes(id)) document.getElementById("conngrp").open=true; if(id.indexOf("accent")===0) document.getElementById("accgrp").open=true; draw(); }
 document.getElementById("tb_undo").onclick=undo;
 document.getElementById("tb_redo").onclick=redo;
 document.getElementById("tb_select").onclick=()=>selectTool("select");
@@ -1910,6 +1995,8 @@ document.getElementById("maskapply").onclick=async()=>{
   bPanel().classList.add("open");
 };
 const APP=()=>window.pywebview&&window.pywebview.api;
+const TREE_IMG=new Image(); TREE_IMG.src="tree-sprite.svg";   // Tony's vectorized sprite
+TREE_IMG.onload=()=>draw();
 let _saveT=null;
 function save(){
   if(uiMode==="mask"){ maskSave(); return; }     // never write the base map over the sketch autosave

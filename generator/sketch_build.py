@@ -42,6 +42,9 @@ from xml.etree import ElementTree as ET
 # grass 13, dirt 12, floor 1 per Components.xml; connector ids from Tony 2026-08-23.
 DEFAULT_PALETTE = {
     "floor": 1, "room": 1, "hall": 1, "dirtfloor": 12, "grass": 13, "dirt": 184,
+    # accent floors (Tony 2026-08-25): decoration grounds, default to plain floor 1 —
+    # the real ids are per-style choices
+    "accent1": 1, "accent2": 1, "accent3": 1,
     "water": {"ground": 22, "movementCost": 3},
     # impassable water = water + obstruction 19 (captured: region 0 harbor edges)
     "deepwater": {"ground": 22, "movementCost": 3, "obstruction": 19},
@@ -60,7 +63,8 @@ DEFAULT_PALETTE = {
 
 # v5 sketches declare room/hall explicitly (the classification is Tony's, taken as drawn);
 # "floor" remains for v1-v4 sketches. dirtfloor = dirt ground as walkable floor; dirt = ROAD.
-GROUNDS = ("room", "hall", "floor", "dirtfloor", "grass", "water", "deepwater", "dirt")
+GROUNDS = ("room", "hall", "floor", "dirtfloor", "grass", "water", "deepwater", "dirt",
+           "accent1", "accent2", "accent3")
 
 
 def resolve_palette(pal, rep):
@@ -890,7 +894,8 @@ def render_png(M, S, path):
     d = ImageDraw.Draw(img)
     COL = {"floor": (58, 74, 86), "room": (58, 74, 86), "hall": (85, 104, 122),
            "dirtfloor": (138, 106, 60), "grass": (77, 122, 61), "water": (47, 111, 184),
-           "deepwater": (29, 74, 128), "dirt": (109, 84, 51), "structural_floor": (40, 36, 30)}
+           "deepwater": (29, 74, 128), "dirt": (109, 84, 51), "structural_floor": (40, 36, 30),
+           "accent1": (126, 139, 152), "accent2": (74, 111, 176), "accent3": (160, 118, 74)}
     for c, m in M.items():
         px, py = mx + (c[0]-x0)*cs, my + (c[1]-y0)*cs
         col = COL.get(m["ground"], (24, 24, 26)) if m["ground"] else (16, 14, 12)

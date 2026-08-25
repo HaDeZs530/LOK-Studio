@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" shape-rendering="geometricPrecision">
+  <g transform="translate(21.14,30.59) scale(0.9614)">
+    <g transform="rotate(-40 128.5 122)">
+      <g transform="translate(14,0)">
+        <path fill="#9C6C48" d="M92 228 L138 228 L130 170 L146 128 L131 123 L120 164 L114 164 L102 132 L88 138 L102 172 Z"></path>
+        <g fill="#2E5A24">
+          <circle cx="123" cy="106" r="58"></circle>
+          <circle cx="179" cy="104" r="33"></circle>
+          <circle cx="163" cy="70" r="31"></circle>
+          <circle cx="121" cy="58" r="36"></circle>
+          <circle cx="83" cy="70" r="33"></circle>
+          <circle cx="67" cy="108" r="31"></circle>
+          <circle cx="85" cy="140" r="31"></circle>
+          <circle cx="125" cy="154" r="34"></circle>
+          <circle cx="161" cy="140" r="32"></circle>
+          <circle cx="149" cy="50" r="24"></circle>
+          <circle cx="51" cy="90" r="24"></circle>
+        </g>
+        <g fill="#5C8F45">
+          <circle cx="118" cy="96" r="54"></circle>
+          <circle cx="174" cy="94" r="29"></circle>
+          <circle cx="158" cy="60" r="27"></circle>
+          <circle cx="116" cy="48" r="32"></circle>
+          <circle cx="78" cy="60" r="29"></circle>
+          <circle cx="62" cy="98" r="27"></circle>
+          <circle cx="80" cy="130" r="27"></circle>
+          <circle cx="120" cy="144" r="30"></circle>
+          <circle cx="156" cy="130" r="28"></circle>
+          <circle cx="144" cy="40" r="20"></circle>
+          <circle cx="46" cy="80" r="20"></circle>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

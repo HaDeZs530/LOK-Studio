@@ -1,26 +1,68 @@
 {
-  "_comment": "STYLE SET template — copy this file, rename it (e.g. harbor.json, ruins.json), and change the ids. Build with: python3 sketch_build.py <sketch.json> --style <name> ... Any key omitted falls back to the gray-box default. Wall entries are [wall, destroyed, ruins]; doors are [openId, closedId, secretId, destroyedId].",
+  "_comment": "STYLE SET template \u2014 copy this file, rename it (e.g. harbor.json, ruins.json), and change the ids. Build with: python3 sketch_build.py <sketch.json> --style <name> ... Any key omitted falls back to the gray-box default. Wall entries are [wall, destroyed, ruins]; doors are [openId, closedId, secretId, destroyedId].",
   "floor": 1,
   "room": 1,
   "hall": 1,
   "dirtfloor": 12,
   "grass": 13,
   "dirt": 12,
-  "water": {"ground": 22, "movementCost": 3},
-  "deepwater": {"ground": 22, "movementCost": 3, "obstruction": 19},
-  "tree": {"tree": 98, "canGrow": "true"},
-  "treewall": {"obstruction": 266, "blockVision": "true"},
+  "water": {
+    "ground": 22,
+    "movementCost": 3
+  },
+  "deepwater": {
+    "ground": 22,
+    "movementCost": 3,
+    "obstruction": 19
+  },
+  "tree": {
+    "tree": 98,
+    "canGrow": "true"
+  },
+  "treewall": {
+    "obstruction": 266,
+    "blockVision": "true"
+  },
   "structural_floor": 12,
-  "wall-ns": [29, 42, 46],
-  "wall-ew": [30, 43, 46],
-  "corner": [34, 144, 46],
-  "structural": [447, 0, 44],
-  "door-ns": [78, 66, 151, 84],
-  "door-ew": [79, 67, 152, 85],
+  "wall-ns": [
+    29,
+    42,
+    46
+  ],
+  "wall-ew": [
+    30,
+    43,
+    46
+  ],
+  "corner": [
+    34,
+    144,
+    46
+  ],
+  "structural": [
+    447,
+    0,
+    44
+  ],
+  "door-ns": [
+    78,
+    66,
+    151,
+    84
+  ],
+  "door-ew": [
+    79,
+    67,
+    152,
+    85
+  ],
   "indestructible": false,
   "boss_ground": 5,
   "spawn_ground": 2,
   "stairs_up": 127,
   "stairs_down": 123,
-  "portal_egress": 318
+  "portal_egress": 318,
+  "accent1": 1,
+  "accent2": 1,
+  "accent3": 1
 }
