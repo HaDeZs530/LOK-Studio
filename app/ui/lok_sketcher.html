@@ -719,7 +719,8 @@ function drawBlueprint(){
     cx.fillStyle="rgba(0,0,0,0.14)";
     cx.fillRect(px+zoom*TRIM,py+zoom*0.65,zoom*(1-TRIM),zoom*0.35);
   }
-  for(const k of nset){                           // north strips
+  const cuts=[];                                  // cuts paint LAST — a later strip on a
+  for(const k of nset){                           // both-strips tile must not repaint them
     const [nx,ny]=k.split(",").map(Number);
     const px=panX+nx*zoom, py=panY+ny*zoom;
     cx.fillStyle="#e8dcc0";
@@ -727,7 +728,8 @@ function drawBlueprint(){
     cx.fillStyle="rgba(0,0,0,0.14)";
     cx.fillRect(px,py+zoom*0.65,zoom,zoom*0.35);
     if(!solidK(key(nx+1,ny)))                     // NE corner cut at the run's end
-      tri([px+zoom-zoom*CUT,py+zoom*TRIM],[px+zoom,py+zoom*TRIM],[px+zoom,py+zoom],gcol(k));
+      cuts.push([[px+zoom-zoom*CUT-1,py+zoom*TRIM-1],[px+zoom+1,py+zoom*TRIM-1],
+                 [px+zoom+1,py+zoom+1],gcol(k)]);
   }
   for(const k of wset){                           // west strips
     const [nx,ny]=k.split(",").map(Number);
@@ -737,8 +739,12 @@ function drawBlueprint(){
     cx.fillStyle="rgba(0,0,0,0.14)";
     cx.fillRect(px+zoom*TRIM,py+zoom*0.65,zoom*(1-TRIM),zoom*0.35);
     if(!solidK(key(nx,ny+1)))                     // SW corner cut at the run's end
-      tri([px+zoom*TRIM,py+zoom-zoom*CUT],[px+zoom*TRIM,py+zoom],[px+zoom*CUT+zoom*TRIM,py+zoom],gcol(k));
+      cuts.push([[px+zoom*TRIM-1,py+zoom-zoom*CUT-1],[px+zoom*TRIM-1,py+zoom+1],
+                 [px+zoom*CUT+zoom*TRIM+1,py+zoom+1],gcol(k)]);
   }
+  for(const [a,b,c,col] of cuts) tri(a,b,c,col);  // 1px bleed swallows AA seams; a cut
+                                                  // only fires beside open floor, so the
+                                                  // bleed lands on floor color anyway
   // walls as cream slabs with a subtle inner shade
   for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
     const t=terrain.get(key(gx,gy));
