@@ -21,6 +21,13 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip pywebview pyinstaller
 
+      - name: Stamp version
+        run: |
+          $v = "$env:GITHUB_REF_NAME" -replace '^v',''
+          if ($v -notmatch '^\d+(\.\d+)*$') { $v = '0.0.0-dev' }   # non-tag runs
+          Set-Content app/version.py "# stamped by CI from the git tag`nVERSION = `"$v`""
+          Write-Host "version: $v"
+
       - name: Build
         run: pyinstaller packaging/LOK-Studio.spec --noconfirm
 

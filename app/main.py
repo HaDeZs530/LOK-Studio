@@ -17,6 +17,11 @@ import subprocess
 import sys
 from pathlib import Path
 
+try:
+    from version import VERSION            # stamped by CI from the git tag
+except ImportError:
+    VERSION = "0.0.0-dev"
+
 FROZEN = bool(getattr(sys, "frozen", False))
 if FROZEN:
     # packaged app: bundled read-only data lives in _internal (sys._MEIPASS);
@@ -455,7 +460,62 @@ class Api:
         return _run("apply_masks.py", *args)
 
     def version(self):
-        return "LOK Studio 0.1.0"
+        return f"LOK Studio {VERSION}"
+
+    # ---- updates: checked only on request (☰ menu), never automatically.
+    REPO_API = "https://api.github.com/repos/HaDeZs530/LOK-Studio/releases/latest"
+
+    @staticmethod
+    def _vtuple(s):
+        s = str(s or "").strip().lstrip("vV").split("-")[0]
+        parts = []
+        for chunk in s.split("."):
+            parts.append(int(chunk) if chunk.isdigit() else 0)
+        return tuple(parts + [0, 0, 0])[:3]
+
+    def check_update(self):
+        """Ask GitHub for the newest release. Returns what's there — never downloads."""
+        import urllib.request
+        try:
+            req = urllib.request.Request(
+                self.REPO_API, headers={"User-Agent": "LOK-Studio",
+                                        "Accept": "application/vnd.github+json"})
+            with urllib.request.urlopen(req, timeout=12) as r:
+                d = json.loads(r.read().decode("utf-8"))
+        except Exception as e:
+            return {"error": f"Could not reach GitHub: {e}"}
+        latest = d.get("tag_name") or ""
+        setup = next((a.get("browser_download_url") for a in (d.get("assets") or [])
+                      if str(a.get("name", "")).lower().endswith("setup.exe")), None)
+        # a build living under Program Files came from the installer; a portable copy
+        # should be pointed at the page rather than handed a second installation
+        installed = "program files" in str(Path(sys.executable).parent).lower()
+        return {"current": VERSION, "latest": latest.lstrip("vV"),
+                "newer": self._vtuple(latest) > self._vtuple(VERSION),
+                "dev": VERSION.endswith("-dev"),
+                "notes": (d.get("body") or "").strip()[:1200],
+                "page": d.get("html_url"), "setup": setup,
+                "installed": installed and bool(setup)}
+
+    def run_update(self, url):
+        """Download the release installer and launch it, then close the app so the
+        installer can replace the files. Only ever called after an explicit confirm."""
+        import urllib.request, tempfile, os
+        if not str(url).startswith("https://github.com/HaDeZs530/LOK-Studio/releases/"):
+            return {"error": "refused: that download is not from this project's releases"}
+        try:
+            dest = Path(tempfile.gettempdir()) / "LOK-Studio-Setup.exe"
+            req = urllib.request.Request(url, headers={"User-Agent": "LOK-Studio"})
+            with urllib.request.urlopen(req, timeout=120) as r, open(dest, "wb") as f:
+                shutil.copyfileobj(r, f)
+            if dest.stat().st_size < 1_000_000:
+                return {"error": "the download looks truncated — try again"}
+            os.startfile(str(dest))
+        except Exception as e:
+            return {"error": f"Update failed: {e}"}
+        import threading, webview
+        threading.Timer(1.5, lambda: webview.windows[0].destroy()).start()
+        return {"ok": True, "path": str(dest)}
 
 
 def main():

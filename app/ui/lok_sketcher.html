@@ -188,6 +188,7 @@
   <button id="menubtn" title="Menu">&#9776;</button>
   <div id="menupanel">
     <button class="menuitem" id="mi_settings">Settings&hellip;</button>
+    <button class="menuitem" id="mi_update">Check for updates&hellip;</button>
   </div>
   <span class="tsep"></span>
   <span id="pos" title="Cursor tile coordinates">&nbsp;</span>
@@ -531,6 +532,34 @@ document.querySelectorAll("#setbox [data-open]").forEach(b=>b.onclick=async()=>{
   const r=await APP().open_folder(p);
   if(r&&r.error) uiAlert(r.error);
 });
+document.getElementById("mi_update").onclick=async()=>{
+  menuClose();
+  if(!APP()){ uiAlert("Update checking needs the LOK Studio app."); return; }
+  uiToast("CHECKING FOR UPDATES…");
+  const u=await APP().check_update();
+  if(!u||u.error){ uiAlert((u&&u.error)||"Could not check for updates."); return; }
+  if(!u.newer){
+    uiAlert("You're up to date.\n\nInstalled: "+u.current
+      +(u.latest?"\nLatest release: "+u.latest:"")
+      +(u.dev?"\n\n(This copy runs from source — it has no release version.)":""));
+    return;
+  }
+  const notes=u.notes?"\n\n"+u.notes.split("\n").slice(0,12).join("\n"):"";
+  if(!u.installed){        // portable/zip copy: don't hand it a second installation
+    if(await uiConfirm("Version "+u.latest+" is available (you have "+u.current+")."
+        +notes+"\n\nThis copy wasn't installed with the installer, so download it "
+        +"yourself from the releases page. Open that page now?"))
+      window.open(u.page,"_blank");
+    return;
+  }
+  if(!await uiConfirm("Version "+u.latest+" is available (you have "+u.current+")."
+      +notes+"\n\nDownload and install it now? LOK Studio will close so the installer "
+      +"can replace it. Your maps, styles and settings are not touched."))
+    return;
+  uiToast("DOWNLOADING UPDATE…");
+  const r=await APP().run_update(u.setup);
+  if(r&&r.error) uiAlert(r.error);
+};
 document.getElementById("mi_settings").onclick=async()=>{
   menuClose();
   if(!APP()){
