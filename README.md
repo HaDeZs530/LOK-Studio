@@ -2,59 +2,73 @@
 
 # LOK Studio
 
-**Draw a map. Get a working game region.**
+A sketching front end for building WorldForge regions.
 
-LOK Studio is a map-making tool for [Stormhalter](https://stormhalter.com), the Legends
-of Kesmai revival. You sketch a layout on a grid — rooms, corridors, walls, doors,
-water, forest — pick which real game tiles it should be built from, and the app writes
-the WorldForge region file for you.
+[Stormhalter](https://stormhalter.com)'s tiles are isometric, so a wall piece doesn't
+render on the tile it sits on. It leans up and to the left, spilling onto neighbouring
+tiles, and the piece that draws a corner or frames a doorway often belongs to a
+different tile than the wall it closes. Placing walls by hand means tracking those
+offsets for every run, corner and door in a region.
 
-The part that usually eats the day is the part it takes off your hands: isometric maps
-have fussy rules about where wall faces render, which tile carries a corner piece, how a
-door in a thick wall gets framed. You draw the shape you want. The builder handles the
-rest, the same way every time.
+LOK Studio handles that placement. You sketch the layout — rooms, corridors, walls,
+doors — and it writes the region XML with the wall pieces placed by those rules.
+
+It is not a start-to-finish map creator. It gets a drawn area into WorldForge correctly
+built; decoration, spawns and the rest are done in WorldForge afterwards.
 
 ---
 
 ## Download
 
-### ➜ [**Download LOK Studio for Windows**](https://github.com/HaDeZs530/LOK-Studio/releases/latest/download/LOK-Studio-win64.zip)
+### ➜ [**Installer**](https://github.com/HaDeZs530/LOK-Studio/releases/latest/download/LOK-Studio-Setup.exe) &nbsp;·&nbsp; [**Portable zip**](https://github.com/HaDeZs530/LOK-Studio/releases/latest/download/LOK-Studio-win64.zip)
 
-Nothing to install. No Python, no accounts.
-
-1. Download the zip.
-2. **Unzip the whole folder** somewhere you'll keep it.
-3. Run **`LOK-Studio.exe`** from inside it.
+No Python and no accounts either way. The installer puts it in the Start Menu; the zip
+runs from wherever you unzip it — unzip the **whole folder** and run `LOK-Studio.exe`
+from inside it, keeping the `_internal` folder beside it.
 
 Windows will warn you the first time — *"Windows protected your PC"* — because the app
-isn't code-signed. Click **More info → Run anyway**. Keep the exe inside its folder;
-the `_internal` folder next to it is the app.
+isn't code-signed. Click **More info → Run anyway**.
 
 ---
 
 ## How it works
 
-**Draw.** Sixteen brushes: room and hall floors, thin walls, thick structural masses,
-doors, grass, water, roads, trees, stairs and portals. Pan, zoom, copy-paste, undo.
-Everything autosaves.
+### Sketch
 
-**Choose your tiles.** The palette screen shows every terrain tile in the game — over
-1,400 of them, with pictures — and lets you say which one plays each role. Type `176`
-next to Room floor and you see the tile you just picked. Save a set as a named style
-and reuse it on any map.
+The sketch screen is where you draw and plan — a whole region or just a piece of one.
+Rooms, corridors, thin dividing walls, thick structural masses, doors, floors, water,
+roads, trees, stairs and portals, on a coordinate grid that matches WorldForge.
 
-**Build.** Press build and the app shows you what it's about to do before it does it:
-which region, how many tiles, which tiles it's using. Building into an existing map is
-always a dry run first — it tells you exactly what would change, and nothing is written
-until you click confirm. Your file is backed up before every write.
+The isometric rules are applied as you go, so what you draw is a layout that will
+actually build. You lay out the shape of the space; you don't have to think about which
+tile carries which wall face.
 
-**Come back later.** Pull an existing region back onto the canvas, move a wall, add a
-room, and rebuild — only what you actually changed gets rewritten. Decorations you
-placed by hand in WorldForge survive untouched.
+### Styles
 
-**Restyle without redrawing.** Paint areas of a finished map and assign each one a
-style — one wing in dungeon stone, another in marble — and the app repaints just those
-tiles.
+A style is a saved set of tile ids — this floor, that wall family, these doors. Save as
+many as you like: a dungeon set, a marble set, a ruined set. Every tile in the game is
+browsable with its picture, so you pick by eye rather than by number.
+
+Masking is the other half. Paint over sections of a map and assign each section its own
+style, and those areas get rebuilt in their own tiles — one wing in dungeon stone,
+another in marble — without redrawing a single wall.
+
+### Build R#
+
+**R#** is the region number you're building into. Press build and the sketch goes
+through the generators, which convert it into WorldForge region XML following the
+placement and isometric rules.
+
+You see what it intends to do before it does it — which region, how many tiles, which
+tile set. Building into an existing region is a dry run first: it reports exactly what
+would change and writes nothing until you confirm. Every write is backed up.
+
+### Import
+
+Import a section of a region to work on one area without disturbing the rest, and when
+you rebuild, only what you actually changed gets rewritten — decoration you placed by
+hand in WorldForge stays untouched. Or import a whole map purely to mask it and apply
+styles to specific areas.
 
 ---
 
@@ -63,10 +77,8 @@ tiles.
 Clone the repo and double-click **`run.bat`**. Needs [Python](https://python.org) with
 "Add to PATH" ticked; the first run installs one dependency and opens the app.
 
-Working on two machines? Clone on both. Your saved tile styles live in the repo and
-travel with it; your maps-in-progress stay local.
-
----
+Working on two machines? Clone on both. Your saved styles live in the repo and travel
+with it; your maps-in-progress stay local.
 
 ## What's inside
 
@@ -89,7 +101,5 @@ travel with it; your maps-in-progress stay local.
 
 ## Status
 
-The full loop works and is in daily use: import a region, edit it, build it back,
-restyle areas, all inside the app. Procedural layout generation is the next big piece.
-
-Built by HaDeZs for the Stormhalter dev community. Issues and ideas welcome.
+The full loop works and is in daily use: sketch, style, build, import a region, edit it,
+build it back, restyle areas.
