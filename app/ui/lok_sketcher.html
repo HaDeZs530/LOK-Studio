@@ -121,6 +121,41 @@
   .rst:hover{border-color:#52d8dc;color:#bfeff5}
   .rst.ghost{visibility:hidden;pointer-events:none}
   .rst.dw.active{border-color:#e0c85a;color:#e0c85a}
+  #menubtn{font-size:16px;line-height:1;padding:4px 10px}
+  #menubtn.open{border-color:#52d8dc;background:#12303a}
+  #menupanel{display:none;position:absolute;top:38px;left:8px;z-index:70;min-width:190px;
+    background:#0c161c;border:1px solid #2a6f78;border-radius:4px;padding:4px;
+    box-shadow:0 6px 22px rgba(0,0,0,.6)}
+  #menupanel.open{display:block}
+  .menuitem{display:block;width:100%;text-align:left;padding:8px 12px;border:0;background:none;
+    color:#cfe4e6;font-family:Georgia,serif;font-size:13px;letter-spacing:1px;cursor:pointer;border-radius:3px}
+  .menuitem:hover{background:#12303a;color:#bfeff5}
+  #setscreen{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:75;display:none;
+    align-items:center;justify-content:center}
+  #setscreen.open{display:flex}
+  #setbox{width:min(720px,92vw);max-height:86vh;overflow-y:auto;background:#0c161c;
+    border:1px solid #2a6f78;border-radius:5px;padding:0 0 18px 0;box-shadow:0 10px 40px rgba(0,0,0,.7)}
+  #sethead{display:flex;align-items:center;padding:14px 18px;border-bottom:1px solid #1b3a42}
+  #sethead h3{margin:0;flex:1 1 auto}
+  #setclose{border:1px solid #234f57;background:#0f1d24;color:#cfe4e6;border-radius:3px;
+    cursor:pointer;font-family:Georgia,serif;font-size:15px;line-height:1;padding:4px 10px}
+  #setclose:hover{border-color:#c24a2a;color:#d9a08a}
+  .setsec{padding:14px 18px 4px 18px}
+  .setsec h4{margin:0 0 4px 0;font-size:11px;color:#5d8a90;letter-spacing:2px;font-weight:normal;text-transform:uppercase}
+  .setrow{margin:10px 0}
+  .setrow .lbl{font-size:13px;color:#cfe4e6;letter-spacing:1px;margin-bottom:3px}
+  .setrow .hint{font-size:11px;color:#4d6d73;line-height:1.5;margin-bottom:4px}
+  .setrow .pathrow{display:flex;gap:6px;align-items:center}
+  .setrow .path{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    background:#0a1014;border:1px solid #234f57;border-radius:3px;padding:6px 9px;
+    color:#e0c85a;font-size:12px;letter-spacing:1px}
+  .setrow .path.unset{color:#8a5a4a}
+  .setrow button{flex-shrink:0;padding:6px 12px;border:1px solid #234f57;background:#0f1d24;
+    color:#cfe4e6;border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:12px}
+  .setrow button:hover{border-color:#52d8dc;color:#bfeff5}
+  .setrow select{background:#0a1014;color:#e0c85a;border:1px solid #234f57;border-radius:3px;
+    padding:6px 9px;font-family:Georgia,serif;font-size:13px;letter-spacing:1px}
+  #setabout{padding:6px 18px 0 18px;font-size:11px;color:#4d6d73;line-height:1.6}
   #uitoast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;pointer-events:none;
     padding:7px 18px;border:1px solid #52d8dc;background:#0d2027;color:#bfeff5;border-radius:3px;
     font-family:Georgia,serif;font-size:13px;letter-spacing:2px;opacity:0;transition:opacity .25s}
@@ -150,6 +185,11 @@
 <body>
 <div id="app">
 <div id="topbar">
+  <button id="menubtn" title="Menu">&#9776;</button>
+  <div id="menupanel">
+    <button class="menuitem" id="mi_settings">Settings&hellip;</button>
+  </div>
+  <span class="tsep"></span>
   <span id="pos" title="Cursor tile coordinates">&nbsp;</span>
   <span class="tsep"></span>
   <button id="tb_undo" title="Ctrl+Z">&#10226; Undo</button>
@@ -238,6 +278,57 @@
 </div>
 </div>
 </div>
+<div id="setscreen"><div id="setbox">
+  <div id="sethead">
+    <h3>SETTINGS</h3>
+    <button id="setclose" title="Close (Esc)">&times;</button>
+  </div>
+  <div class="setsec">
+    <h4>Folders</h4>
+    <div class="setrow">
+      <div class="lbl">Regions</div>
+      <div class="hint">Where builds are written — the Regions folder of the segment you
+        work in. Use a sandbox copy, never live game data.</div>
+      <div class="pathrow">
+        <div class="path" id="p_regions_dir">—</div>
+        <button data-pick="regions_dir">Change&hellip;</button>
+        <button data-open="regions_dir">Open</button>
+      </div>
+    </div>
+    <div class="setrow">
+      <div class="lbl">Workspace</div>
+      <div class="hint">Imports, Exports, snapshots and autosaves.</div>
+      <div class="pathrow">
+        <div class="path" id="p_workspace_dir">—</div>
+        <button data-pick="workspace_dir">Change&hellip;</button>
+        <button data-reset="workspace_dir">Default</button>
+        <button data-open="workspace_dir">Open</button>
+      </div>
+    </div>
+    <div class="setrow">
+      <div class="lbl">Styles</div>
+      <div class="hint">Your saved tile sets.</div>
+      <div class="pathrow">
+        <div class="path" id="p_styles_dir">—</div>
+        <button data-pick="styles_dir">Change&hellip;</button>
+        <button data-reset="styles_dir">Default</button>
+        <button data-open="styles_dir">Open</button>
+      </div>
+    </div>
+    <div class="hint">Changing a folder repoints the app at it — files already written
+      stay where they are, nothing is moved.</div>
+  </div>
+  <div class="setsec">
+    <h4>Interface</h4>
+    <div class="setrow">
+      <div class="lbl">Scale</div>
+      <div class="hint">Also Ctrl+= larger, Ctrl+&minus; smaller, Ctrl+0 reset. Remembered per machine.</div>
+      <select id="setscale"></select>
+    </div>
+  </div>
+  <div class="setsec"><h4>About</h4></div>
+  <div id="setabout"></div>
+</div></div>
 <div id="palscreen">
   <h2>PALETTE &amp; STYLES</h2>
   <div class="sub2">ROLE &rarr; GAME TILE ID &middot; EXPORTS INSIDE THE SKETCH JSON &middot; MULTI-PART ENTRIES COMMA-SEPARATED</div>
@@ -392,6 +483,64 @@ function resize(){
   cv.width=Math.max(1,Math.round(r.width)); cv.height=Math.max(1,Math.round(r.height));
   draw();
 }
+// ---------------- ☰ menu + settings dialog ----------------
+const menuBtn=document.getElementById("menubtn"), menuPanel=document.getElementById("menupanel");
+function menuClose(){ menuPanel.classList.remove("open"); menuBtn.classList.remove("open"); }
+menuBtn.onclick=e=>{
+  e.stopPropagation();
+  const open=menuPanel.classList.toggle("open");
+  menuBtn.classList.toggle("open",open);
+};
+document.addEventListener("click",e=>{ if(!menuPanel.contains(e.target)&&e.target!==menuBtn) menuClose(); });
+const setScreen=document.getElementById("setscreen");
+function setClose(){ setScreen.classList.remove("open"); }
+document.getElementById("setclose").onclick=setClose;
+setScreen.addEventListener("click",e=>{ if(e.target===setScreen) setClose(); });
+function setPath(id,val,unset){
+  const el=document.getElementById("p_"+id);
+  el.textContent=val||"not set";
+  el.title=val||"";
+  el.classList.toggle("unset",!!unset);
+}
+async function settingsRefresh(){
+  if(!APP()) return;
+  const s=await APP().settings_get();
+  setPath("regions_dir",s.regions_dir,!s.regions_dir);
+  setPath("workspace_dir",s.workspace_dir);
+  setPath("styles_dir",s.styles_dir);
+  document.getElementById("setabout").textContent=
+    s.version+"  ·  "+(s.frozen?"packaged app":"running from source")
+    +"\nsettings file: "+s.settings_file;
+  const sel=document.getElementById("setscale");
+  if(!sel.options.length)
+    sel.innerHTML=UI_STEPS.map(v=>'<option value="'+v+'">'+Math.round(v*100)+'%</option>').join("");
+  sel.value=String(UI_STEPS.reduce((b,v)=>Math.abs(v-uiScale)<Math.abs(b-uiScale)?v:b,1));
+}
+document.getElementById("setscale").onchange=e=>applyUiScale(parseFloat(e.target.value),true);
+document.querySelectorAll("#setbox [data-pick]").forEach(b=>b.onclick=async()=>{
+  const r=await APP().pick_folder(b.dataset.pick);
+  if(r&&r.error){ uiAlert(r.error); return; }
+  if(r) settingsRefresh();
+});
+document.querySelectorAll("#setbox [data-reset]").forEach(b=>b.onclick=async()=>{
+  await APP().reset_folder(b.dataset.reset); settingsRefresh();
+});
+document.querySelectorAll("#setbox [data-open]").forEach(b=>b.onclick=async()=>{
+  const p=document.getElementById("p_"+b.dataset.open).textContent;
+  if(!p||p==="not set"){ uiAlert("Nothing to open — set the folder first."); return; }
+  const r=await APP().open_folder(p);
+  if(r&&r.error) uiAlert(r.error);
+});
+document.getElementById("mi_settings").onclick=async()=>{
+  menuClose();
+  if(!APP()){
+    uiAlert("Folder settings need the LOK Studio app.\n"
+           +"In a browser only the interface scale applies — Ctrl+= / Ctrl+− / Ctrl+0.");
+    return;
+  }
+  await settingsRefresh();
+  setScreen.classList.add("open");
+};
 // ---------------- interface scale (Ctrl + = / − / 0) ----------------
 // The UI is laid out in fixed px; on a 4K panel it reads small. CSS zoom on the root
 // scales the whole interface uniformly. tileAt() already normalizes mouse coords
@@ -420,6 +569,10 @@ function uiToast(msg){
   clearTimeout(_toastT); _toastT=setTimeout(()=>{ t.style.opacity="0"; },1100);
 }
 window.addEventListener("keydown",e=>{                 // capture: works everywhere
+  if(e.key==="Escape"){
+    if(setScreen.classList.contains("open")){ setClose(); e.preventDefault(); return; }
+    if(menuPanel.classList.contains("open")){ menuClose(); e.preventDefault(); return; }
+  }
   if(!(e.ctrlKey||e.metaKey)) return;
   if(e.key==="="||e.key==="+"){ stepUiScale(1); e.preventDefault(); }
   else if(e.key==="-"||e.key==="_"){ stepUiScale(-1); e.preventDefault(); }
@@ -991,6 +1144,7 @@ window.addEventListener("keydown", e=>{
     if(e.key==="Escape"){ document.getElementById("buildpanel").classList.remove("open"); e.preventDefault(); }
     return;                                    // build panel swallows hotkeys
   }
+  if(setScreen.classList.contains("open")) return;      // settings owns the keyboard
   if(document.getElementById("palscreen").classList.contains("open")){
     if(e.key==="Escape"){ document.getElementById("palscreen").classList.remove("open"); e.preventDefault(); }
     return;                                    // palette screen swallows all other hotkeys
@@ -1550,6 +1704,14 @@ document.getElementById("buildbtn").onclick=async()=>{
   ].concat(pf.notes.length?["",...pf.notes.map(n=>"⚠ "+n)]:[]).join("\n");
   bRep().textContent=head+"\n";
   actButton("Close","",buildClose);
+  // the Regions folder is asked for once and remembered — this is the way back out
+  // of a wrong pick (Tony, 2026-08-24)
+  actButton("Regions folder…","",async()=>{
+    const pick=await APP().pick_regions_dir();
+    if(!pick) return;
+    if(pick.error){ uiAlert(pick.error); return; }
+    document.getElementById("buildbtn").click();      // re-run pre-flight on the new folder
+  });
   if(pf.mode==="merge"||pf.mode==="restore_merge"){
     const dry=actButton(pf.mode==="merge"?"MERGE (DRY RUN)":"RESTORE + MERGE (DRY RUN)","go",()=>runAction(dry,async()=>{
       const r=await APP().build_run(data,pf.mode,false);

@@ -34,10 +34,27 @@ else:
     GEN = ROOT / "generator"
     WORKSPACE = ROOT / "workspace"                 # user data — gitignored
     STYLES = GEN / "styles"
-IMPORTS = WORKSPACE / "Imports"
-EXPORTS = WORKSPACE / "Exports"
-SNAPSHOTS = WORKSPACE / "Snapshots"
-SETTINGS = WORKSPACE / "settings.json"
+# Defaults. settings.json ALWAYS lives at the default workspace — it is what records a
+# custom one, so it can't live inside the folder it points at.
+DEFAULT_WORKSPACE, DEFAULT_STYLES = WORKSPACE, STYLES
+SETTINGS = DEFAULT_WORKSPACE / "settings.json"
+
+
+def _dir(key, default):
+    """Settings can repoint a folder (Settings dialog). Repoint only — files already
+    written stay where they are; nothing is moved."""
+    try:
+        v = _settings().get(key)
+    except Exception:
+        v = None
+    return Path(v) if v else default
+
+
+def ws():         return _dir("workspace_dir", DEFAULT_WORKSPACE)
+def styles_dir(): return _dir("styles_dir", DEFAULT_STYLES)
+def imports():    return ws() / "Imports"
+def exports():    return ws() / "Exports"
+def snapshots():  return ws() / "Snapshots"
 
 # Frozen re-exec: the packaged exe has no separate python, so generator scripts run
 # as "<exe> --script <name> <args...>" — this branch executes them and exits.
@@ -59,7 +76,7 @@ def _settings():
 
 
 def _save_settings(st):
-    WORKSPACE.mkdir(parents=True, exist_ok=True)
+    SETTINGS.parent.mkdir(parents=True, exist_ok=True)   # always the DEFAULT workspace
     SETTINGS.write_text(json.dumps(st, indent=1), encoding="utf-8")
 
 
@@ -84,7 +101,7 @@ class Api:
     # ---- styles on disk (replaces browser storage + folder-permission dance)
     def styles_list(self):
         out = {}
-        for f in sorted(STYLES.glob("*.json")):
+        for f in sorted(styles_dir().glob("*.json")):
             try:
                 d = json.loads(f.read_text(encoding="utf-8"))
                 name = d.pop("_name", None) or f.stem
@@ -97,23 +114,23 @@ class Api:
     def style_save(self, name, obj):
         fn = "".join(ch if ch.isalnum() else "_" for ch in name.lower()).strip("_")
         obj = dict(obj); obj["_name"] = name
-        (STYLES / f"{fn}.json").write_text(json.dumps(obj, indent=2), encoding="utf-8")
+        (styles_dir() / f"{fn}.json").write_text(json.dumps(obj, indent=2), encoding="utf-8")
         return True
 
     def style_delete(self, name):
         fn = "".join(ch if ch.isalnum() else "_" for ch in name.lower()).strip("_")
-        p = STYLES / f"{fn}.json"
+        p = styles_dir() / f"{fn}.json"
         if p.exists():
             p.unlink()
         return True
 
     # ---- sketch autosave to disk (replaces localStorage)
     def autosave_write(self, kind, data):
-        (WORKSPACE / f"autosave_{kind}.json").write_text(data, encoding="utf-8")
+        (ws() / f"autosave_{kind}.json").write_text(data, encoding="utf-8")
         return True
 
     def autosave_read(self, kind):
-        p = WORKSPACE / f"autosave_{kind}.json"
+        p = ws() / f"autosave_{kind}.json"
         return p.read_text(encoding="utf-8") if p.exists() else None
 
     # ---- interface scale (per machine: a 4K panel wants a bigger UI than a laptop)
@@ -129,10 +146,73 @@ class Api:
         _save_settings(st)
         return st["ui_scale"]
 
+    # ---- settings dialog (☰ menu). Folders are REPOINT ONLY: nothing is moved,
+    # files already written stay where they are.
+    FOLDER_KEYS = {"regions_dir": "Regions", "workspace_dir": "Workspace",
+                   "styles_dir": "Styles"}
+
+    def settings_get(self):
+        st = _settings()
+        return {
+            "regions_dir": st.get("regions_dir") or "",
+            "workspace_dir": str(ws()), "workspace_custom": bool(st.get("workspace_dir")),
+            "styles_dir": str(styles_dir()), "styles_custom": bool(st.get("styles_dir")),
+            "defaults": {"workspace_dir": str(DEFAULT_WORKSPACE),
+                         "styles_dir": str(DEFAULT_STYLES)},
+            "ui_scale": self.ui_scale_get(),
+            "frozen": FROZEN, "version": self.version(),
+            "settings_file": str(SETTINGS),
+        }
+
+    def pick_folder(self, key):
+        """Folder dialog for one settings key; returns the chosen path or an error."""
+        if key not in self.FOLDER_KEYS:
+            return {"error": f"unknown setting: {key}"}
+        import webview
+        st = _settings()
+        start = st.get(key) or (str(ws()) if key != "regions_dir" else "")
+        res = webview.windows[0].create_file_dialog(
+            webview.FOLDER_DIALOG, directory=start or "")
+        if not res:
+            return None
+        p = str(res[0] if isinstance(res, (list, tuple)) else res)
+        if key == "regions_dir" and "HaDeZs Test" in p:
+            return {"error": "That is HaDeZs Test — the tools never write there. "
+                             "Point at your sandbox Regions folder instead."}
+        st[key] = p
+        _save_settings(st)
+        if key in ("workspace_dir", "styles_dir"):       # make it usable immediately
+            try:
+                Path(p).mkdir(parents=True, exist_ok=True)
+                if key == "workspace_dir":
+                    for d in (imports(), exports(), snapshots()):
+                        d.mkdir(parents=True, exist_ok=True)
+            except Exception as e:
+                return {"error": f"could not use that folder: {e}"}
+        return {"path": p}
+
+    def reset_folder(self, key):
+        """Back to the default location (Workspace / Styles only)."""
+        st = _settings()
+        st.pop(key, None)
+        _save_settings(st)
+        return {"path": str(ws() if key == "workspace_dir" else styles_dir())}
+
+    def open_folder(self, path):
+        import os
+        p = Path(path)
+        if not p.exists():
+            return {"error": "that folder does not exist yet"}
+        try:
+            os.startfile(str(p))                          # Windows
+        except AttributeError:
+            subprocess.Popen(["xdg-open", str(p)])
+        return True
+
     # ---- generator
     def import_region(self, region_xml, window=None):
         """Region XML -> sketch JSON in workspace/Imports (layout only, no palette)."""
-        out = IMPORTS / (Path(region_xml).stem + "_import.json")
+        out = imports() / (Path(region_xml).stem + "_import.json")
         args = [region_xml]
         if window:
             args += ["--window", *window]
@@ -174,7 +254,7 @@ class Api:
         """Save dialog defaulting to workspace/Exports; returns the written path or None."""
         import webview
         w = webview.windows[0]
-        res = w.create_file_dialog(webview.SAVE_DIALOG, directory=str(EXPORTS),
+        res = w.create_file_dialog(webview.SAVE_DIALOG, directory=str(exports()),
                                    save_filename=suggested)
         if not res:
             return None
@@ -187,7 +267,7 @@ class Api:
         {name, text} or None."""
         import webview
         w = webview.windows[0]
-        d = EXPORTS if start == "exports" else IMPORTS
+        d = exports() if start == "exports" else imports()
         res = w.create_file_dialog(webview.OPEN_DIALOG, directory=str(d),
                                    file_types=("JSON files (*.json)", "All files (*.*)"))
         if not res:
@@ -221,7 +301,7 @@ class Api:
         can say what was picked (id, name, bounds)."""
         import webview
         st = _settings()
-        start = st.get("regions_dir") or str(IMPORTS)
+        start = st.get("regions_dir") or str(imports())
         res = webview.windows[0].create_file_dialog(
             webview.OPEN_DIALOG, directory=start,
             file_types=("Region XML (*.xml)", "All files (*.*)"))
@@ -249,7 +329,7 @@ class Api:
         st = _settings()
         src = Path(src_path)
         ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-        out = IMPORTS / f"{src.stem}_{ts}_context.json"
+        out = imports() / f"{src.stem}_{ts}_context.json"
         args = [src]
         wt = (window_text or "").split()
         if wt:
@@ -261,8 +341,8 @@ class Api:
         r = _run("xml_to_sketch.py", *args)
         if not r["ok"]:
             return {"error": r["report"]}
-        SNAPSHOTS.mkdir(parents=True, exist_ok=True)
-        snap = SNAPSHOTS / f"{src.stem}_{ts}.xml"
+        snapshots().mkdir(parents=True, exist_ok=True)
+        snap = snapshots() / f"{src.stem}_{ts}.xml"
         shutil.copy2(src, snap)
         text = out.read_text(encoding="utf-8")
         d = json.loads(text)
@@ -319,7 +399,7 @@ class Api:
         target = self._target(rid)
         if target is None:
             return {"ok": False, "report": "Regions folder not set."}
-        tmp = WORKSPACE / "_build_sketch.json"
+        tmp = ws() / "_build_sketch.json"
         tmp.write_text(sketch_json, encoding="utf-8")
         origins = _settings().get("origins", {}).get(str(rid), {})
         notice = ""
@@ -367,7 +447,7 @@ class Api:
             return {"ok": False, "report": f"No import context for region {rid} — use "
                                            f"IMPORT REGION on it first (that kept copy "
                                            f"is the restyle base)."}
-        mf = WORKSPACE / "_apply_masks.json"
+        mf = ws() / "_apply_masks.json"
         mf.write_text(masks_json, encoding="utf-8")
         args = [str(mf), base, "--merge", str(target)]
         if write:
@@ -384,14 +464,14 @@ def main():
     except ImportError:
         sys.exit("pywebview is not installed — run run.bat (it installs it), or:\n"
                  "  python -m pip install pywebview")
-    for d in (WORKSPACE, IMPORTS, EXPORTS, SNAPSHOTS):
+    for d in (ws(), imports(), exports(), snapshots()):
         d.mkdir(parents=True, exist_ok=True)
     if FROZEN:
         # first run: seed the writable styles folder from the bundled defaults
-        STYLES.mkdir(parents=True, exist_ok=True)
+        styles_dir().mkdir(parents=True, exist_ok=True)
         for f in (GEN / "styles").glob("*.json"):
-            if not (STYLES / f.name).exists():
-                shutil.copy2(f, STYLES / f.name)
+            if not (styles_dir() / f.name).exists():
+                shutil.copy2(f, styles_dir() / f.name)
     # size to the screen it opens on — 1500x950 is a postage stamp on a 4K panel
     w, h = 1500, 950
     try:
