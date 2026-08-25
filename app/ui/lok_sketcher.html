@@ -18,24 +18,25 @@
   #buildbtns button{width:100%;margin-bottom:6px;padding:8px;border:1px solid #8a7a2c;background:#151509;
     color:#e0c85a;border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px;letter-spacing:1px}
   #buildbtns button:hover{border-color:#e0c85a}
-  #buildpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:55;display:none;align-items:center;justify-content:center}
+  #buildpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:55;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;overflow:auto}
   #buildpanel.open{display:flex}
   #buildbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:780px;max-width:94vw;
-    max-height:88vh;display:flex;flex-direction:column;padding:18px 22px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
-  #buildhead{color:#e0c85a;font-size:15px;letter-spacing:2px;margin-bottom:10px}
-  #buildreport{flex:1;overflow:auto;background:#0a1418;border:1px solid #17333b;border-radius:4px;
-    color:#bfd8da;font:12px/1.55 Consolas,monospace;padding:10px 12px;white-space:pre-wrap;margin-bottom:12px;min-height:180px}
+    max-height:100%;box-sizing:border-box;display:flex;flex-direction:column;padding:18px 22px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
+  #buildhead{color:#e0c85a;font-size:15px;letter-spacing:2px;margin-bottom:10px;flex:0 0 auto}
+  #buildreport{flex:1 1 auto;min-height:0;overflow:auto;background:#0a1418;border:1px solid #17333b;border-radius:4px;
+    color:#bfd8da;font:12px/1.55 Consolas,monospace;padding:10px 12px;white-space:pre-wrap;margin-bottom:12px}
   #buildreport .warn{color:#e08a5a}
-  #buildactions{text-align:right}
+  #buildactions{text-align:right;flex:0 0 auto}
   #buildactions button{margin-left:8px;padding:7px 18px;border:1px solid #234f57;background:#0f1d24;
     color:#8fb0b5;border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px}
   #buildactions button:hover{border-color:#52d8dc;color:#bfeff5}
   #buildactions button.go{border-color:#8a7a2c;color:#e0c85a}
   #buildactions button.danger{border-color:#8a3a2a;color:#d9a08a}
   #buildactions button:disabled{opacity:.35;cursor:default}
-  #importpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:55;display:none;align-items:center;justify-content:center}
+  #importpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:55;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;overflow:auto}
   #importpanel.open{display:flex}
-  #importbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:560px;max-width:92vw;
+  #importbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:560px;max-width:100%;
+    max-height:100%;box-sizing:border-box;overflow:auto;
     padding:20px 24px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
   #importhead{color:#e0c85a;font-size:15px;letter-spacing:2px;margin-bottom:14px}
   #irrow{display:flex;gap:10px;align-items:center;margin-bottom:10px}
@@ -123,9 +124,10 @@
   .rst.ghost{visibility:hidden;pointer-events:none}
   .rst.dw.active{border-color:#e0c85a;color:#e0c85a}
   .rst.tinted{border-color:#e0c85a;color:#e0c85a}
-  #tintpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:62;display:none;align-items:center;justify-content:center}
+  #tintpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:62;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;overflow:auto}
   #tintpanel.open{display:flex}
-  #tintbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:430px;max-width:92vw;
+  #tintbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:430px;max-width:100%;
+    max-height:100%;box-sizing:border-box;overflow:auto;
     padding:20px 24px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
   #tinthead{color:#e0c85a;font-size:15px;letter-spacing:2px;margin-bottom:12px}
   #tintprev{display:block;margin:0 auto 14px auto;width:128px;height:128px;image-rendering:pixelated;
@@ -157,9 +159,9 @@
     color:#cfe4e6;font-family:Georgia,serif;font-size:13px;letter-spacing:1px;cursor:pointer;border-radius:3px}
   .menuitem:hover{background:#12303a;color:#bfeff5}
   #setscreen{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:75;display:none;
-    align-items:center;justify-content:center}
+    align-items:center;justify-content:center;padding:14px;box-sizing:border-box;overflow:auto}
   #setscreen.open{display:flex}
-  #setbox{width:min(720px,92vw);max-height:86vh;overflow-y:auto;background:#0c161c;
+  #setbox{width:min(720px,100%);max-height:100%;box-sizing:border-box;overflow-y:auto;background:#0c161c;
     border:1px solid #2a6f78;border-radius:5px;padding:0 0 18px 0;box-shadow:0 10px 40px rgba(0,0,0,.7)}
   #sethead{display:flex;align-items:center;padding:14px 18px;border-bottom:1px solid #1b3a42}
   #sethead h3{margin:0;flex:1 1 auto}
@@ -185,9 +187,10 @@
   #uitoast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;pointer-events:none;
     padding:7px 18px;border:1px solid #52d8dc;background:#0d2027;color:#bfeff5;border-radius:3px;
     font-family:Georgia,serif;font-size:13px;letter-spacing:2px;opacity:0;transition:opacity .25s}
-  #modal{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:60;display:none;align-items:center;justify-content:center}
+  #modal{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:60;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;overflow:auto}
   #modal.open{display:flex}
-  #modalbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;min-width:360px;max-width:600px;
+  #modalbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;min-width:min(360px,100%);max-width:600px;
+    max-height:100%;box-sizing:border-box;overflow:auto;
     padding:22px 26px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
   #modalmsg{color:#cfe4e6;font-size:14px;letter-spacing:.5px;line-height:1.5;margin-bottom:16px;white-space:pre-wrap}
   #modalinput{width:100%;box-sizing:border-box;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;
@@ -1996,6 +1999,20 @@ document.getElementById("buildbtn").onclick=async()=>{
     document.getElementById("buildbtn").click();      // re-run pre-flight on the new folder
   });
   if(pf.mode==="merge"||pf.mode==="restore_merge"){
+    if(pf.can_rebuild_new){
+      // Escape hatch (Tony 2026-08-25): the import backup should never TRAP you into
+      // restoring. Delete the region, press this, get a clean build from the sketch.
+      const rb=actButton("REBUILD NEW","danger",async()=>{
+        if(!await uiConfirm("Build region "+pf.region+" fresh from this sketch alone?\n\n"
+          +"The import backup is ignored. Anything that was in the old region but is not "
+          +"in this sketch will not be there.")) return;
+        runAction(rb,async()=>{
+          const r=await APP().build_run(data,"new",true);
+          bRep().textContent+="\n"+r.report+"\n"+(r.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
+          bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
+        });
+      });
+    }
     const dry=actButton(pf.mode==="merge"?"MERGE (DRY RUN)":"RESTORE + MERGE (DRY RUN)","go",()=>runAction(dry,async()=>{
       const r=await APP().build_run(data,pf.mode,false);
       bRep().textContent+="\n"+r.report+"\n";
