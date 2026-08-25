@@ -1,5 +1,23 @@
 # LOK STUDIO — the app era (2026-08-24 on)
 
+## RULING (Tony, 2026-08-24): the 1-wide-hall coverage question is CLOSED — no fix
+
+A 1-tile hall drawn against structural mass on its SOUTH or EAST reads half-covered in
+game: the mass's face renders ON the hall tile and the tall sprite spills W/NW. That is
+the game's isometric art, not a generator bug. Tony's answer is drawing discipline —
+mass on the south/east of a corridor means draw the extra strip (exactly the canon
+"visible floor row → hidden face row → block row" from his hand-built regions).
+DO NOT re-propose: auto-expansion / logical-mode building (breaks exactly-as-drawn,
+coordinates, diff merges, masks, round trip — considered and rejected), or a
+coverage-dimming overlay in blueprint (proposed, declined — blueprint's existing
+implied-face rendering is enough). Nothing to build here.
+WHAT WAS BUILT INSTEAD (Tony's design, mocked up and approved): blueprint's implied
+face strips are trimmed so a QUARTER of the carrier tile shows as floor — north faces
+keep the top quarter, west faces the left quarter (TRIM=0.25 in drawBlueprint;
+measured ~1/5-1/4 surviving sliver from an in-game close-up, Tony chose 1/4 over 1/3).
+The two orientations now read differently, and a 1-wide hall against mass shows its
+true sliver instead of a solid cream band. Drawn walls/structural tiles unchanged.
+
 ## 2026-08-24 (night) — UI SCALE · APP ICON · INSTALLER · RELEASE FIX · README
 
 - **INTERFACE SCALE (Tony moved to a 3840x2160 panel; the fixed-px UI read small).**

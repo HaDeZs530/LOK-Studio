@@ -689,14 +689,21 @@ function drawBlueprint(){
   // will build. Preview approximation: corner caps, T-join stacks and door-recess
   // carve-outs are the builder's exact business — the build report stays final.
   const GROUNDY=t=>t&&t!=="wall"&&t!=="structural"&&t!=="door";
+  // The face strip leaves a QUARTER of the carrier tile as visible floor — north
+  // faces keep their top quarter, west faces their left quarter — matching the
+  // in-game surviving sliver (measured ~1/5-1/4; Tony picked 1/4, 2026-08-24).
+  const TRIM=0.25;
   for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
     if(terrain.get(key(gx,gy))!=="structural") continue;
-    for(const [nx,ny] of [[gx,gy-1],[gx-1,gy]]){
+    for(const [nx,ny,north] of [[gx,gy-1,true],[gx-1,gy,false]]){
       if(!GROUNDY(terrain.get(key(nx,ny)))) continue;
+      const px=panX+nx*zoom, py=panY+ny*zoom;
       cx.fillStyle="#e8dcc0";
-      cx.fillRect(panX+nx*zoom,panY+ny*zoom,zoom,zoom);
+      if(north) cx.fillRect(px,py+zoom*TRIM,zoom,zoom*(1-TRIM));
+      else      cx.fillRect(px+zoom*TRIM,py,zoom*(1-TRIM),zoom);
       cx.fillStyle="rgba(0,0,0,0.14)";
-      cx.fillRect(panX+nx*zoom,panY+ny*zoom+zoom*0.65,zoom,zoom*0.35);
+      if(north) cx.fillRect(px,py+zoom*0.65,zoom,zoom*0.35);
+      else      cx.fillRect(px+zoom*TRIM,py+zoom*0.65,zoom*(1-TRIM),zoom*0.35);
     }
   }
   // walls as cream slabs with a subtle inner shade
