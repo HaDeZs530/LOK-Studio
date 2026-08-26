@@ -83,6 +83,14 @@ anything the generator WRITES must live in the workspace, only reads may live in
 bundle. One consequence: an installed app's reapply memory starts empty (the old
 location could never have been written), so the first reapply after this fix won't
 revert tiles from before it — harmless for fresh work, worth knowing.
+**REPO SHIPS CLEAN (Tony 2026-08-26):** personal styles and the masks applied-state
+never go to GitHub. .gitignore now excludes generator/last_applied_masks/ and all of
+generator/styles/*.json EXCEPT the two templates (graybox.json = build fallback,
+bare.json = bare-style template). This REVERSES the earlier "styles travel with
+pushes" two-machine design — styles are per-machine now; moving one means copying its
+JSON or exporting from the palette screen. Already-tracked personal files (test1.json,
+24.json) need a manual delete+commit by Tony — gitignore alone can't untrack them.
+CI bundles the styles dir into the package, so a clean repo = a clean installer.
 
 ## 2026-08-24 (night) — UI SCALE · APP ICON · INSTALLER · RELEASE FIX · README
 

@@ -77,8 +77,9 @@ styles to specific areas.
 Clone the repo and double-click **`run.bat`**. Needs [Python](https://python.org) with
 "Add to PATH" ticked; the first run installs one dependency and opens the app.
 
-Working on two machines? Clone on both. Your saved styles live in the repo and travel
-with it; your maps-in-progress stay local.
+Working on two machines? Clone on both. Saved styles and maps-in-progress are
+per-machine — copy a style's JSON from `generator/styles/` (or export it from the
+palette screen) to bring it across.
 
 ## What's inside
 
