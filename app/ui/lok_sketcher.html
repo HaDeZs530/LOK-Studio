@@ -18,24 +18,25 @@
   #buildbtns button{width:100%;margin-bottom:6px;padding:8px;border:1px solid #8a7a2c;background:#151509;
     color:#e0c85a;border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px;letter-spacing:1px}
   #buildbtns button:hover{border-color:#e0c85a}
-  #buildpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:55;display:none;align-items:center;justify-content:center}
+  #buildpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:55;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;overflow:auto}
   #buildpanel.open{display:flex}
   #buildbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:780px;max-width:94vw;
-    max-height:88vh;display:flex;flex-direction:column;padding:18px 22px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
-  #buildhead{color:#e0c85a;font-size:15px;letter-spacing:2px;margin-bottom:10px}
-  #buildreport{flex:1;overflow:auto;background:#0a1418;border:1px solid #17333b;border-radius:4px;
-    color:#bfd8da;font:12px/1.55 Consolas,monospace;padding:10px 12px;white-space:pre-wrap;margin-bottom:12px;min-height:180px}
+    max-height:100%;box-sizing:border-box;display:flex;flex-direction:column;padding:18px 22px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
+  #buildhead{color:#e0c85a;font-size:15px;letter-spacing:2px;margin-bottom:10px;flex:0 0 auto}
+  #buildreport{flex:1 1 auto;min-height:0;overflow:auto;background:#0a1418;border:1px solid #17333b;border-radius:4px;
+    color:#bfd8da;font:12px/1.55 Consolas,monospace;padding:10px 12px;white-space:pre-wrap;margin-bottom:12px}
   #buildreport .warn{color:#e08a5a}
-  #buildactions{text-align:right}
+  #buildactions{text-align:right;flex:0 0 auto}
   #buildactions button{margin-left:8px;padding:7px 18px;border:1px solid #234f57;background:#0f1d24;
     color:#8fb0b5;border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px}
   #buildactions button:hover{border-color:#52d8dc;color:#bfeff5}
   #buildactions button.go{border-color:#8a7a2c;color:#e0c85a}
   #buildactions button.danger{border-color:#8a3a2a;color:#d9a08a}
   #buildactions button:disabled{opacity:.35;cursor:default}
-  #importpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:55;display:none;align-items:center;justify-content:center}
+  #importpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:55;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;overflow:auto}
   #importpanel.open{display:flex}
-  #importbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:560px;max-width:92vw;
+  #importbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:560px;max-width:100%;
+    max-height:100%;box-sizing:border-box;overflow:auto;
     padding:20px 24px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
   #importhead{color:#e0c85a;font-size:15px;letter-spacing:2px;margin-bottom:14px}
   #irrow{display:flex;gap:10px;align-items:center;margin-bottom:10px}
@@ -93,11 +94,11 @@
   hr{border:0;border-top:1px solid #1b3a42;margin:10px 0}
   #bigbtns button{width:100%;margin:3px 0;padding:8px;border:1px solid #b89b4a;background:#101d24;color:#e6d9a8;border-radius:3px;cursor:pointer;font-size:13px;font-family:Georgia,serif;letter-spacing:2px}
   #modebtn{width:100%;margin:3px 0;padding:9px;border:1px solid #b89b4a;background:#101d24;color:#bfeff5;border-radius:3px;cursor:pointer;font-size:13px;font-family:Georgia,serif;letter-spacing:2px}
-  details#conngrp{margin:3px 0}
-  details#conngrp summary{cursor:pointer;padding:6px 9px;border:1px solid #234f57;background:#0f1d24;border-radius:3px;
+  details#conngrp,details#accgrp{margin:3px 0}
+  details#conngrp summary,details#accgrp summary{cursor:pointer;padding:6px 9px;border:1px solid #234f57;background:#0f1d24;border-radius:3px;
     font-size:13px;letter-spacing:1px;color:#cfe4e6;list-style:none}
-  details#conngrp summary::before{content:"\25B8  "}
-  details#conngrp[open] summary::before{content:"\25BE  "}
+  details#conngrp summary::before,details#accgrp summary::before{content:"\25B8  "}
+  details#conngrp[open] summary::before,details#accgrp[open] summary::before{content:"\25BE  "}
   #palscreen{position:fixed;inset:0;background:#0a1014;z-index:10;display:none;overflow-y:auto;padding:26px 44px 44px 44px}
   #palscreen.open{display:block}
   #palscreen h2{font-size:20px;color:#e0c85a;letter-spacing:4px;font-weight:normal;margin:0 0 2px 0}
@@ -111,7 +112,7 @@
   #palgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:5px 40px;max-width:1100px}
   .palrow{display:flex;align-items:center;justify-content:space-between;padding:3px 2px;border-bottom:1px solid #12242a}
   .palrow label{flex:1 1 auto;text-transform:none;letter-spacing:1px;font-size:13px;color:#8fb0b5}
-  .palrow input{width:84px;flex-shrink:0;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;border-radius:3px;
+  .palrow input{width:76px;flex-shrink:0;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;border-radius:3px;
     padding:5px 8px;font-family:inherit;font-size:13px;text-align:right;letter-spacing:1px}
   #palettebtn{width:100%;margin:3px 0;padding:9px;border:1px solid #b89b4a;background:#101d24;color:#e6d9a8;border-radius:3px;
     cursor:pointer;font-size:13px;font-family:Georgia,serif;letter-spacing:2px}
@@ -122,6 +123,32 @@
   .rst:hover{border-color:#52d8dc;color:#bfeff5}
   .rst.ghost{visibility:hidden;pointer-events:none}
   .rst.dw.active{border-color:#e0c85a;color:#e0c85a}
+  .rst.tinted{border-color:#e0c85a;color:#e0c85a}
+  #tintpanel{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:62;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;overflow:auto}
+  #tintpanel.open{display:flex}
+  #tintbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;width:430px;max-width:100%;
+    max-height:100%;box-sizing:border-box;overflow:auto;
+    padding:20px 24px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
+  #tinthead{color:#e0c85a;font-size:15px;letter-spacing:2px;margin-bottom:12px}
+  #tintprev{display:block;margin:0 auto 14px auto;width:128px;height:128px;image-rendering:pixelated;
+    background:#000;border:1px solid #17333b;border-radius:4px}
+  .trow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .trow label{width:16px;font-size:14px;font-weight:bold}
+  .trow input[type=range]{flex:1}
+  .trow .tval{width:38px;text-align:right;font-size:14px}
+  #tintbtns{text-align:right;margin-top:12px}
+  #tintbtns button{margin-left:8px;padding:7px 16px;border:1px solid #234f57;background:#0f1d24;color:#8fb0b5;
+    border-radius:3px;cursor:pointer;font-family:Georgia,serif;font-size:13px}
+  #tintbtns button:hover{border-color:#52d8dc;color:#bfeff5}
+  #tintbtns #tintok{border-color:#8a7a2c;color:#e0c85a}
+  .opthead{color:#5d8a90;font-size:11px;letter-spacing:2px;margin:16px 0 8px 0;
+    border-top:1px solid #17333b;padding-top:12px}
+  .orow{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-size:13px;color:#cfe4e6}
+  .orow label{flex:1}
+  .orow input[type=number]{width:84px;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;
+    border-radius:3px;padding:5px 8px;font-family:inherit;font-size:13px;text-align:right}
+  .orow input[type=checkbox]{width:16px;height:16px;accent-color:#e0c85a}
+  .orow.locked{opacity:.55}
   #menubtn{font-size:16px;line-height:1;padding:4px 10px}
   #menubtn.open{border-color:#52d8dc;background:#12303a}
   #menupanel{display:none;position:absolute;top:38px;left:8px;z-index:70;min-width:190px;
@@ -132,9 +159,9 @@
     color:#cfe4e6;font-family:Georgia,serif;font-size:13px;letter-spacing:1px;cursor:pointer;border-radius:3px}
   .menuitem:hover{background:#12303a;color:#bfeff5}
   #setscreen{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:75;display:none;
-    align-items:center;justify-content:center}
+    align-items:center;justify-content:center;padding:14px;box-sizing:border-box;overflow:auto}
   #setscreen.open{display:flex}
-  #setbox{width:min(720px,92vw);max-height:86vh;overflow-y:auto;background:#0c161c;
+  #setbox{width:min(720px,100%);max-height:100%;box-sizing:border-box;overflow-y:auto;background:#0c161c;
     border:1px solid #2a6f78;border-radius:5px;padding:0 0 18px 0;box-shadow:0 10px 40px rgba(0,0,0,.7)}
   #sethead{display:flex;align-items:center;padding:14px 18px;border-bottom:1px solid #1b3a42}
   #sethead h3{margin:0;flex:1 1 auto}
@@ -160,9 +187,10 @@
   #uitoast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;pointer-events:none;
     padding:7px 18px;border:1px solid #52d8dc;background:#0d2027;color:#bfeff5;border-radius:3px;
     font-family:Georgia,serif;font-size:13px;letter-spacing:2px;opacity:0;transition:opacity .25s}
-  #modal{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:60;display:none;align-items:center;justify-content:center}
+  #modal{position:fixed;inset:0;background:rgba(3,7,9,.62);z-index:60;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;overflow:auto}
   #modal.open{display:flex}
-  #modalbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;min-width:360px;max-width:600px;
+  #modalbox{background:#0d1b22;border:1px solid #2a6a74;border-radius:6px;min-width:min(360px,100%);max-width:600px;
+    max-height:100%;box-sizing:border-box;overflow:auto;
     padding:22px 26px;box-shadow:0 10px 50px rgba(0,0,0,.85)}
   #modalmsg{color:#cfe4e6;font-size:14px;letter-spacing:.5px;line-height:1.5;margin-bottom:16px;white-space:pre-wrap}
   #modalinput{width:100%;box-sizing:border-box;background:#0f1d24;color:#e0c85a;border:1px solid #234f57;
@@ -222,8 +250,9 @@
   </div>
   <button id="palettebtn">&#9646; PALETTE / STYLES</button>
   <div id="side_sketch">
-  <button id="modebtn" title="Cycle view: Edit / Blueprint / Iso (M)">&#9670; VIEW (M)</button>
+  <button id="modebtn" title="Toggle Edit / Iso view (M)">&#9670; ISO VIEW (M)</button>
   <div id="tools"></div>
+  <details id="accgrp"><summary>ACCENT FLOORS</summary><div id="acctools"></div></details>
   <details id="conngrp"><summary>CONNECTORS</summary><div id="conntools"></div></details>
   <hr>
   <label>Grid W&times;H &middot; center X/Y</label><br>
@@ -352,13 +381,16 @@
 <script>
 const TOOLS = [
   {id:"wall",  name:"Wall",       key:"w", col:"#b9c7d2", bp:"#e8dcc0"},
-  {id:"structural", name:"Structural", key:"x", col:"#78848f", bp:"#c9ba92"},
+  {id:"structural", name:"Structural", key:"s", col:"#78848f", bp:"#c9ba92"},
   {id:"door",  name:"Door",       key:"d", col:"#c24a2a", bp:"#d0622e"},
   {id:"room",  name:"Room floor", key:"f", col:"#3a4a56", bp:"#332c22"},
-  {id:"hall",  name:"Hall floor", key:"r", col:"#55687a", bp:"#403729"},
+  {id:"hall",  name:"Hall floor", key:"t", col:"#55687a", bp:"#403729"},
   {id:"dirtfloor", name:"Dirt floor", key:"i", col:"#8a6a3c", bp:"#4f3f26"},
   {id:"grass", name:"Grass",      key:"g", col:"#4d7a3d", bp:"#3d5c31"},
-  {id:"dirt",  name:"Road",       key:"t", col:"#6d5433", bp:"#4a3d28"},
+  {id:"dirt",  name:"Road",       key:"r", col:"#6d5433", bp:"#4a3d28"},
+  {id:"accent1", name:"Accent floor 1", key:"j", col:"#7e8b98", bp:"#57534a"},
+  {id:"accent2", name:"Accent floor 2", key:"k", col:"#4a6fb0", bp:"#3d4f66"},
+  {id:"accent3", name:"Accent floor 3", key:"z", col:"#a0764a", bp:"#5c4a33"},
   {id:"water", name:"Water",      key:"a", col:"#2f6fb8", bp:"#3d84c9"},
   {id:"deepwater", name:"Deep water (block)", key:"q", col:"#1d4a80", bp:"#255a9e"},
   {id:"dead",  name:"Dead space", key:"v", col:"#000000", bp:"#080706"},
@@ -368,10 +400,10 @@ const TOOLS = [
   {id:"treewall", name:"Tree wall (block)", key:"h", col:"#1d5c26", bp:"#2e8b3a"},
   {id:"label", name:"Label (text)",key:"l", col:"#c9a648", bp:"#e8dcc0"},
   {id:"select",name:"Select",     key:"c", col:"#e0c85a", bp:"#e0c85a"},
-  {id:"erase", name:"Erase",      key:"e", col:"#0d0b09", bp:"#0d0b09"},
+  {id:"erase", name:"Erase",      key:"x", col:"#0d0b09", bp:"#0d0b09"},
 ];
 const CONN = [
-  {id:"spawn",       name:"Spawn",       key:"s", col:"#e0c85a", glyph:"\u2726"},
+  {id:"spawn",       name:"Spawn",       key:"e", col:"#e0c85a", glyph:"\u2726"},
   {id:"portal",      name:"Portal",      key:"o", col:"#b06ae0", glyph:"\u25CE"},
   {id:"stairs_up",   name:"Stairs Up",   key:"u", col:"#d0d8dc", glyph:"\u25B2"},
   {id:"stairs_down", name:"Stairs Down", key:"n", col:"#d0d8dc", glyph:"\u25BC"},
@@ -385,7 +417,7 @@ let terrain = new Map();   // "x,y" -> terrain id
 let marks   = new Map();   // "x,y" -> boss|path
 let labels  = new Map();   // "x,y" -> text
 let connectors = new Map(); // "x,y" -> {t:"spawn"|"portal"|"stairs_up"|"stairs_down", tag:""}
-let tool="wall", brush=1, viewMode="edit";   // edit | blueprint | iso
+let tool="wall", brush=1, viewMode="edit";   // edit | iso (blueprint retired 2026-08-25)
 let zoom=8, panX=20, panY=20;
 // ---- centered app dialogs (replace the browser's native alert/confirm/prompt) ----
 let modalResolve=null;
@@ -614,7 +646,7 @@ function bounds(){
   const x2=Math.min(GW,Math.ceil((cv.width-panX)/zoom)), y2=Math.min(GH,Math.ceil((cv.height-panY)/zoom));
   return [x1,y1,x2,y2];
 }
-function draw(){ viewMode==="edit" ? drawEdit() : viewMode==="blueprint" ? drawBlueprint() : drawIso(); }
+function draw(){ viewMode==="edit" ? drawEdit() : drawIso(); }
 function drawEdit(){
   cx.shadowBlur=0;
   cx.fillStyle="#0a1014"; cx.fillRect(0,0,cv.width,cv.height);
@@ -663,122 +695,8 @@ function drawEdit(){
   cx.strokeRect(panX,panY,GW*zoom,GH*zoom);
   rulers();
 }
-function drawBlueprint(){
-  cx.shadowBlur=0;
-  cx.fillStyle="#0d0b09"; cx.fillRect(0,0,cv.width,cv.height);
-  const [x1,y1,x2,y2]=bounds();
-  // faint parchment grid
-  if(zoom>=4){
-    cx.strokeStyle="rgba(201,166,72,0.05)"; cx.lineWidth=1; cx.beginPath();
-    for(let gx=x1; gx<=x2; gx++){ cx.moveTo(panX+gx*zoom+.5,panY+y1*zoom); cx.lineTo(panX+gx*zoom+.5,panY+y2*zoom); }
-    for(let gy=y1; gy<=y2; gy++){ cx.moveTo(panX+x1*zoom,panY+gy*zoom+.5); cx.lineTo(panX+x2*zoom,panY+gy*zoom+.5); }
-    cx.stroke();
-  }
-  // terrain: floors/grass/water/dirt first
-  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
-    const t=terrain.get(key(gx,gy));
-    if(t && t!=="wall" && t!=="structural" && t!=="door"){
-      if(t==="water"||t==="deepwater"){ cx.shadowColor="#3d84c9"; cx.shadowBlur=zoom*0.8; }
-      cx.fillStyle=BPCOL[t];
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
-      cx.shadowBlur=0;
-    }
-  }
-  // IMPLIED FACE WALLS (Tony 2026-08-24): the generator dresses every structural
-  // block's north and west neighbor with the mass's face wall when that neighbor is
-  // ground. Blueprint shows them so structural-to-interior joins read the way they
-  // will build. Preview approximation: corner caps, T-join stacks and door-recess
-  // carve-outs are the builder's exact business — the build report stays final.
-  const GROUNDY=t=>t&&t!=="wall"&&t!=="structural"&&t!=="door";
-  // Each strip leaves a QUARTER of its carrier tile as floor (north faces the top
-  // quarter, west faces the left quarter — measured in-game, Tony picked 1/4), the NW
-  // diagonal carries the L-piece (sprite spill), and strip ENDS get a 45° corner cut
-  // back to floor — NE end of north strips, SW end of west strips — imitating the
-  // isometric lean while the view stays flat (Tony's design, 2026-08-24).
-  const TRIM=0.25, CUT=0.75;
-  const nset=new Set(), wset=new Set(), nwset=new Set();
-  for(let gx=x1-1; gx<x2+1; gx++) for(let gy=y1-1; gy<y2+1; gy++){  // pad: edge cuts stay honest
-    if(terrain.get(key(gx,gy))!=="structural") continue;
-    if(GROUNDY(terrain.get(key(gx,gy-1)))) nset.add(key(gx,gy-1));
-    if(GROUNDY(terrain.get(key(gx-1,gy)))) wset.add(key(gx-1,gy));
-    if(GROUNDY(terrain.get(key(gx-1,gy-1)))) nwset.add(key(gx-1,gy-1));
-  }
-  // a cut only makes sense against OPEN ground — anything that renders cream
-  // (blocks, drawn walls, doors, other strips, NW L-pieces) counts as solid,
-  // otherwise the cut carves a stranded floor notch against a cream neighbor
-  const solidK=k=>{ const t=terrain.get(k);
-    return t==="structural"||t==="wall"||t==="door"
-         ||nset.has(k)||wset.has(k)||nwset.has(k); };
-  const gcol=k=>BPCOL[terrain.get(k)]||"#332c22";
-  const tri=(a,b,c,col)=>{ cx.fillStyle=col; cx.beginPath();
-    cx.moveTo(a[0],a[1]); cx.lineTo(b[0],b[1]); cx.lineTo(c[0],c[1]); cx.closePath(); cx.fill(); };
-  for(const k of nwset){                          // NW L-pieces first; strips overlay them
-    const [nx,ny]=k.split(",").map(Number);
-    const px=panX+nx*zoom, py=panY+ny*zoom;
-    cx.fillStyle="#e8dcc0";
-    cx.fillRect(px+zoom*TRIM,py+zoom*TRIM,zoom*(1-TRIM),zoom*(1-TRIM));
-    cx.fillStyle="rgba(0,0,0,0.14)";
-    cx.fillRect(px+zoom*TRIM,py+zoom*0.65,zoom*(1-TRIM),zoom*0.35);
-  }
-  const cuts=[];                                  // cuts paint LAST — a later strip on a
-  for(const k of nset){                           // both-strips tile must not repaint them
-    const [nx,ny]=k.split(",").map(Number);
-    const px=panX+nx*zoom, py=panY+ny*zoom;
-    cx.fillStyle="#e8dcc0";
-    cx.fillRect(px,py+zoom*TRIM,zoom,zoom*(1-TRIM));
-    cx.fillStyle="rgba(0,0,0,0.14)";
-    cx.fillRect(px,py+zoom*0.65,zoom,zoom*0.35);
-    if(!solidK(key(nx+1,ny)))                     // NE corner cut at the run's end
-      cuts.push([[px+zoom-zoom*CUT-1,py+zoom*TRIM-1],[px+zoom+1,py+zoom*TRIM-1],
-                 [px+zoom+1,py+zoom+1],gcol(k)]);
-  }
-  for(const k of wset){                           // west strips
-    const [nx,ny]=k.split(",").map(Number);
-    const px=panX+nx*zoom, py=panY+ny*zoom;
-    cx.fillStyle="#e8dcc0";
-    cx.fillRect(px+zoom*TRIM,py,zoom*(1-TRIM),zoom);
-    cx.fillStyle="rgba(0,0,0,0.14)";
-    cx.fillRect(px+zoom*TRIM,py+zoom*0.65,zoom*(1-TRIM),zoom*0.35);
-    if(!solidK(key(nx,ny+1)))                     // SW corner cut at the run's end
-      cuts.push([[px+zoom*TRIM-1,py+zoom-zoom*CUT-1],[px+zoom*TRIM-1,py+zoom+1],
-                 [px+zoom*CUT+zoom*TRIM+1,py+zoom+1],gcol(k)]);
-  }
-  for(const [a,b,c,col] of cuts) tri(a,b,c,col);  // 1px bleed swallows AA seams; a cut
-                                                  // only fires beside open floor, so the
-                                                  // bleed lands on floor color anyway
-  // walls as cream slabs with a subtle inner shade
-  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
-    const t=terrain.get(key(gx,gy));
-    if(t==="wall"||t==="structural"){
-      cx.fillStyle= t==="wall" ? "#e8dcc0" : "#c9ba92";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
-      cx.fillStyle= t==="wall" ? "rgba(0,0,0,0.14)" : "rgba(0,0,0,0.28)";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom+zoom*0.65,zoom,zoom*0.35);
-    } else if(t==="door"){
-      cx.fillStyle="#332c22";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
-      cx.shadowColor="#d0622e"; cx.shadowBlur=zoom*0.7;
-      cx.fillStyle="#d0622e";
-      cx.fillRect(panX+gx*zoom+zoom*0.15,panY+gy*zoom+zoom*0.3,zoom*0.7,zoom*0.4);
-      cx.shadowBlur=0;
-    }
-  }
-  drawMarks(x1,y1,x2,y2,true);
-  drawConnectors(true);
-  drawLabels(true);
-  drawGhost(true);
-  // title block
-  const title=document.getElementById("maptitle").value.trim();
-  if(title){
-    cx.fillStyle="#8a7a55"; cx.font="11px Georgia"; cx.textAlign="left";
-    cx.fillText("S T O R M H A L T E R", 54, cv.height-52);
-    cx.fillStyle="#e8dcc0"; cx.font="26px Georgia";
-    cx.fillText(title.toUpperCase().split("").join(" "), 54, cv.height-26);
-  }
-  rulers();
-}
 function drawIso(){
-  // ISO view (Tony 2026-08-24): blueprint styling, but structural masses render as
+  // ISO view (Tony 2026-08-24): presentation styling, structural masses render as
   // merged isometric cubes — top faces shifted up-left by S, 45-degree side faces on
   // the SE edges — matching how the game actually sits the mass on the map.
   cx.shadowBlur=0;
@@ -799,42 +717,123 @@ function drawIso(){
       cx.shadowBlur=0;
     }
   }
-  // cubes: pad past the viewport so shifted tops of just-offscreen blocks appear
-  const S=0.75, isB=(x,y)=>terrain.get(key(x,y))==="structural";
-  const bl=[];
-  for(let gx=x1-1; gx<x2+2; gx++) for(let gy=y1-1; gy<y2+2; gy++) if(isB(gx,gy)) bl.push([gx,gy]);
-  for(const [gx,gy] of bl){                        // side faces first
-    const X=panX+gx*zoom, Y=panY+gy*zoom, z=zoom;
-    if(!isB(gx+1,gy)||!isB(gx+1,gy-1)){            // east shoulder
-      cx.fillStyle="#8c7e5e"; cx.beginPath();
-      cx.moveTo(X+(1-S)*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z);
-      cx.closePath(); cx.fill();
-    }
-    if(!isB(gx,gy+1)||!isB(gx-1,gy+1)){            // south shoulder
-      cx.fillStyle="#a39470"; cx.beginPath();
-      cx.moveTo(X-S*z,Y+(1-S)*z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
-      cx.closePath(); cx.fill();
-    }
+  // ONE back-to-front pass (Tony 2026-08-25): cubes AND wall panels sorted NW->SE, so
+  // the up-left lean layers truthfully — walls own their tile, masses spill onto part
+  // of the tile behind them. Partitions = cubes squashed thin (T) on the edge the game
+  // draws them: h-runs hug the SOUTH edge (south face shown), v-runs the EAST edge
+  // (east face shown); junction tiles carry both and form the corner L. Doors are the
+  // same panel in ember. Approved from the 2026-08-25 mock.
+  const S=0.75, T=0.30, tv=(x,y)=>terrain.get(key(x,y));
+  const isB=(x,y)=>tv(x,y)==="structural";
+  const wallish=(x,y)=>{const q=tv(x,y); return q==="wall"||q==="door"||q==="structural";};
+  const isTW=(x,y)=>marks.get(key(x,y))==="treewall";
+  // doors piercing a structural run: the generator CARVES the flank block into a
+  // divider — east flank for a NS door, south flank for an EW door (canon gap-door
+  // form). The iso view previews that carve: flank cube suppressed, panel drawn.
+  const carved=new Map();
+  for(let gx=x1-2; gx<x2+2; gx++) for(let gy=y1-2; gy<y2+2; gy++){
+    if(tv(gx,gy)!=="door") continue;
+    if(tv(gx-1,gy)==="structural"&&tv(gx+1,gy)==="structural") carved.set(key(gx+1,gy),"pv");
+    else if(tv(gx,gy-1)==="structural"&&tv(gx,gy+1)==="structural") carved.set(key(gx,gy+1),"ph");
   }
-  cx.fillStyle="#e8dcc0";
-  for(const [gx,gy] of bl){                        // shifted tops merge across the mass
-    const X=panX+gx*zoom, Y=panY+gy*zoom, z=zoom;
-    cx.fillRect(X-S*z,Y-S*z,z,z);
+  const items=[];
+  for(let gx=x1-2; gx<x2+2; gx++) for(let gy=y1-2; gy<y2+2; gy++){
+    const q=tv(gx,gy);
+    if(carved.has(key(gx,gy))) items.push([gx,gy,carved.get(key(gx,gy))]);
+    else if(q==="structural"||q==="wall"||q==="door") items.push([gx,gy,q]);
+    else if(isTW(gx,gy)) items.push([gx,gy,"tw"]);
+    else if(marks.get(key(gx,gy))==="tree") items.push([gx,gy,"tr"]);
   }
-  for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
-    const t=terrain.get(key(gx,gy));
-    if(t==="wall"){
+  items.sort((a,b)=>a[1]-b[1]||a[0]-b[0]);
+  for(const [gx,gy,q] of items){
+    const X=panX+gx*zoom, Y=panY+gy*zoom, z=zoom;
+    if(q==="tr"){                                  // walkable tree: Tony's sprite
+      cx.fillStyle="rgba(8,16,8,0.38)";
+      cx.beginPath(); cx.ellipse(X+0.18*z,Y+0.52*z,0.62*z,0.4*z,0,0,7); cx.fill();
+      if(TREE_IMG.complete&&TREE_IMG.naturalWidth)
+        cx.drawImage(TREE_IMG, X-0.92*z, Y-0.98*z, 1.9*z, 1.9*z);
+      continue;
+    }
+    if(q==="tw"){                                  // tree wall: the structural cube, green
+      if(!isTW(gx+1,gy)||!isTW(gx+1,gy-1)){
+        cx.fillStyle="#225628"; cx.beginPath();
+        cx.moveTo(X+(1-S)*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z);
+        cx.closePath(); cx.fill();
+      }
+      if(!isTW(gx,gy+1)||!isTW(gx-1,gy+1)){
+        cx.fillStyle="#306e36"; cx.beginPath();
+        cx.moveTo(X-S*z,Y+(1-S)*z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+        cx.closePath(); cx.fill();
+      }
+      cx.fillStyle="#469646";
+      cx.fillRect(X-S*z,Y-S*z,z,z);
+      continue;
+    }
+    if(q==="pv"||q==="ph"){                          // carved door flank: derived divider
+      cx.fillStyle=BPCOL.floor||"#332c22";           // seen floor under it
+      cx.fillRect(X,Y,z,z);
+      if(q==="pv"){
+        cx.fillStyle="#8c7e5e"; cx.beginPath();
+        cx.moveTo(X+z-S*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
+        cx.closePath(); cx.fill();
+        cx.fillStyle="#e8dcc0";
+        cx.fillRect(X+(1-T)*z-S*z,Y-S*z,T*z,z);
+      } else {
+        cx.fillStyle="#a39470"; cx.beginPath();
+        cx.moveTo(X-S*z,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+        cx.closePath(); cx.fill();
+        cx.fillStyle="#e8dcc0";
+        cx.fillRect(X-S*z,Y+(1-T)*z-S*z,z,T*z);
+      }
+      continue;
+    }
+    if(q==="structural"){
+      if(!isB(gx+1,gy)||!isB(gx+1,gy-1)){            // east shoulder
+        cx.fillStyle="#8c7e5e"; cx.beginPath();
+        cx.moveTo(X+(1-S)*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z);
+        cx.closePath(); cx.fill();
+      }
+      if(!isB(gx,gy+1)||!isB(gx-1,gy+1)){            // south shoulder
+        cx.fillStyle="#a39470"; cx.beginPath();
+        cx.moveTo(X-S*z,Y+(1-S)*z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+        cx.closePath(); cx.fill();
+      }
       cx.fillStyle="#e8dcc0";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
-      cx.fillStyle="rgba(0,0,0,0.14)";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom+zoom*0.65,zoom,zoom*0.35);
-    } else if(t==="door"){
-      cx.fillStyle="#332c22";
-      cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
-      cx.shadowColor="#d0622e"; cx.shadowBlur=zoom*0.7;
-      cx.fillStyle="#d0622e";
-      cx.fillRect(panX+gx*zoom+zoom*0.15,panY+gy*zoom+zoom*0.3,zoom*0.7,zoom*0.4);
-      cx.shadowBlur=0;
+      cx.fillRect(X-S*z,Y-S*z,z,z);
+      continue;
+    }
+    const h=wallish(gx+1,gy)||wallish(gx-1,gy), v=wallish(gx,gy-1)||wallish(gx,gy+1);
+    const o=(h&&!v)?"h":(v&&!h)?"v":(h&&v)?"hv":"h";
+    const door=q==="door";
+    const top=door?"#e88c50":"#e8dcc0", shS=door?"#b5622f":"#a39470", shE=door?"#9c5426":"#8c7e5e";
+    if(o.indexOf("h")>=0){                           // south-edge panel
+      // START CUT (Tony 2026-08-25): no wall continuing west -> the run ends flush at
+      // the tile's true west edge instead of overhanging by S (matches the game, where
+      // the corner piece closes the run).
+      const Lx = wallish(gx-1,gy) ? X-S*z : X;
+      cx.fillStyle=shS; cx.beginPath();              // south face
+      cx.moveTo(Lx,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+      cx.closePath(); cx.fill();
+      if(!wallish(gx+1,gy)){                         // east end cap
+        cx.fillStyle=shE; cx.beginPath();
+        cx.moveTo(X+z-S*z,Y+(1-T)*z-S*z); cx.lineTo(X+z,Y+(1-T)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
+        cx.closePath(); cx.fill();
+      }
+      cx.fillStyle=top;
+      cx.fillRect(Lx,Y+(1-T)*z-S*z,(X+z-S*z)-Lx,T*z); // top band
+    }
+    if(o.indexOf("v")>=0){                           // east-edge panel
+      const Ty = wallish(gx,gy-1) ? Y-S*z : Y;       // START CUT: flush north edge
+      cx.fillStyle=shE; cx.beginPath();              // east face
+      cx.moveTo(X+z-S*z,Ty); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
+      cx.closePath(); cx.fill();
+      if(!wallish(gx,gy+1)){                         // south end cap
+        cx.fillStyle=shS; cx.beginPath();
+        cx.moveTo(X+(1-T)*z-S*z,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-T)*z,Y+z);
+        cx.closePath(); cx.fill();
+      }
+      cx.fillStyle=top;
+      cx.fillRect(X+(1-T)*z-S*z,Ty,T*z,(Y+z-S*z)-Ty); // top band
     }
   }
   drawMarks(x1,y1,x2,y2,true);
@@ -863,6 +862,7 @@ function drawMarks(x1,y1,x2,y2,bp){
       cx.fillRect(-s/2,-s/2,s,s); cx.restore();
       cx.shadowBlur=0;
     } else if(m==="tree"||m==="treewall"){
+      if(viewMode==="iso") continue;                   // iso: sprite (tree) / green cube (treewall)
       const col=(bp?BPCOL:TCOL)[m];
       const s=Math.max(3,zoom*(m==="treewall"?0.46:0.32));
       if(bp&&m==="treewall"){ cx.shadowColor=col; cx.shadowBlur=zoom*0.5; }
@@ -1284,6 +1284,10 @@ window.addEventListener("keydown", e=>{
     else if(e.key==="Enter"){ modalDone(true); e.preventDefault(); }
     return;                                    // dialog swallows everything else
   }
+  if(document.getElementById("tintpanel").classList.contains("open")){
+    if(e.key==="Escape"){ document.getElementById("tintpanel").classList.remove("open"); e.preventDefault(); }
+    return;
+  }
   if(document.getElementById("importpanel").classList.contains("open")){
     if(e.key==="Escape"){ document.getElementById("importpanel").classList.remove("open"); e.preventDefault(); }
     if(document.activeElement&&document.activeElement.id==="irwin") return;
@@ -1328,23 +1332,23 @@ function updateModeUI(){
   document.getElementById("modebtn").classList.toggle("active",viewMode!=="edit");
   const g=document.getElementById("modebadge");
   g.textContent=viewMode.toUpperCase();
-  g.classList.toggle("bp",viewMode==="blueprint");
   g.classList.toggle("iso",viewMode==="iso");
 }
 function toggleMode(){
-  viewMode = viewMode==="edit" ? "blueprint" : viewMode==="blueprint" ? "iso" : "edit";
+  viewMode = viewMode==="edit" ? "iso" : "edit";
   updateModeUI();
   draw();
 }
 document.getElementById("modebtn").onclick=toggleMode;
 const toolsDiv=document.getElementById("tools");
+const accDiv=document.getElementById("acctools");
 for(const t of TOOLS){
   const b=document.createElement("button");
   b.className="tool"+(t.id===tool?" active":""); b.id="t_"+t.id;
   const shp = t.id==="boss" ? " diamond" : ((t.id==="path"||t.id==="tree") ? " dot" : "");
   b.innerHTML='<span class="sw'+shp+'" style="background:'+t.col+'"></span>'+t.name+' <span style="margin-left:auto;color:#4d6d73">'+t.key.toUpperCase()+"</span>";
   b.onclick=()=>selectTool(t.id);
-  toolsDiv.appendChild(b);
+  (t.id.indexOf("accent")===0?accDiv:toolsDiv).appendChild(b);
 }
 const connDiv=document.getElementById("conntools");
 for(const t of CONN){
@@ -1367,6 +1371,9 @@ const PAL_FIELDS=[
   ["dirtfloor","Dirt floor","12","nl"],
   ["grass","Grass","13","nl"],
   ["dirt","Road","184","nl"],
+  ["accent1","Accent floor 1","1","nl"],
+  ["accent2","Accent floor 2","1","nl"],
+  ["accent3","Accent floor 3","1","nl"],
   ["water","Water","22","n"],
   ["deepwater","Deep water","19","dw"],
   ["structural_floor","Structural wall floor","12","nl"],
@@ -1398,11 +1405,57 @@ function updateIcon(k){
   }
   const first=(raw.match(/-?\d+/)||[raw])[0];   // comma lists: icon shows the first id
   const e=ledgerEntry(first);
-  if(e){ img.src=e.i; img.title=e.n||""; img.classList.remove("none"); }
+  if(e){
+    const t=palTint[k];
+    if(t){
+      const im=new Image();
+      im.onload=()=>{ const c=document.createElement("canvas"); c.width=im.naturalWidth; c.height=im.naturalHeight;
+        tintApply(c.getContext("2d"),im,t,c.width,c.height); img.src=c.toDataURL(); };
+      im.src=e.i;
+    } else img.src=e.i;
+    img.title=e.n||""; img.classList.remove("none");
+  }
   else { img.removeAttribute("src"); img.classList.add("none"); img.title=""; }
+  const g=document.getElementById("tint_"+k);
+  if(g&&!g.classList.contains("ghost"))
+    g.classList.toggle("tinted",!!palTint[k]||!!palOpts[k]);
 }
 const palRows=document.getElementById("palgrid");
 const NONE_ROLES=["wall-ns","wall-ew","corner","door-ns","door-ew"]; // 0 = none (bare style)
+const NO_TINT=["boss_ground","spawn_ground","portal_egress"];
+let palTint={};                                    // role -> [r,g,b,a], absent = untinted
+let palOpts={};                                    // role -> {flag/value}, absent = default
+// WorldForge's non-colour component properties (Tony 2026-08-25). Element names are
+// CAPTURED, not guessed: indestructible / canGrow / blockVision / movementCost from his
+// live region XML. ALL names verified from region 1 (Tony's 2026-08-25 test tiles):
+// note WorldForge's labels lie — "IsDecayed" serializes as <decayed>, "IsIndestructible"
+// as <indestructible>, but "IsDestroyed"/"IsOpen"/"IsSecret" keep their Is. Never guess.
+// Style-level: every tile built with this style gets these.
+const FLOOR_ROLES=["room","hall","dirtfloor","grass","dirt","accent1","accent2","accent3","structural_floor"];
+const ROLE_OPTS={};
+for(const r of FLOOR_ROLES) ROLE_OPTS[r]=[["movementCost","Movement cost","num",1]];
+ROLE_OPTS["water"]=[["movementCost","Movement cost","num",3],["depth","Depth","num",""]];
+ROLE_OPTS["deepwater"]=[["movementCost","Movement cost","num",3],["depth","Depth","num",""]];
+for(const r of ["wall-ns","wall-ew","corner"]) ROLE_OPTS[r]=[["indestructible","Indestructible","bool",false]];
+ROLE_OPTS["structural"]=[["indestructible","Indestructible (always on for structural)","lockedTrue",true]];
+for(const r of ["door-ns","door-ew"]) ROLE_OPTS[r]=[["isOpen","Starts open","bool",false],
+                                                    ["isSecret","Secret","bool",false],
+                                                    ["isDestroyed","Starts destroyed","bool",false],
+                                                    ["indestructible","Indestructible","bool",false]];
+ROLE_OPTS["tree"]=[["canGrow","Can grow","bool",true],["decayed","Decayed","bool",false]];
+ROLE_OPTS["treewall"]=[["blockVision","Blocks vision","bool",true]];
+function optsOf(k){ return palOpts[k]||{}; }
+function tintOf(k){ return palTint[k]||[255,255,255,255]; }
+function tintApply(ctx2,img,t,w,h){
+  ctx2.clearRect(0,0,w,h);
+  ctx2.globalAlpha=t[3]/255;
+  ctx2.drawImage(img,0,0,w,h);
+  ctx2.globalCompositeOperation="multiply";
+  ctx2.fillStyle="rgb("+t[0]+","+t[1]+","+t[2]+")"; ctx2.fillRect(0,0,w,h);
+  ctx2.globalCompositeOperation="destination-in";
+  ctx2.drawImage(img,0,0,w,h);
+  ctx2.globalCompositeOperation="source-over"; ctx2.globalAlpha=1;
+}
 function syncDw(){
   const v=String(document.getElementById("pal_deepwater").value).trim();
   document.getElementById("dw19").classList.toggle("active",v==="19");
@@ -1417,11 +1470,12 @@ for(const [k,label,def] of PAL_FIELDS){
       +'<input type="hidden" id="pal_'+k+'" value="'+def+'">'
       +'<button class="rst dw" id="dw19" title="Obstruction 19">19</button>'
       +'<button class="rst dw" id="dw605" title="Obstruction 605">605</button>'
-      +'<button class="rst ghost" tabindex="-1">&#215;</button>';
+      +'<button class="rst" id="tint_'+k+'" title="Color — WorldForge RGBA sliders">&#9881;</button>';
     palRows.appendChild(r);
     const setdw=v=>{ document.getElementById("pal_deepwater").value=v; syncDw(); updateIcon(k); save(); };
     document.getElementById("dw19").onclick=()=>setdw("19");
     document.getElementById("dw605").onclick=()=>setdw("605");
+    document.getElementById("tint_"+k).onclick=()=>openTint(k);
     syncDw();
     continue;
   }
@@ -1429,14 +1483,19 @@ for(const [k,label,def] of PAL_FIELDS){
     +'<input type="text" id="pal_'+k+'" value="'+def+'">'
     +'<button class="rst" id="rst_'+k+'" title="Reset to default ('+def+')">&#8634;</button>'
     +(NONE_ROLES.includes(k)?'<button class="rst" id="off_'+k+'" title="Set to 0 — none, not emitted (bare style)">&#215;</button>'
-                            :'<button class="rst ghost" tabindex="-1">&#215;</button>');
+                            :'<button class="rst ghost" tabindex="-1">&#215;</button>')
+    +(NO_TINT.includes(k)?'<button class="rst ghost" tabindex="-1">&#9881;</button>'
+                         :'<button class="rst" id="tint_'+k+'" title="Color — WorldForge RGBA sliders">&#9881;</button>');
   palRows.appendChild(r);
   document.getElementById("rst_"+k).onclick=()=>{
-    document.getElementById("pal_"+k).value=def; updateIcon(k); save();
+    document.getElementById("pal_"+k).value=def;
+    delete palTint[k]; delete palOpts[k];             // reset clears colour AND options
+    updateIcon(k); save();
   };
   if(NONE_ROLES.includes(k)) document.getElementById("off_"+k).onclick=()=>{
     document.getElementById("pal_"+k).value="0"; updateIcon(k); save();
   };
+  if(!NO_TINT.includes(k)) document.getElementById("tint_"+k).onclick=()=>openTint(k);
 }
 palRows.addEventListener("input",e=>{
   const m=(e.target.id||"").match(/^pal_(.+)$/);
@@ -1510,13 +1569,90 @@ function palObj(){
     const v=palParse(k,shape,document.getElementById("pal_"+k).value||def);
     if(v!==undefined) p[k]=v;
   }
+  if(Object.keys(palTint).length) p.tint=JSON.parse(JSON.stringify(palTint));
+  if(Object.keys(palOpts).length) p.opts=JSON.parse(JSON.stringify(palOpts));
   return p;
 }
+// ---- WorldForge color sliders (Tony 2026-08-25): multiplicative RGB + alpha,
+// exactly the game's recolor. Preview = ledger tile x multiply, live.
+let tintRole=null;
+function tintVals(){ return ["tr","tg","tb","ta"].map(i=>+document.getElementById(i).value); }
+function tintPrev(){
+  const t=tintVals();
+  ["trv","tgv","tbv","tav"].forEach((i,n)=>document.getElementById(i).textContent=t[n]);
+  const first=(String(document.getElementById("pal_"+tintRole).value).match(/-?\d+/)||["1"])[0];
+  const e=ledgerEntry(first);
+  const cv2=document.getElementById("tintprev"), c2=cv2.getContext("2d");
+  c2.clearRect(0,0,128,128);
+  if(!e) return;
+  const im=new Image();
+  im.onload=()=>tintApply(c2,im,t,128,128);
+  im.src=e.i;
+}
+function renderOpts(k){
+  const spec=ROLE_OPTS[k]||[], box=document.getElementById("optrows");
+  document.getElementById("optsec").style.display=spec.length?"":"none";
+  box.innerHTML="";
+  const cur=optsOf(k);
+  for(const [key,label,kind,def] of spec){
+    const r=document.createElement("div");
+    r.className="orow"+(kind==="lockedTrue"?" locked":"");
+    const v=(cur[key]!==undefined)?cur[key]:def;
+    if(kind==="num")
+      r.innerHTML='<label>'+label+'</label><input type="number" id="opt_'+key+'" value="'+(v===""?"":v)+'" placeholder="'+(def===""?"—":def)+'">';
+    else
+      r.innerHTML='<label>'+label+'</label><input type="checkbox" id="opt_'+key+'"'+((kind==="lockedTrue"||v===true||v==="true")?" checked":"")+(kind==="lockedTrue"?" disabled":"")+'>';
+    box.appendChild(r);
+  }
+}
+function collectOpts(k){
+  const spec=ROLE_OPTS[k]||[], out={};
+  for(const [key,label,kind,def] of spec){
+    if(kind==="lockedTrue") continue;                 // role decides; never stored
+    const el=document.getElementById("opt_"+key);
+    if(!el) continue;
+    if(kind==="num"){
+      const raw=el.value.trim();
+      if(raw==="") continue;                          // blank = leave it to the default
+      const n=parseInt(raw,10);
+      if(!isNaN(n)&&n!==def) out[key]=n;
+    } else if(el.checked!==def) out[key]=el.checked;
+  }
+  return out;
+}
+function openTint(k){
+  tintRole=k;
+  const t=tintOf(k);
+  ["tr","tg","tb","ta"].forEach((i,n)=>document.getElementById(i).value=t[n]);
+  document.getElementById("tinthead").textContent=(PAL_FIELDS.find(f=>f[0]===k)||[,k])[1].toUpperCase();
+  renderOpts(k);
+  document.getElementById("tintpanel").classList.add("open");
+  tintPrev();
+}
+window.addEventListener("DOMContentLoaded",()=>{      // panel sits after the script
+["tr","tg","tb","ta"].forEach(i=>document.getElementById(i).addEventListener("input",tintPrev));
+document.getElementById("tintreset").onclick=()=>{
+  ["tr","tg","tb","ta"].forEach(i=>document.getElementById(i).value=255);
+  delete palOpts[tintRole]; renderOpts(tintRole); tintPrev();   // colour AND options back to default
+};
+document.getElementById("tintok").onclick=()=>{
+  const t=tintVals();
+  if(t[0]===255&&t[1]===255&&t[2]===255&&t[3]===255) delete palTint[tintRole];
+  else palTint[tintRole]=t;
+  const o=collectOpts(tintRole);
+  if(Object.keys(o).length) palOpts[tintRole]=o; else delete palOpts[tintRole];
+  document.getElementById("tintpanel").classList.remove("open");
+  updateIcon(tintRole); save();
+};
+document.getElementById("tintcancel").onclick=()=>document.getElementById("tintpanel").classList.remove("open");
+});
 function palSet(p){
   for(const [k,_,def,shape] of PAL_FIELDS){
     const s=palToStr(shape,p?p[k]:undefined);
     document.getElementById("pal_"+k).value = s!==null ? s : def;
   }
+  palTint=(p&&p.tint)?JSON.parse(JSON.stringify(p.tint)):{};
+  palOpts=(p&&p.opts)?JSON.parse(JSON.stringify(p.opts)):{};
   palIcons(); syncDw();
 }
 function loadStyles(){ try{ return JSON.parse(localStorage.getItem("lok_styles")||"{}"); }catch(e){ return {}; } }
@@ -1645,7 +1781,7 @@ document.getElementById("styleexp").onclick=()=>{
 document.getElementById("styledef").onclick=()=>{ palSet(null); document.getElementById("stylesel").value=""; save(); };
 refreshStyleSel();
 stylesFromFolder(false);   // silent folder load at boot if permission is already granted
-function selectTool(id){ tool=id; if(id!=="select") pasteMode=false; for(const t of TOOLS.concat(CONN)) document.getElementById("t_"+t.id).classList.toggle("active",t.id===id); document.getElementById("tb_select").classList.toggle("active",id==="select"); if(CONNIDS.includes(id)) document.getElementById("conngrp").open=true; draw(); }
+function selectTool(id){ tool=id; if(id!=="select") pasteMode=false; for(const t of TOOLS.concat(CONN)) document.getElementById("t_"+t.id).classList.toggle("active",t.id===id); document.getElementById("tb_select").classList.toggle("active",id==="select"); if(CONNIDS.includes(id)) document.getElementById("conngrp").open=true; if(id.indexOf("accent")===0) document.getElementById("accgrp").open=true; draw(); }
 document.getElementById("tb_undo").onclick=undo;
 document.getElementById("tb_redo").onclick=redo;
 document.getElementById("tb_select").onclick=()=>selectTool("select");
@@ -1863,6 +1999,20 @@ document.getElementById("buildbtn").onclick=async()=>{
     document.getElementById("buildbtn").click();      // re-run pre-flight on the new folder
   });
   if(pf.mode==="merge"||pf.mode==="restore_merge"){
+    if(pf.can_rebuild_new){
+      // Escape hatch (Tony 2026-08-25): the import backup should never TRAP you into
+      // restoring. Delete the region, press this, get a clean build from the sketch.
+      const rb=actButton("REBUILD NEW","danger",async()=>{
+        if(!await uiConfirm("Build region "+pf.region+" fresh from this sketch alone?\n\n"
+          +"The import backup is ignored. Anything that was in the old region but is not "
+          +"in this sketch will not be there.")) return;
+        runAction(rb,async()=>{
+          const r=await APP().build_run(data,"new",true);
+          bRep().textContent+="\n"+r.report+"\n"+(r.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
+          bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
+        });
+      });
+    }
     const dry=actButton(pf.mode==="merge"?"MERGE (DRY RUN)":"RESTORE + MERGE (DRY RUN)","go",()=>runAction(dry,async()=>{
       const r=await APP().build_run(data,pf.mode,false);
       bRep().textContent+="\n"+r.report+"\n";
@@ -1910,6 +2060,8 @@ document.getElementById("maskapply").onclick=async()=>{
   bPanel().classList.add("open");
 };
 const APP=()=>window.pywebview&&window.pywebview.api;
+const TREE_IMG=new Image(); TREE_IMG.src="tree-sprite.svg";   // Tony's vectorized sprite
+TREE_IMG.onload=()=>draw();
 let _saveT=null;
 function save(){
   if(uiMode==="mask"){ maskSave(); return; }     // never write the base map over the sketch autosave
@@ -1949,6 +2101,16 @@ window.addEventListener("pywebviewready", async()=>{      // app mode: disk is t
   <label>WINDOW &middot; X0 Y0 X1 Y1 &middot; BLANK = WHOLE REGION</label>
   <input type="text" id="irwin" placeholder="e.g.  -33 -75 35 -37">
   <div id="iractions"><button id="irgo" disabled>IMPORT</button><button id="ircancel" onclick="document.getElementById('importpanel').classList.remove('open')">Cancel</button></div>
+</div></div>
+<div id="tintpanel"><div id="tintbox">
+  <div id="tinthead">COLOR</div>
+  <canvas id="tintprev" width="128" height="128"></canvas>
+  <div class="trow"><label style="color:#e05a5a">R</label><input type="range" id="tr" min="0" max="255" value="255"><span class="tval" style="color:#e05a5a" id="trv">255</span></div>
+  <div class="trow"><label style="color:#57c96a">G</label><input type="range" id="tg" min="0" max="255" value="255"><span class="tval" style="color:#57c96a" id="tgv">255</span></div>
+  <div class="trow"><label style="color:#52d8dc">B</label><input type="range" id="tb" min="0" max="255" value="255"><span class="tval" style="color:#52d8dc" id="tbv">255</span></div>
+  <div class="trow"><label style="color:#cfe4e6">A</label><input type="range" id="ta" min="0" max="255" value="255"><span class="tval" style="color:#cfe4e6" id="tav">255</span></div>
+  <div id="optsec"><div class="opthead">OPTIONS</div><div id="optrows"></div></div>
+  <div id="tintbtns"><button id="tintreset">&#8634; 255</button><button id="tintok">OK</button><button id="tintcancel">Cancel</button></div>
 </div></div>
 <div id="buildpanel"><div id="buildbox">
   <div id="buildhead">BUILD</div>

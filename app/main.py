@@ -395,13 +395,16 @@ class Api:
         tiles = sum(len(v) for v in (s.get("layers") or {}).values())
         notes = []
         if mode == "restore_merge":
-            notes.append(f"TARGET MISSING — {target.name} will be RESTORED from the "
-                         f"backup taken at import, then your changes merged on top.")
+            notes.append(f"TARGET MISSING — RESTORE + MERGE will bring {target.name} back "
+                         f"from the backup taken at import and merge your changes on top. "
+                         f"REBUILD NEW ignores the backup and builds the region from this "
+                         f"sketch alone.")
         if mode == "new" and origins:
             notes.append(f"WARNING: this sketch traces to region {rid} but neither the "
                          f"file nor an import backup exists — a new build will contain "
                          f"ONLY what is sketched.")
         return {"mode": mode, "region": rid, "target": str(target),
+                "can_rebuild_new": mode == "restore_merge",
                 "title": s.get("title") or "", "tiles": tiles,
                 "palette": pal_line, "notes": notes,
                 "base": origins.get("base") if origins.get("base")
@@ -440,6 +443,16 @@ class Api:
                                                f"— re-run Build to merge instead."}
             r = _run("sketch_build.py", str(tmp), "--new", str(rid),
                      s.get("title") or f"Region {rid}", "-o", str(target))
+            # The old import context/backup describe a region that no longer exists —
+            # keeping them would make the NEXT build diff against a stale base. Retire
+            # them so future builds merge honestly against the file we just wrote.
+            if r.get("ok"):
+                st = _settings()
+                if st.get("origins", {}).pop(str(rid), None) is not None:
+                    _save_settings(st)
+                    r["report"] += ("\n\nNOTE: the import context for region "
+                                    f"{rid} was retired — it described the replaced "
+                                    "region. Import again to resume section editing.")
         else:
             return {"ok": False, "report": f"unknown mode {mode}"}
         r["report"] = notice + r["report"]

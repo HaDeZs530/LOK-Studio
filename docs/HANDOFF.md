@@ -1,5 +1,31 @@
 # LOK STUDIO — the app era (2026-08-24 on)
 
+## ⭐ STANDING LAW (Tony, 2026-08-25): CONFIRM EVERYTHING AGAINST A WORLDFORGE FILE
+
+Nothing this project writes into a region is ever inferred, pattern-matched, or taken
+from a UI label. Every element name, value format and default is CAPTURED from a real
+WorldForge-saved file — that is how the isometric rules, junctions, doors, companions,
+colours and component options were all settled, and it is the reason the generator has
+never silently corrupted a map.
+
+The procedure when something new is needed: Tony sets the property in WorldForge on a
+throwaway region, saves, names the region; Claude reads the XML and encodes exactly
+what is there. If no file has ever used a property, its serialization is UNKNOWN —
+say so and ask for a calibration tile. Never guess it.
+
+`Claude Worldforge Testing\Regions\1.xml` is the CALIBRATION REFERENCE (2026-08-25):
+doors with isOpen / isSecret / isDestroyed / indestructible, a decayed tree, walls with
+and without indestructible, obstructions. Keep it.
+
+WHY IT MATTERS — the labels lie. WorldForge's property panel says "IsDecayed" but the
+file says `<decayed>`; "IsIndestructible" writes `<indestructible>`; yet "IsOpen",
+"IsSecret" and "IsDestroyed" keep their prefix. There is no derivable rule. Two of
+those four would have been wrong on a confident guess.
+
+Colour serialization (same law, captured from region 9):
+`<color r=".." g=".." b=".." a=".." />` as the component's FIRST child, 255 = untouched.
+
+
 ## RULING (Tony, 2026-08-24): the 1-wide-hall coverage question is CLOSED — no fix
 
 A 1-tile hall drawn against structural mass on its SOUTH or EAST reads half-covered in
