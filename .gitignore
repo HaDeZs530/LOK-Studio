@@ -8,3 +8,11 @@ __pycache__/
 # packaging output (phase 2)
 dist/
 build/
+
+# masks reapply/revert memory — per-machine user state, never committed
+generator/last_applied_masks/
+
+# personal styles stay per-machine — the repo ships only the two templates
+generator/styles/*.json
+!generator/styles/graybox.json
+!generator/styles/bare.json
