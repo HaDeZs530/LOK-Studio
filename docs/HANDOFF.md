@@ -72,6 +72,17 @@ dev mode — the packaged re-exec fell back to cp1252 and died printing the repo
 ⚠ glyph. Fixed in the --script branch: sys.stdout/stderr .reconfigure(utf-8,
 errors=replace) before running the generator script. Reproduced and verified.
 Lesson: any encoding guarantee via env vars must be re-checked under PyInstaller.
+**SECOND PACKAGED-APP CRASH, same family (Tony 2026-08-26):** apply_masks saved its
+applied-state (reapply/revert memory) beside the script — inside Program Files in the
+installed app → PermissionError on a masked WRITE (after the region was already
+written; only the state save died). Fix: `--state-dir` flag on apply_masks; main.py
+passes `ws()/last_applied_masks` when FROZEN. Dev/standalone keep the old beside-the-
+script default. Verified both paths headlessly. AUDIT NOTE for future sessions: grep
+generator scripts for writes derived from `Path(__file__)` before packaging features —
+anything the generator WRITES must live in the workspace, only reads may live in the
+bundle. One consequence: an installed app's reapply memory starts empty (the old
+location could never have been written), so the first reapply after this fix won't
+revert tiles from before it — harmless for fresh work, worth knowing.
 
 ## 2026-08-24 (night) — UI SCALE · APP ICON · INSTALLER · RELEASE FIX · README
 

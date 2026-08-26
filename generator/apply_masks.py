@@ -135,7 +135,14 @@ def main():
         print("\n".join(rep)); return
     src = a[a.index("--merge")+1]
     # tiles the LAST applied mask covered but this one doesn't get REVERTED to base
-    applied = Path(__file__).resolve().parent / "last_applied_masks" / (Path(src).stem + ".json")
+    # applied-state dir: --state-dir wins (the packaged app passes its writable
+    # workspace — beside the script is INSIDE Program Files there, and read-only);
+    # standalone/dev runs keep the old location beside the script.
+    if "--state-dir" in a:
+        state_root = Path(a[a.index("--state-dir") + 1])
+    else:
+        state_root = Path(__file__).resolve().parent / "last_applied_masks"
+    applied = state_root / (Path(src).stem + ".json")
     revert = set()
     if applied.exists():
         prev = json.load(open(applied, encoding="utf-8"))
@@ -156,7 +163,7 @@ def main():
                              preserve_extras=True)
     sb.audit(txt, M_write, base, rep, intended)
     if "--write" in a:
-        applied.parent.mkdir(exist_ok=True)
+        applied.parent.mkdir(parents=True, exist_ok=True)
         applied.write_text(json.dumps(masks_d), encoding="utf-8")
         rep.append(f"applied-state saved: {applied.name}")
     print("\n".join(rep))

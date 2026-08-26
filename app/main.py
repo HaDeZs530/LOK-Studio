@@ -477,6 +477,10 @@ class Api:
         mf = ws() / "_apply_masks.json"
         mf.write_text(masks_json, encoding="utf-8")
         args = [str(mf), base, "--merge", str(target)]
+        if FROZEN:
+            # beside-the-script is inside Program Files in the packaged app — read-only.
+            # The applied-state (reapply/revert memory) goes to the writable workspace.
+            args += ["--state-dir", str(ws() / "last_applied_masks")]
         if write:
             args += ["--write"]
         return _run("apply_masks.py", *args)
