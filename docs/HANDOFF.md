@@ -40,6 +40,12 @@ top faces shifted up-left S=0.75, east shoulder "#8c7e5e", south shoulder "#a394
 tops "#e8dcc0", block list padded past the viewport so offscreen tops still show.
 Partition walls/doors/marks/labels stay blueprint-style. Verified against Test 3 in
 a three-mode test render matching Tony's WorldForge screenshots.
+**PACKAGED-APP UNICODE CRASH (Tony's masked build, 2026-08-24):** the frozen
+interpreter IGNORES PYTHONUTF8/PYTHONIOENCODING, so _run's UTF-8 env only protects
+dev mode — the packaged re-exec fell back to cp1252 and died printing the report's
+⚠ glyph. Fixed in the --script branch: sys.stdout/stderr .reconfigure(utf-8,
+errors=replace) before running the generator script. Reproduced and verified.
+Lesson: any encoding guarantee via env vars must be re-checked under PyInstaller.
 
 ## 2026-08-24 (night) — UI SCALE · APP ICON · INSTALLER · RELEASE FIX · README
 

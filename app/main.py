@@ -64,6 +64,15 @@ def snapshots():  return ws() / "Snapshots"
 # Frozen re-exec: the packaged exe has no separate python, so generator scripts run
 # as "<exe> --script <name> <args...>" — this branch executes them and exits.
 if "--script" in sys.argv:
+    # The frozen interpreter IGNORES PYTHONUTF8/PYTHONIOENCODING (PyInstaller boots it
+    # with env vars off), so _run's UTF-8 env does nothing here and stdout falls back
+    # to cp1252 — which can't encode the reports' ⚠/×/· glyphs and killed a packaged
+    # mask apply (Tony, 2026-08-24). Reconfigure the streams directly instead.
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
     _i = sys.argv.index("--script")
     _script, _args = sys.argv[_i + 1], sys.argv[_i + 2:]
     sys.argv = [_script] + _args
