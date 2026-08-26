@@ -1964,15 +1964,17 @@ document.getElementById("irgo").onclick=async()=>{
           "\n\nA full-region backup and the diff base were kept automatically.");
 };
 });
-document.getElementById("buildbtn").onclick=async()=>{
+let buildStyle="";                       // one-off style override; resets every build
+document.getElementById("buildbtn").onclick=()=>{ buildStyle=""; runPreflight(); };
+async function runPreflight(){
   if(!APP()){ uiAlert("Building runs in the LOK Studio app."); return; }
   const data=JSON.stringify(exportData());
-  let pf=await APP().build_preflight(data);
+  let pf=await APP().build_preflight(data,buildStyle||null);
   if(pf&&pf.need_dir){
     const pick=await APP().pick_regions_dir();
     if(!pick) return;
     if(pick.error){ uiAlert(pick.error); return; }
-    pf=await APP().build_preflight(data);
+    pf=await APP().build_preflight(data,buildStyle||null);
   }
   if(!pf) return;
   if(pf.error){ uiAlert(pf.error); return; }
@@ -1989,6 +1991,23 @@ document.getElementById("buildbtn").onclick=async()=>{
     "palette: "+pf.palette,
   ].concat(pf.notes.length?["",...pf.notes.map(n=>"⚠ "+n)]:[]).join("\n");
   bRep().textContent=head+"\n";
+  // STYLE OVERRIDE (Tony 2026-08-26): build the whole map in a saved style. Blocked
+  // when the region carries mask styling — a whole-map style would overwrite it.
+  if(pf.styles && pf.styles.length){
+    const row=document.createElement("div"); row.className="setrow";
+    if(pf.masked){
+      row.innerHTML='<div class="hint">Style override unavailable — region '+pf.region
+        +' has mask styling applied; a whole-map style would overwrite it.</div>';
+    }else{
+      row.innerHTML='<div class="lbl">Style for this build</div>';
+      const sel=document.createElement("select");
+      sel.innerHTML='<option value="">(sketch palette)</option>'
+        +pf.styles.map(n=>'<option'+(n===pf.style?' selected':'')+'>'+n+'</option>').join("");
+      sel.onchange=()=>{ buildStyle=sel.value; runPreflight(); };   // redraw the palette line
+      row.appendChild(sel);
+    }
+    bAct().appendChild(row);
+  }
   actButton("Close","",buildClose);
   // the Regions folder is asked for once and remembered — this is the way back out
   // of a wrong pick (Tony, 2026-08-24)
@@ -2007,14 +2026,14 @@ document.getElementById("buildbtn").onclick=async()=>{
           +"The import backup is ignored. Anything that was in the old region but is not "
           +"in this sketch will not be there.")) return;
         runAction(rb,async()=>{
-          const r=await APP().build_run(data,"new",true);
+          const r=await APP().build_run(data,"new",true,buildStyle||null);
           bRep().textContent+="\n"+r.report+"\n"+(r.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
           bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
         });
       });
     }
     const dry=actButton(pf.mode==="merge"?"MERGE (DRY RUN)":"RESTORE + MERGE (DRY RUN)","go",()=>runAction(dry,async()=>{
-      const r=await APP().build_run(data,pf.mode,false);
+      const r=await APP().build_run(data,pf.mode,false,buildStyle||null);
       bRep().textContent+="\n"+r.report+"\n";
       bRep().scrollTop=bRep().scrollHeight;
       if(r.ok){
@@ -2027,13 +2046,13 @@ document.getElementById("buildbtn").onclick=async()=>{
     }));
   } else {
     const cr=actButton("CREATE NEW "+pf.region+".xml","go",()=>runAction(cr,async()=>{
-      const r=await APP().build_run(data,"new",true);
+      const r=await APP().build_run(data,"new",true,buildStyle||null);
       bRep().textContent+="\n"+r.report+"\n"+(r.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
       bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
     }));
   }
   bPanel().classList.add("open");
-};
+}
 document.getElementById("maskapply").onclick=async()=>{
   if(!APP()){ uiAlert("Applying masks runs in the LOK Studio app."); return; }
   const rid=parseInt(document.getElementById("regionnum").value,10);

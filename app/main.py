@@ -371,7 +371,7 @@ class Api:
         rd = _settings().get("regions_dir")
         return (Path(rd) / f"{rid}.xml") if rd else None
 
-    def build_preflight(self, sketch_json):
+    def build_preflight(self, sketch_json, style=None):
         s = json.loads(sketch_json)
         rid = s.get("region")
         if rid in (None, ""):
@@ -384,7 +384,15 @@ class Api:
         snap_ok = bool(snap and Path(snap).exists())
         exists = target.exists()
         mode = "merge" if exists else ("restore_merge" if snap_ok else "new")
-        pal = s.get("palette") or {}
+        pal = dict(s.get("palette") or {})
+        # STYLE OVERRIDE (Tony 2026-08-26): a saved style can drive the whole build when
+        # the region has no mask styling. Shown in the palette line so the pre-flight
+        # still tells the truth about what will be written.
+        styles = self.styles_list()
+        applied_state = (ws() / "last_applied_masks" / f"{rid}.json")
+        masked = applied_state.exists()
+        if style and style in styles and not masked:
+            pal.update(styles[style])
         g = lambda k, d: pal.get(k, d)
         pal_line = (f"room {g('room',1)} · hall {g('hall',1)} · NS {g('wall-ns',29)} · "
                     f"EW {g('wall-ew',30)} · corner {g('corner',34)} · "
@@ -392,6 +400,8 @@ class Api:
         if (g('room',1), g('hall',1), g('wall-ns',29), g('wall-ew',30),
                 g('corner',34), g('structural',447)) == (1, 1, 29, 30, 34, 447):
             pal_line += "   (gray-box values)"
+        if style and style in styles and not masked:
+            pal_line += f'   ← style "{style}"'
         tiles = sum(len(v) for v in (s.get("layers") or {}).values())
         notes = []
         if mode == "restore_merge":
@@ -405,12 +415,14 @@ class Api:
                          f"ONLY what is sketched.")
         return {"mode": mode, "region": rid, "target": str(target),
                 "can_rebuild_new": mode == "restore_merge",
+                "styles": sorted(styles.keys()), "style": style or "",
+                "masked": masked,
                 "title": s.get("title") or "", "tiles": tiles,
                 "palette": pal_line, "notes": notes,
                 "base": origins.get("base") if origins.get("base")
                         and Path(origins["base"]).exists() else None}
 
-    def build_run(self, sketch_json, mode, write=False):
+    def build_run(self, sketch_json, mode, write=False, style=None):
         s = json.loads(sketch_json)
         rid = s.get("region")
         target = self._target(rid)
@@ -429,6 +441,8 @@ class Api:
                 notice = (f"NOTICE: {target.name} was missing and has been RESTORED "
                           f"from the import backup.\n\n")
             mode = "merge"
+        masked = (ws() / "last_applied_masks" / f"{rid}.json").exists()
+        style = style if (style and not masked) else None
         if mode == "merge":
             args = [str(tmp), "--merge", str(target)]
             base = origins.get("base")
