@@ -2082,9 +2082,9 @@ async function runPreflight(){
     bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
   };
   if(pf.can_merge){
-    const label=pf.restore ? "MERGE TO EXISTING (restores from backup first)"
-                           : "MERGE TO EXISTING";
-    const dry=actButton(label+" — DRY RUN","go",()=>runAction(dry,async()=>{
+    const label=pf.restore ? "PREVIEW MERGE (restores from backup first)"
+                           : "PREVIEW MERGE";
+    const dry=actButton(label,"go",()=>runAction(dry,async()=>{
       const r=await APP().build_run(data,pf.restore?"restore_merge":"merge",false,buildStyle||null,masksJson);
       bRep().textContent+="\n"+r.report+"\n";
       bRep().scrollTop=bRep().scrollHeight;
@@ -2131,7 +2131,7 @@ document.getElementById("maskapply").onclick=async()=>{
     +"\n";
   bAct().innerHTML="";
   actButton("Close","",buildClose);
-  const dry=actButton("APPLY (DRY RUN)","go",()=>runAction(dry,async()=>{
+  const dry=actButton("PREVIEW MASKS","go",()=>runAction(dry,async()=>{
     const r=await APP().apply_masks_run(rid,JSON.stringify(out),false);
     bRep().textContent+="\n"+r.report+"\n";
     if(r.ok){
