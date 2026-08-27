@@ -1087,9 +1087,9 @@ document.getElementById("maskpaint").onclick=()=>{ maskErase=false;
 document.getElementById("maskerase").onclick=()=>{ maskErase=true;
   document.getElementById("maskerase").classList.add("active"); document.getElementById("maskpaint").classList.remove("active"); };
 document.getElementById("maskadd").onclick=async()=>{
-  const name=await uiPrompt("Mask name (what is this area?):","area "+(masks.length+1));
+  const name=await uiPrompt("Mask name:","Mask "+(masks.length+1));
   if(name===null) return;
-  masks.push({name:name.trim()||("area "+(masks.length+1)),style:"",tiles:new Set()});
+  masks.push({name:name.trim()||("Mask "+(masks.length+1)),style:"",tiles:new Set()});
   activeMask=masks.length-1; maskErase=false;
   document.getElementById("maskpaint").classList.add("active"); document.getElementById("maskerase").classList.remove("active");
   renderMaskList(); maskSave();
@@ -2014,8 +2014,7 @@ async function runPreflight(){
     const cols=document.createElement("div"); cols.id="maskcols";
 
     const bcol=document.createElement("div"); bcol.className="maskcol base";
-    bcol.innerHTML='<div class="mname">'
-      +((pf.mask_rows&&pf.mask_rows.length)?"Outside the masks":"Whole map")+'</div>';
+    bcol.innerHTML='<div class="mname">Base style</div>';
     if(pf.masked){
       bcol.innerHTML+='<div class="mstyle">(sketch palette)</div>'
         +'<div class="mtiles">locked — region restyled by APPLY MASKS</div>';
@@ -2030,7 +2029,7 @@ async function runPreflight(){
 
     for(const m of (pf.mask_rows||[])){
       const c=document.createElement("div"); c.className="maskcol";
-      c.innerHTML='<div class="mname">'+m.name+'</div>'
+      c.innerHTML='<div class="mname">Mask: '+m.name+'</div>'
         +'<div class="mstyle">'+(m.style||'(no style)')+'</div>'
         +'<div class="mtiles">'+m.tiles+' tiles</div>';
       cols.appendChild(c);
