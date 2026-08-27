@@ -83,6 +83,18 @@ anything the generator WRITES must live in the workspace, only reads may live in
 bundle. One consequence: an installed app's reapply memory starts empty (the old
 location could never have been written), so the first reapply after this fix won't
 revert tiles from before it — harmless for fresh work, worth knowing.
+**BUILD BOX REDESIGNED — TWO EXPLICIT ACTIONS (Tony 2026-08-26):** the auto-chosen
+mode was confusing. Now: **BUILD NEW** is ALWAYS offered — if the number is taken it
+prompts for a free one (pre-flight ships `taken` + `next_free`; choosing writes the new
+number back into the R# box and re-exports the sketch so the build and the canvas agree).
+**MERGE TO EXISTING** appears only when there is something to merge into: the file
+exists, or an import backup can restore it (then it is labelled "restores from backup
+first" — the old restore_merge path, kept as a label rather than a separate mode).
+The old REBUILD NEW escape hatch is subsumed: BUILD NEW covers it and confirms first.
+Status line replaced the mode line: it says what is on disk, not which branch fired.
+Styles row sits above, always showing the build-style box (labelled "Whole map" or
+"Outside the masks") with each masked area beside it in the SAME row.
+
 **BUILD-TIME STYLES + MASKS IN THE BUILD (Tony 2026-08-26):**
 Pre-flight now carries the look, not just the geometry.
 - **Style for this build**: dropdown under the palette line, "(sketch palette)" default,

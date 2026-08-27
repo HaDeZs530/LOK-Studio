@@ -184,8 +184,11 @@
   .setrow select{background:#0a1014;color:#e0c85a;border:1px solid #234f57;border-radius:3px;
     padding:6px 9px;font-family:Georgia,serif;font-size:13px;letter-spacing:1px}
   #setabout{padding:6px 18px 0 18px;font-size:11px;color:#4d6d73;line-height:1.6}
-  #maskcols{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:6px}
-  .maskcol{border:1px solid #234f57;border-radius:3px;padding:6px 8px;background:#0f1d24}
+  #maskcols{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .maskcol{flex:0 1 auto;min-width:150px;border:1px solid #234f57;border-radius:3px;padding:6px 8px;background:#0f1d24}
+  .maskcol.base{border-color:#8a7a2c}
+  .maskcol select{width:100%;margin-top:3px;background:#0a1014;color:#e0c85a;border:1px solid #234f57;
+    border-radius:3px;padding:4px 6px;font-family:Georgia,serif;font-size:12px;letter-spacing:1px}
   .maskcol .mname{color:#cfe4e6;font-size:12px;letter-spacing:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .maskcol .mstyle{color:#e0c85a;font-size:13px;letter-spacing:1px;margin-top:2px}
   .maskcol .mtiles{color:#4d6d73;font-size:10px;letter-spacing:1px;margin-top:2px}
@@ -295,8 +298,7 @@
     <button id="maskexport">EXPORT MASKS</button>
     <button id="maskimport">IMPORT MASKS</button>
     <button id="maskapply" style="border-color:#8a7a2c;color:#e0c85a">&#9654; APPLY MASKS</button>
-    <div class="hint" style="margin:2px 2px 0 2px">Restyles an imported region. Building
-      carries the mask work on its own.</div>
+    <div class="hint" style="margin:2px 2px 0 2px">Restyles an imported region.</div>
     <input type="file" id="maskimportfile" accept=".json" style="display:none">
   </div>
   </div>
@@ -1996,38 +1998,49 @@ async function runPreflight(){
   const head=[
     "PRE-FLIGHT — region "+pf.region+(pf.title?"  ·  \""+pf.title+"\"":""),
     "target:  "+pf.target,
-    "mode:    "+(pf.mode==="merge"?"MERGE (file exists — dry run first, nothing written without confirm)"
-               :pf.mode==="restore_merge"?"RESTORE + MERGE (file missing — import backup will be restored first)"
-               :"CREATE NEW (no file with this number)"),
+    "status:  "+(pf.exists?pf.target.split(/[\\/]/).pop()+" exists — merge into it, or build new under another number"
+               :pf.restore?pf.target.split(/[\\/]/).pop()+" is missing — the import backup can restore it, or build new"
+               :"no file with this number — build new"),
     "sketch:  "+pf.tiles+" placed tiles",
     "palette: "+pf.palette,
   ].concat(pf.notes.length?["",...pf.notes.map(n=>"⚠ "+n)]:[]).join("\n");
   bRep().textContent=head+"\n";
-  // STYLE OVERRIDE (Tony 2026-08-26): build the whole map in a saved style. Blocked
-  // when the region carries mask styling — a whole-map style would overwrite it.
-  if(pf.mask_rows && pf.mask_rows.length){
-    const box=document.createElement("div"); box.className="setrow";
-    box.innerHTML='<div class="lbl">Masked areas — these build in their own styles</div>'
-      +'<div class="hint">Change a mask\'s style on the MASKS tab.</div>'
-      +'<div id="maskcols">'+pf.mask_rows.map(m=>
-          '<div class="maskcol"><div class="mname">'+m.name+'</div>'
-          +'<div class="mstyle">'+(m.style||'(no style)')+'</div>'
-          +'<div class="mtiles">'+m.tiles+' tiles</div></div>').join("")+'</div>';
-    bAct().appendChild(box);
-  }
-  if(pf.styles && pf.styles.length){
+  // STYLES ROW (Tony 2026-08-26): the build style box is ALWAYS here, with each
+  // masked area beside it in the same row — masks are confirmation only, their
+  // bindings live on the MASKS tab.
+  {
     const row=document.createElement("div"); row.className="setrow";
+    row.innerHTML='<div class="lbl">Styles for this build</div>';
+    const cols=document.createElement("div"); cols.id="maskcols";
+
+    const bcol=document.createElement("div"); bcol.className="maskcol base";
+    bcol.innerHTML='<div class="mname">'
+      +((pf.mask_rows&&pf.mask_rows.length)?"Outside the masks":"Whole map")+'</div>';
     if(pf.masked){
-      row.innerHTML='<div class="hint">Style override unavailable — region '+pf.region
-        +' has mask styling applied; a whole-map style would overwrite it.</div>';
+      bcol.innerHTML+='<div class="mstyle">(sketch palette)</div>'
+        +'<div class="mtiles">locked — region restyled by APPLY MASKS</div>';
     }else{
-      row.innerHTML='<div class="lbl">Style for this build'
-        +((pf.mask_rows&&pf.mask_rows.length)?' (outside the masked areas)':'')+'</div>';
       const sel=document.createElement("select");
       sel.innerHTML='<option value="">(sketch palette)</option>'
-        +pf.styles.map(n=>'<option'+(n===pf.style?' selected':'')+'>'+n+'</option>').join("");
+        +(pf.styles||[]).map(n=>'<option'+(n===pf.style?' selected':'')+'>'+n+'</option>').join("");
       sel.onchange=()=>{ buildStyle=sel.value; runPreflight(); };   // redraw the palette line
-      row.appendChild(sel);
+      bcol.appendChild(sel);
+    }
+    cols.appendChild(bcol);
+
+    for(const m of (pf.mask_rows||[])){
+      const c=document.createElement("div"); c.className="maskcol";
+      c.innerHTML='<div class="mname">'+m.name+'</div>'
+        +'<div class="mstyle">'+(m.style||'(no style)')+'</div>'
+        +'<div class="mtiles">'+m.tiles+' tiles</div>';
+      cols.appendChild(c);
+    }
+    row.appendChild(cols);
+    if(pf.mask_rows&&pf.mask_rows.length){
+      const h=document.createElement("div"); h.className="hint";
+      h.style.marginTop="4px";
+      h.textContent="Mask styles are set on the MASKS tab.";
+      row.appendChild(h);
     }
     bAct().appendChild(row);
   }
@@ -2040,40 +2053,50 @@ async function runPreflight(){
     if(pick.error){ uiAlert(pick.error); return; }
     document.getElementById("buildbtn").click();      // re-run pre-flight on the new folder
   });
-  if(pf.mode==="merge"||pf.mode==="restore_merge"){
-    if(pf.can_rebuild_new){
-      // Escape hatch (Tony 2026-08-25): the import backup should never TRAP you into
-      // restoring. Delete the region, press this, get a clean build from the sketch.
-      const rb=actButton("REBUILD NEW","danger",async()=>{
-        if(!await uiConfirm("Build region "+pf.region+" fresh from this sketch alone?\n\n"
-          +"The import backup is ignored. Anything that was in the old region but is not "
-          +"in this sketch will not be there.")) return;
-        runAction(rb,async()=>{
-          const r=await APP().build_run(data,"new",true,buildStyle||null,masksJson);
-          bRep().textContent+="\n"+r.report+"\n"+(r.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
-          bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
-        });
-      });
-    }
-    const dry=actButton(pf.mode==="merge"?"MERGE (DRY RUN)":"RESTORE + MERGE (DRY RUN)","go",()=>runAction(dry,async()=>{
-      const r=await APP().build_run(data,pf.mode,false,buildStyle||null,masksJson);
+  // TWO ACTIONS (Tony 2026-08-26): BUILD NEW is always offered — if the number is
+  // taken it asks for a free one. MERGE TO EXISTING only appears when there is
+  // something to merge into: the file, or an import backup that can restore it.
+  const finish=(btn,r)=>{
+    bRep().textContent+="\n"+r.report+"\n"+(r.ok?"\n\u2714 WRITTEN.":"\n\u2718 FAILED.");
+    bRep().scrollTop=bRep().scrollHeight;
+    bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
+  };
+  if(pf.can_merge){
+    const label=pf.restore ? "MERGE TO EXISTING (restores from backup first)"
+                           : "MERGE TO EXISTING";
+    const dry=actButton(label+" — DRY RUN","go",()=>runAction(dry,async()=>{
+      const r=await APP().build_run(data,pf.restore?"restore_merge":"merge",false,buildStyle||null,masksJson);
       bRep().textContent+="\n"+r.report+"\n";
       bRep().scrollTop=bRep().scrollHeight;
       if(r.ok){
-        const wr=actButton("CONFIRM & WRITE","danger",()=>runAction(wr,async()=>{
-          const r2=await APP().build_run(data,"merge",true,buildStyle||null,masksJson);
-          bRep().textContent+="\n"+r2.report+"\n"+(r2.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
-          bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
-        }));
+        const wr=actButton("CONFIRM & WRITE","danger",()=>runAction(wr,async()=>
+          finish(wr,await APP().build_run(data,"merge",true,buildStyle||null,masksJson))));
       }
     }));
-  } else {
-    const cr=actButton("CREATE NEW "+pf.region+".xml","go",()=>runAction(cr,async()=>{
-      const r=await APP().build_run(data,"new",true,buildStyle||null,masksJson);
-      bRep().textContent+="\n"+r.report+"\n"+(r.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
-      bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
-    }));
   }
+  const bn=actButton("BUILD NEW"+(pf.exists?"\u2026":" "+pf.region+".xml"),
+                     pf.exists?"":"go",async()=>{
+    let rid=pf.region, payload=data;
+    if(pf.exists){
+      const ans=await uiPrompt("Region "+pf.region+" already exists.\n\nBuild new as which "
+        +"region number?  (free: "+pf.next_free+")", String(pf.next_free));
+      if(ans===null) return;
+      rid=parseInt(String(ans).trim(),10);
+      if(isNaN(rid)){ uiAlert("That is not a region number."); return; }
+      if((pf.taken||[]).includes(rid)){
+        uiAlert("Region "+rid+" is taken too — pick a free number, or use MERGE TO EXISTING.");
+        return;
+      }
+      document.getElementById("regionnum").value=rid;   // the sketch follows the choice
+      payload=JSON.stringify(exportData());
+      save();
+    }else if(!await uiConfirm("Build region "+rid+" fresh from this sketch?"
+        +(pf.can_merge?"\n\nThe existing content is not merged — only what is sketched "
+                       +"will be in the region.":""))){
+      return;
+    }
+    runAction(bn,async()=>finish(bn,await APP().build_run(payload,"new",true,buildStyle||null,masksJson)));
+  });
   bPanel().classList.add("open");
 }
 document.getElementById("maskapply").onclick=async()=>{

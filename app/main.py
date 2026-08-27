@@ -425,8 +425,16 @@ class Api:
             notes.append(f"WARNING: this sketch traces to region {rid} but neither the "
                          f"file nor an import backup exists — a new build will contain "
                          f"ONLY what is sketched.")
+        # BUILD NEW is always offered; MERGE only when there is something to merge
+        # into (the file, or an import backup that can restore it). Tony 2026-08-26.
+        taken = sorted(int(f.stem) for f in Path(_settings()["regions_dir"]).glob("*.xml")
+                       if f.stem.isdigit())
+        nxt = next(n for n in range(1, 1000) if n not in taken)
         return {"mode": mode, "region": rid, "target": str(target),
                 "can_rebuild_new": mode == "restore_merge",
+                "exists": exists, "can_merge": exists or snap_ok,
+                "restore": (not exists) and snap_ok,
+                "taken": taken, "next_free": nxt,
                 "styles": sorted(styles.keys()), "style": style or "",
                 "masked": masked, "mask_rows": mask_rows,
                 "title": s.get("title") or "", "tiles": tiles,
