@@ -491,6 +491,20 @@ class Api:
                                     "region. Import again to resume section editing.")
         else:
             return {"ok": False, "report": f"unknown mode {mode}"}
+        # A written build IS a description of the file — keep it as a restyle base so
+        # masks work straight after building, with no import (Tony 2026-08-26). Stored
+        # under "built", NEVER over "base": the Imports context is the diff-merge base
+        # and must not move under future merges.
+        if write and r.get("ok"):
+            try:
+                bc = imports() / f"region{rid}_built_context.json"
+                bc.parent.mkdir(parents=True, exist_ok=True)
+                bc.write_text(sketch_json, encoding="utf-8")
+                st = _settings()
+                st.setdefault("origins", {}).setdefault(str(rid), {})["built"] = str(bc)
+                _save_settings(st)
+            except Exception:
+                pass
         r["report"] = notice + r["report"]
         return r
 
@@ -505,11 +519,14 @@ class Api:
             return {"ok": False, "report": f"{target.name} not found — masks restyle an "
                                            f"EXISTING region."}
         origins = _settings().get("origins", {}).get(str(rid), {})
-        base = origins.get("base")
-        if not (base and Path(base).exists()):
-            return {"ok": False, "report": f"No import context for region {rid} — use "
-                                           f"IMPORT REGION on it first (that kept copy "
-                                           f"is the restyle base)."}
+        # the imported window is the truest base; a written build describes the file
+        # just as well, so masking works right after Build with no import
+        base = next((p for p in (origins.get("base"), origins.get("built"))
+                     if p and Path(p).exists()), None)
+        if not base:
+            return {"ok": False, "report": f"No context for region {rid} — build it or "
+                                           f"use IMPORT REGION first (either gives the "
+                                           f"restyle its base)."}
         mf = ws() / "_apply_masks.json"
         mf.write_text(masks_json, encoding="utf-8")
         args = [str(mf), base, "--merge", str(target)]

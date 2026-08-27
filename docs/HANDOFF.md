@@ -101,6 +101,17 @@ Pre-flight now carries the look, not just the geometry.
   `pal_emit` passed only to emit_new/merge. Verified: masked area builds in the mask's
   wall family and ground, unmasked area in the base, no base ids leak inside the mask,
   carrier outside the mask correctly stays base, control build unchanged.
+- **A WRITTEN BUILD IS A RESTYLE BASE (Tony 2026-08-26)**: masks no longer require an
+  import. Every successful WRITE build saves its sketch to
+  `Imports/region<rid>_built_context.json` and records it as `origins[rid]["built"]` —
+  a SEPARATE key from `["base"]`, because the Imports context is the diff-merge base
+  and the standing rule is that it never moves under future merges. apply_masks_run
+  prefers `base` when present, else `built`. A CREATE NEW build still retires the stale
+  import origin first, then records its own built context. Verified: fresh region, no
+  import ever → APPLY MASKS restyles 28 tiles + 12 carriers, none skipped; with both
+  keys present the import context still wins. LIMIT: a merge build's sketch covers only
+  the drawn window, so masks painted outside it report "not in the context model" —
+  masking far-off parts of a big region still wants a real import of that area.
 - **Masks are CONFIRMATION ONLY in the pre-flight** (Tony's ruling): listed as read-only
   COLUMNS (name / style / tile count), not editable there — style bindings belong to the
   MASKS tab. collectMasksOut gained a `quiet` mode so the pre-flight never raises the
