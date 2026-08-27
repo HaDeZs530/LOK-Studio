@@ -373,8 +373,9 @@
   <h2>PALETTE &amp; STYLES</h2>
   <div class="sub2">ROLE &rarr; GAME TILE ID &middot; EXPORTS INSIDE THE SKETCH JSON &middot; MULTI-PART ENTRIES COMMA-SEPARATED</div>
   <div id="palhead">
-    <select id="stylesel"><option value="">&mdash; saved styles &mdash;</option></select>
-    <button id="stylesave" title="Save the numbers below as a named style (browser + linked styles folder)">Save</button>
+    <select id="stylesel"><option value="">&mdash; new style &mdash;</option></select>
+    <button id="stylesave" title="Save these numbers as a NEW named style">Save as new&hellip;</button>
+    <button id="styleupd" title="Overwrite the selected style with these numbers" style="display:none">Update style</button>
     <button id="styleexp" title="Download the style as a JSON file for Generator/styles/">Export</button>
     <button id="styledel" title="Delete the selected style (browser + linked styles folder)">Delete</button>
     <button id="styledef" title="Reset every box to the gray-box defaults">Defaults</button>
@@ -1732,12 +1733,18 @@ async function styleToFolder(name,obj){
 }
 function refreshStyleSel(selName){
   const sel=document.getElementById("stylesel");
-  sel.innerHTML='<option value="">&mdash; saved styles &mdash;</option>';
+  sel.innerHTML='<option value="">&mdash; new style &mdash;</option>';
   for(const n of Object.keys(styleCache).sort()){
     const o=document.createElement("option"); o.value=n; o.textContent=n;
     if(n===selName) o.selected=true;
     sel.appendChild(o);
   }
+  styleBtns();
+}
+function styleBtns(){                       // Update only means something with a style picked
+  const has=!!document.getElementById("stylesel").value;
+  document.getElementById("styleupd").style.display=has?"":"none";
+  document.getElementById("styledel").style.display=has?"":"none";
 }
 document.getElementById("stylesel").addEventListener("mousedown",()=>{
   if(APP()) return;                                        // app mode: styles come from disk
@@ -1746,12 +1753,9 @@ document.getElementById("stylesel").addEventListener("mousedown",()=>{
 document.getElementById("stylesel").addEventListener("change",e=>{
   const st=styleCache[e.target.value];
   if(st){ palSet(st); save(); }
+  styleBtns();
 });
-document.getElementById("stylesave").onclick=async()=>{
-  const cur=document.getElementById("stylesel").value;
-  const name=((await uiPrompt("Style name:",cur||""))||"").trim();
-  if(!name) return;
-  const obj=palObj();
+async function styleWrite(name,obj){
   if(APP()){ await APP().style_save(name,obj); styleCache[name]=obj; refreshStyleSel(name); return; }
   const styles=loadStyles(); styles[name]=obj;
   try{ localStorage.setItem("lok_styles",JSON.stringify(styles)); }catch(e){}
@@ -1761,6 +1765,23 @@ document.getElementById("stylesave").onclick=async()=>{
     uiAlert(window.showDirectoryPicker
       ? "Saved in this browser only — styles folder not linked. Save again and pick Claude Worldforge Testing\\Generator\\styles, or use Export."
       : "This browser can't write folders — saved locally; use Export to share.");
+}
+document.getElementById("styleupd").onclick=async()=>{
+  const name=document.getElementById("stylesel").value;
+  if(!name) return;
+  if(!await uiConfirm('Update the style "'+name+'" with the numbers on this screen?\n\n'
+    +"Its old values are replaced. Maps already built keep the ids they were built with."))
+    return;
+  await styleWrite(name,palObj());
+  uiToast("STYLE UPDATED");
+};
+document.getElementById("stylesave").onclick=async()=>{
+  const name=((await uiPrompt("Name for the new style:",""))||"").trim();
+  if(!name) return;
+  const known=(APP()?styleCache:loadStyles())||{};
+  if(known[name] && !await uiConfirm('"'+name+'" already exists. Overwrite it?')) return;
+  const obj=palObj();
+  await styleWrite(name,obj);
 };
 document.getElementById("styledel").onclick=async()=>{
   const name=document.getElementById("stylesel").value;
