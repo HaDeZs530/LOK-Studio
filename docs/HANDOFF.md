@@ -83,6 +83,21 @@ anything the generator WRITES must live in the workspace, only reads may live in
 bundle. One consequence: an installed app's reapply memory starts empty (the old
 location could never have been written), so the first reapply after this fix won't
 revert tiles from before it — harmless for fresh work, worth knowing.
+**BUG — MASKED MERGES SILENTLY DROPPED TILES (Tony 2026-08-26, FIXED):** "some
+structural tiles did not change to the masked items". The `--base` diff rendered BOTH
+sides with `pal`, so a masked tile whose GEOMETRY was unchanged looked identical on both
+sides, fell out of `changed`, and was never written — only tiles he had also redrawn
+picked up the mask style. Fix: the export side renders with `_pal_at(pal_emit, c)` (the
+palette it will actually be written with) while the base side keeps `pal` (what the file
+already holds). Verified: identical geometry, masks-only change → 40 tiles written with
+446/139/140 inside the mask, 24 untouched outside; the same case previously wrote ZERO.
+RULE for future diff work: the two sides of a diff must be rendered with the palettes
+they respectively REPRESENT — never the same one out of convenience.
+**BUILD LOG (same report):** `_run` now appends every generator invocation — preview and
+write alike — to `workspace/build_log.txt` (timestamp, script, ok/failed, args, full
+report; tail-trimmed at 2 MB). Backups say what a file used to be; the log says what was
+asked for and what the generator answered. Settings' Workspace hint names it.
+
 **BUILD BOX REDESIGNED — TWO EXPLICIT ACTIONS (Tony 2026-08-26):** the auto-chosen
 mode was confusing. Now: **BUILD NEW** is ALWAYS offered — if the number is taken it
 prompts for a free one (pre-flight ships `taken` + `next_free`; choosing writes the new

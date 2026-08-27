@@ -105,8 +105,29 @@ def _run(script, *args):
     env = dict(os.environ, PYTHONUTF8="1", PYTHONIOENCODING="utf-8")
     p = subprocess.run(cmd, capture_output=True, text=True,
                        encoding="utf-8", errors="replace", env=env)
-    return {"ok": p.returncode == 0, "report": (p.stdout + p.stderr).strip(),
-            "cmd": " ".join(cmd)}
+    out = {"ok": p.returncode == 0, "report": (p.stdout + p.stderr).strip(),
+           "cmd": " ".join(cmd)}
+    _log(script, cmd, out)
+    return out
+
+
+def _log(script, cmd, out):
+    """Every generator run — preview and write alike — appended to the workspace log.
+    Backups say what a file used to be; this says what was asked for and what the
+    generator answered (Tony 2026-08-26, debugging a masked merge)."""
+    try:
+        lg = ws() / "build_log.txt"
+        lg.parent.mkdir(parents=True, exist_ok=True)
+        if lg.exists() and lg.stat().st_size > 2_000_000:      # keep the tail
+            lg.write_text(lg.read_text(encoding="utf-8", errors="replace")[-1_000_000:],
+                          encoding="utf-8")
+        stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with lg.open("a", encoding="utf-8") as f:
+            f.write(f"\n{'='*78}\n{stamp}  {script}  "
+                    f"{'OK' if out['ok'] else 'FAILED'}\n{' '.join(cmd[1:])}\n\n"
+                    f"{out['report']}\n")
+    except Exception:
+        pass
 
 
 class Api:

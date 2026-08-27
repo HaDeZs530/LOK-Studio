@@ -1163,8 +1163,14 @@ def main():
             normalize(Sb, scratch)
             Mb, _ = build_model(Sb, scratch)
             strip_disabled(Mb, Sb, pal, scratch)   # same palette, same stripping — fair diff
+            # The EXPORT side must render with the palette it will actually be WRITTEN
+            # with (pal_emit — per-tile under --masks); the BASE side renders with the
+            # base palette, which is what the file already holds. Comparing both with
+            # `pal` hid every mask-only change: a masked tile whose geometry didn't move
+            # looked identical and was never written (Tony's report, 2026-08-26).
             changed = {c for c in M
-                       if c not in Mb or tile_lines(c, M[c], pal) != tile_lines(c, Mb[c], pal)}
+                       if c not in Mb
+                       or tile_lines(c, M[c], _pal_at(pal_emit, c)) != tile_lines(c, Mb[c], pal)}
             clear_keys = set(Mb) - set(M)
             M_write = {c: M[c] for c in changed}
             untouched = len(set(Mb) & set(M)) - len(set(Mb) & changed)
