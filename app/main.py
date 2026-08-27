@@ -94,7 +94,7 @@ def _save_settings(st):
     SETTINGS.write_text(json.dumps(st, indent=1), encoding="utf-8")
 
 
-def _run(script, *args):
+def _run(script, *args, history=None):
     """Run a generator script, capture its report. UTF-8 forced end to end —
     Windows pipes default to cp1252, which chokes on the reports' ⚠/× glyphs."""
     import os
@@ -107,25 +107,84 @@ def _run(script, *args):
                        encoding="utf-8", errors="replace", env=env)
     out = {"ok": p.returncode == 0, "report": (p.stdout + p.stderr).strip(),
            "cmd": " ".join(cmd)}
-    _log(script, cmd, out)
+    _log(script, cmd, out, history)
     return out
 
 
-def _log(script, cmd, out):
-    """Every generator run — preview and write alike — appended to the workspace log.
-    Backups say what a file used to be; this says what was asked for and what the
-    generator answered (Tony 2026-08-26, debugging a masked merge)."""
+def _log(script, cmd, out, history=None):
+    """ONE FILE PER RUN in workspace/Logs (Tony 2026-08-26 — not a running log).
+    A WRITE also gets a self-contained folder under workspace/History: the report, the
+    exact sketch, the masks, the resolved palettes and the region as it was before.
+    Backups say what a file used to be; these say what was asked for and what the
+    generator answered — and let anyone reopen the map that produced it."""
     try:
-        lg = ws() / "build_log.txt"
-        lg.parent.mkdir(parents=True, exist_ok=True)
-        if lg.exists() and lg.stat().st_size > 2_000_000:      # keep the tail
-            lg.write_text(lg.read_text(encoding="utf-8", errors="replace")[-1_000_000:],
-                          encoding="utf-8")
-        stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        with lg.open("a", encoding="utf-8") as f:
-            f.write(f"\n{'='*78}\n{stamp}  {script}  "
-                    f"{'OK' if out['ok'] else 'FAILED'}\n{' '.join(cmd[1:])}\n\n"
-                    f"{out['report']}\n")
+        args = [str(c) for c in cmd]
+        action = {"sketch_build.py": "build", "apply_masks.py": "masks",
+                  "xml_to_sketch.py": "import"}.get(script, script.replace(".py", ""))
+        if script == "sketch_build.py":
+            action = "new" if "--new" in args else ("merge" if "--merge" in args else "model")
+        rid, target = "", ""
+        for flag in ("--merge", "--new"):
+            if flag in args:
+                v = args[args.index(flag) + 1]
+                target = v if flag == "--merge" else ""
+                rid = Path(v).stem if flag == "--merge" else v
+                break
+        wrote = "--write" in args or "--new" in args
+        # positional file arguments, after the interpreter/exe and the script itself
+        positional = [x for x in args[1:]
+                      if x.lower().endswith(".json") and not x.startswith("-")]
+        now = datetime.datetime.now()
+        d = ws() / "Logs"
+        d.mkdir(parents=True, exist_ok=True)
+        name = (f"{now:%Y-%m-%d_%H%M%S}_{action}"
+                + (f"_r{rid}" if rid else "")
+                + ("_WRITE" if wrote else "_preview")
+                + ("" if out["ok"] else "_FAILED") + ".txt")
+        body = [
+            f"LOK Studio — {action.upper()} {'(written)' if wrote else '(preview only)'}",
+            f"when:    {now:%Y-%m-%d %H:%M:%S}",
+            f"region:  {rid or '—'}",
+            f"target:  {target or '—'}",
+            f"result:  {'OK' if out['ok'] else 'FAILED'}",
+            f"style:   {args[args.index('--style')+1] if '--style' in args else '(sketch palette)'}",
+            # apply_masks takes the masks file and the base context positionally;
+            # sketch_build takes them as flags
+            f"masks:   {args[args.index('--masks')+1] if '--masks' in args else (positional[0] if action == 'masks' and positional else 'none')}",
+            f"base:    {args[args.index('--base')+1] if '--base' in args else (positional[1] if action == 'masks' and len(positional) > 1 else '—')}",
+            "", "command:", " ".join(args[1:]), "", "report:", out["report"], "",
+        ]
+        (d / name).write_text("\n".join(body), encoding="utf-8")
+        # the generator prints the backup it took — read it from the report rather
+        # than reconstructing the filename
+        if history is not None and not history.get("backup"):
+            mb = re.search(r"WRITTEN\. backup: (.+)", out["report"])
+            if mb:
+                history["backup"] = mb.group(1).strip()
+        # a folder means the FILE CHANGED; previews only leave the log line
+        if wrote and out["ok"] and history:
+            h = ws() / "History" / name[:-4]
+            h.mkdir(parents=True, exist_ok=True)
+            (h / "report.txt").write_text("\n".join(body), encoding="utf-8")
+            for fname, data in (("sketch.json", history.get("sketch")),
+                                ("masks.json", history.get("masks"))):
+                if data:
+                    (h / fname).write_text(data, encoding="utf-8")
+            for fname, src in (("palette.json", history.get("palette_file")),
+                               ("region_before.xml", history.get("backup"))):
+                try:
+                    if src and Path(src).exists():
+                        shutil.copy2(src, h / fname)
+                except Exception:
+                    pass
+            (h / "README.txt").write_text(
+                "This folder is one written build/merge.\n\n"
+                "report.txt        what was asked for and what the generator answered\n"
+                "sketch.json       the exact map that was built — open it with IMPORT JSON\n"
+                "masks.json        the painted areas and the style each one used\n"
+                "palette.json      every tile id actually used: base, then per mask\n"
+                "region_before.xml the region file as it was BEFORE this write\n",
+                encoding="utf-8")
     except Exception:
         pass
 
@@ -484,16 +543,19 @@ class Api:
             mode = "merge"
         masked = (ws() / "last_applied_masks" / f"{rid}.json").exists()
         style = style if (style and not masked) else None
-        mask_args = []
+        pal_out = ws() / "_palette_used.json"
+        mask_args = ["--palette-out", str(pal_out)]
+        hist = {"sketch": sketch_json, "masks": masks_json,
+                "palette_file": str(pal_out), "backup": None}
         if masks_json:
             try:
                 md = json.loads(masks_json)
                 if any(m.get("tiles") for m in md.get("masks", [])):
                     mfb = ws() / "_build_masks.json"
                     mfb.write_text(masks_json, encoding="utf-8")
-                    mask_args = ["--masks", str(mfb)]
+                    mask_args += ["--masks", str(mfb)]
             except Exception:
-                mask_args = []
+                pass
         if mode == "merge":
             args = [str(tmp), "--merge", str(target)] + mask_args
             base = origins.get("base")
@@ -501,13 +563,14 @@ class Api:
                 args += ["--base", base]
             if write:
                 args += ["--write"]
-            r = _run("sketch_build.py", *args)
+            r = _run("sketch_build.py", *args, history=(hist if write else None))
         elif mode == "new":
             if target.exists():
                 return {"ok": False, "report": f"{target.name} appeared since pre-flight "
                                                f"— re-run Build to merge instead."}
             r = _run("sketch_build.py", str(tmp), "--new", str(rid),
-                     s.get("title") or f"Region {rid}", "-o", str(target), *mask_args)
+                     s.get("title") or f"Region {rid}", "-o", str(target), *mask_args,
+                     history=hist)
             # The old import context/backup describe a region that no longer exists —
             # keeping them would make the NEXT build diff against a stale base. Retire
             # them so future builds merge honestly against the file we just wrote.
@@ -558,6 +621,11 @@ class Api:
                                            f"restyle its base)."}
         mf = ws() / "_apply_masks.json"
         mf.write_text(masks_json, encoding="utf-8")
+        try:
+            base_sketch = Path(base).read_text(encoding="utf-8")
+        except Exception:
+            base_sketch = None
+        hist = {"sketch": base_sketch, "masks": masks_json, "backup": None}
         args = [str(mf), base, "--merge", str(target)]
         if FROZEN:
             # beside-the-script is inside Program Files in the packaged app — read-only.
@@ -565,7 +633,7 @@ class Api:
             args += ["--state-dir", str(ws() / "last_applied_masks")]
         if write:
             args += ["--write"]
-        return _run("apply_masks.py", *args)
+        return _run("apply_masks.py", *args, history=(hist if write else None))
 
     def version(self):
         return f"LOK Studio {VERSION}"

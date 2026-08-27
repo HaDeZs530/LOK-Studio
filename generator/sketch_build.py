@@ -968,7 +968,9 @@ def merge(M, pal, src_path, rep, write=False, clear_window=None, preserve_extras
         btxt = btxt.replace(bm.group(0), f'<bounds left="{nL}" top="{nT}" right="{nR}" bottom="{nB}" />')
         rep.append(f"  bounds ({Lb},{T},{R},{Bb}) -> ({nL},{nT},{nR},{nB})")
     if write:
-        stamp = datetime.date.today().isoformat()
+        # date+TIME: a date-only name meant the second merge of a day overwrote the
+        # morning's backup — the one copy you'd want back (Tony 2026-08-26)
+        stamp = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
         bak = src.parent / "_pre-fix" / f"{src.stem}_before_sketch_build_{stamp}.xml"
         bak.parent.mkdir(exist_ok=True)
         bak.write_bytes(raw)
@@ -1121,6 +1123,23 @@ def main():
     # pal stays the BASE DICT (strip_disabled and the dict consumers need it);
     # pal_emit is what tile emission uses.
     pal_emit = build_mask_palette(pal, a, S, M, rep)
+    if "--palette-out" in a:                      # history: what ids were really used
+        try:
+            dump = {"base": pal}
+            if "--masks" in a:
+                md = json.load(open(a[a.index("--masks") + 1], encoding="utf-8"))
+                for m in md.get("masks", []):
+                    ts = [tuple(t) for t in (m.get("tiles") or [])]
+                    if ts:
+                        dump.setdefault("masks", {})[m.get("name", "?")] = {
+                            "style": m.get("style", ""),
+                            "tiles": len(ts),
+                            "palette": _pal_at(pal_emit, ts[0]),
+                        }
+            json.dump(dump, open(a[a.index("--palette-out") + 1], "w", encoding="utf-8"),
+                      indent=1, default=str)
+        except Exception as e:
+            rep.append(f"  (palette dump skipped: {e})")
     strip_disabled(M, S, pal, rep)
     if not M:
         sys.exit("empty sketch — nothing to build")

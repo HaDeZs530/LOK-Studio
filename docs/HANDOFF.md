@@ -93,10 +93,23 @@ already holds). Verified: identical geometry, masks-only change → 40 tiles wri
 446/139/140 inside the mask, 24 untouched outside; the same case previously wrote ZERO.
 RULE for future diff work: the two sides of a diff must be rendered with the palettes
 they respectively REPRESENT — never the same one out of convenience.
-**BUILD LOG (same report):** `_run` now appends every generator invocation — preview and
-write alike — to `workspace/build_log.txt` (timestamp, script, ok/failed, args, full
-report; tail-trimmed at 2 MB). Backups say what a file used to be; the log says what was
-asked for and what the generator answered. Settings' Workspace hint names it.
+**BUILD/MERGE HISTORY — ONE FILE PER RUN (Tony's ruling: not a running log):**
+`_run` writes `workspace/Logs/<date>_<time>_<action>_r<id>_<WRITE|preview>[_FAILED].txt`
+for every generator invocation. Header: when / region / target / result / style / masks /
+base, then the exact command and the full report. Action is derived from the args
+(new · merge · masks · import); apply_masks takes its masks file and base positionally,
+sketch_build takes them as flags — both are read. Backups say what a file used to be;
+these say what was asked for and what the generator answered. Settings' Workspace hint
+names the folder. (An earlier appended build_log.txt was replaced by this.)
+**PLUS A SELF-CONTAINED FOLDER PER WRITE** — `workspace/History/<same name>/`:
+`report.txt`, `sketch.json` (the exact map built — reopen with IMPORT JSON),
+`masks.json` (painted areas + their styles), `palette.json` (RESOLVED ids: base, then
+each mask's style/tile-count/full palette — dumped by the new `sketch_build
+--palette-out`), `region_before.xml` (copied from the backup path parsed out of the
+generator's own report, never reconstructed), and a README naming each file. **A folder
+means the file changed** — previews leave only the Logs line. Verified on a new build
+and a merge, both with masks. ALSO FIXED: `_pre-fix` backups were named by DATE ONLY,
+so the second merge of a day overwrote the morning's copy — now date+time.
 
 **BUILD BOX REDESIGNED — TWO EXPLICIT ACTIONS (Tony 2026-08-26):** the auto-chosen
 mode was confusing. Now: **BUILD NEW** is ALWAYS offered — if the number is taken it
