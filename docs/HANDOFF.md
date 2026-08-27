@@ -83,6 +83,30 @@ anything the generator WRITES must live in the workspace, only reads may live in
 bundle. One consequence: an installed app's reapply memory starts empty (the old
 location could never have been written), so the first reapply after this fix won't
 revert tiles from before it — harmless for fresh work, worth knowing.
+**BUILD-TIME STYLES + MASKS IN THE BUILD (Tony 2026-08-26):**
+Pre-flight now carries the look, not just the geometry.
+- **Style for this build**: dropdown under the palette line, "(sketch palette)" default,
+  lists saved styles. Changing it re-runs the pre-flight so the palette line shows the
+  ids that will really be written (tagged `← style "X"`). ONE-OFF by Tony's ruling —
+  resets every Build, never persisted, never written back to the sketch palette.
+  Disabled when the region has mask styling applied via apply_masks (a whole-map style
+  makes every tile differ, so a merge would rewrite the region and wipe the mask work);
+  guard enforced in build_run too, not just the UI.
+- **Masks build in one pass**: `sketch_build --masks <file>` (new). Same vocabulary as
+  apply_masks — embedded style values win, then styles/<name>.json, carriers (N/W/NW
+  neighbours of a masked block/door) take the mask's WALL roles but keep base ground —
+  but it drives `--new` builds too, which apply_masks cannot (it needs an existing
+  region + import context). IMPLEMENTATION NOTE: `pal` must stay a DICT (strip_disabled
+  and every _tint/_opt consumer index it); the per-tile callable is a separate
+  `pal_emit` passed only to emit_new/merge. Verified: masked area builds in the mask's
+  wall family and ground, unmasked area in the base, no base ids leak inside the mask,
+  carrier outside the mask correctly stays base, control build unchanged.
+- **Masks are CONFIRMATION ONLY in the pre-flight** (Tony's ruling): listed as read-only
+  COLUMNS (name / style / tile count), not editable there — style bindings belong to the
+  MASKS tab. collectMasksOut gained a `quiet` mode so the pre-flight never raises the
+  "no masks painted" or "unstyled masks" dialogs; unstyled masks are dropped from the
+  build payload.
+
 **REPO SHIPS CLEAN (Tony 2026-08-26):** personal styles and the masks applied-state
 never go to GitHub. .gitignore now excludes generator/last_applied_masks/ and all of
 generator/styles/*.json EXCEPT the two templates (graybox.json = build fallback,

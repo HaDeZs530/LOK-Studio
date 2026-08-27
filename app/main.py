@@ -371,7 +371,7 @@ class Api:
         rd = _settings().get("regions_dir")
         return (Path(rd) / f"{rid}.xml") if rd else None
 
-    def build_preflight(self, sketch_json, style=None):
+    def build_preflight(self, sketch_json, style=None, masks_json=None):
         s = json.loads(sketch_json)
         rid = s.get("region")
         if rid in (None, ""):
@@ -389,6 +389,18 @@ class Api:
         # the region has no mask styling. Shown in the palette line so the pre-flight
         # still tells the truth about what will be written.
         styles = self.styles_list()
+        # masks painted on the MASKS tab build in their own styles, one pass — listed
+        # in the pre-flight for CONFIRMATION only, not editable there (Tony 2026-08-26)
+        mask_rows = []
+        try:
+            md = json.loads(masks_json) if masks_json else None
+        except Exception:
+            md = None
+        for m in (md or {}).get("masks", []):
+            n = len(m.get("tiles") or [])
+            if n:
+                mask_rows.append({"name": m.get("name") or "?",
+                                  "style": m.get("style") or "", "tiles": n})
         applied_state = (ws() / "last_applied_masks" / f"{rid}.json")
         masked = applied_state.exists()
         if style and style in styles and not masked:
@@ -416,13 +428,13 @@ class Api:
         return {"mode": mode, "region": rid, "target": str(target),
                 "can_rebuild_new": mode == "restore_merge",
                 "styles": sorted(styles.keys()), "style": style or "",
-                "masked": masked,
+                "masked": masked, "mask_rows": mask_rows,
                 "title": s.get("title") or "", "tiles": tiles,
                 "palette": pal_line, "notes": notes,
                 "base": origins.get("base") if origins.get("base")
                         and Path(origins["base"]).exists() else None}
 
-    def build_run(self, sketch_json, mode, write=False, style=None):
+    def build_run(self, sketch_json, mode, write=False, style=None, masks_json=None):
         s = json.loads(sketch_json)
         rid = s.get("region")
         target = self._target(rid)
@@ -443,8 +455,18 @@ class Api:
             mode = "merge"
         masked = (ws() / "last_applied_masks" / f"{rid}.json").exists()
         style = style if (style and not masked) else None
+        mask_args = []
+        if masks_json:
+            try:
+                md = json.loads(masks_json)
+                if any(m.get("tiles") for m in md.get("masks", [])):
+                    mfb = ws() / "_build_masks.json"
+                    mfb.write_text(masks_json, encoding="utf-8")
+                    mask_args = ["--masks", str(mfb)]
+            except Exception:
+                mask_args = []
         if mode == "merge":
-            args = [str(tmp), "--merge", str(target)]
+            args = [str(tmp), "--merge", str(target)] + mask_args
             base = origins.get("base")
             if base and Path(base).exists():
                 args += ["--base", base]
@@ -456,7 +478,7 @@ class Api:
                 return {"ok": False, "report": f"{target.name} appeared since pre-flight "
                                                f"— re-run Build to merge instead."}
             r = _run("sketch_build.py", str(tmp), "--new", str(rid),
-                     s.get("title") or f"Region {rid}", "-o", str(target))
+                     s.get("title") or f"Region {rid}", "-o", str(target), *mask_args)
             # The old import context/backup describe a region that no longer exists —
             # keeping them would make the NEXT build diff against a stale base. Retire
             # them so future builds merge honestly against the file we just wrote.

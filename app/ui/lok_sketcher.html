@@ -184,6 +184,11 @@
   .setrow select{background:#0a1014;color:#e0c85a;border:1px solid #234f57;border-radius:3px;
     padding:6px 9px;font-family:Georgia,serif;font-size:13px;letter-spacing:1px}
   #setabout{padding:6px 18px 0 18px;font-size:11px;color:#4d6d73;line-height:1.6}
+  #maskcols{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:6px}
+  .maskcol{border:1px solid #234f57;border-radius:3px;padding:6px 8px;background:#0f1d24}
+  .maskcol .mname{color:#cfe4e6;font-size:12px;letter-spacing:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .maskcol .mstyle{color:#e0c85a;font-size:13px;letter-spacing:1px;margin-top:2px}
+  .maskcol .mtiles{color:#4d6d73;font-size:10px;letter-spacing:1px;margin-top:2px}
   #uitoast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;pointer-events:none;
     padding:7px 18px;border:1px solid #52d8dc;background:#0d2027;color:#bfeff5;border-radius:3px;
     font-family:Georgia,serif;font-size:13px;letter-spacing:2px;opacity:0;transition:opacity .25s}
@@ -1101,20 +1106,23 @@ document.getElementById("maskbasefile").addEventListener("change",ev=>{
   const f=ev.target.files[0]; if(!f) return;
   f.text().then(loadBaseFromText);
 });
-async function collectMasksOut(strict){
+async function collectMasksOut(strict,quiet){
+  // quiet: the build pre-flight asks on every build — no masks, or masks missing a
+  // style, must not raise a dialog there. Unstyled masks are simply left out.
   const painted=masks.filter(m=>m.tiles.size);
-  if(!painted.length){ uiAlert("No mask tiles painted yet."); return null; }
+  if(!painted.length){ if(!quiet) uiAlert("No mask tiles painted yet."); return null; }
   const noStyle=painted.filter(m=>!m.style);
-  if(noStyle.length){
+  if(noStyle.length && !quiet){
     if(strict){ uiAlert("Every mask needs a style before applying: "+noStyle.map(m=>m.name).join(", ")); return null; }
     if(!await uiConfirm("Masks without a style bound: "+noStyle.map(m=>m.name).join(", ")+". Export anyway?")) return null;
   }
+  if(quiet && painted.length===noStyle.length) return null;   // nothing usable
   const all=(APP()?styleCache:loadStyles()), used={};
   for(const m of masks) if(m.style&&all[m.style]) used[m.style]=all[m.style];
   return {app:"lok-sketcher",kind:"masks",version:1,
     source:{title:maskBaseRaw?maskBaseRaw.title||"":"",width:GW,height:GH,x0:OX,y0:OY},
     styles:used,                                   // style VALUES ride with the file
-    masks:masks.map(m=>({name:m.name,style:m.style,
+    masks:masks.filter(m=>!quiet||m.style).map(m=>({name:m.name,style:m.style,
       tiles:[...m.tiles].map(k=>{const [x,y]=k.split(",").map(Number);return [x+OX,y+OY];})}))};
 }
 document.getElementById("maskexport").onclick=async()=>{
@@ -1969,12 +1977,14 @@ document.getElementById("buildbtn").onclick=()=>{ buildStyle=""; runPreflight();
 async function runPreflight(){
   if(!APP()){ uiAlert("Building runs in the LOK Studio app."); return; }
   const data=JSON.stringify(exportData());
-  let pf=await APP().build_preflight(data,buildStyle||null);
+  const mo=await collectMasksOut(false,true);            // quiet: no masks is fine here
+  const masksJson=(mo&&(mo.masks||[]).some(m=>m.tiles.length))?JSON.stringify(mo):null;
+  let pf=await APP().build_preflight(data,buildStyle||null,masksJson);
   if(pf&&pf.need_dir){
     const pick=await APP().pick_regions_dir();
     if(!pick) return;
     if(pick.error){ uiAlert(pick.error); return; }
-    pf=await APP().build_preflight(data,buildStyle||null);
+    pf=await APP().build_preflight(data,buildStyle||null,masksJson);
   }
   if(!pf) return;
   if(pf.error){ uiAlert(pf.error); return; }
@@ -1993,13 +2003,24 @@ async function runPreflight(){
   bRep().textContent=head+"\n";
   // STYLE OVERRIDE (Tony 2026-08-26): build the whole map in a saved style. Blocked
   // when the region carries mask styling — a whole-map style would overwrite it.
+  if(pf.mask_rows && pf.mask_rows.length){
+    const box=document.createElement("div"); box.className="setrow";
+    box.innerHTML='<div class="lbl">Masked areas — these build in their own styles</div>'
+      +'<div class="hint">Change a mask\'s style on the MASKS tab.</div>'
+      +'<div id="maskcols">'+pf.mask_rows.map(m=>
+          '<div class="maskcol"><div class="mname">'+m.name+'</div>'
+          +'<div class="mstyle">'+(m.style||'(no style)')+'</div>'
+          +'<div class="mtiles">'+m.tiles+' tiles</div></div>').join("")+'</div>';
+    bAct().appendChild(box);
+  }
   if(pf.styles && pf.styles.length){
     const row=document.createElement("div"); row.className="setrow";
     if(pf.masked){
       row.innerHTML='<div class="hint">Style override unavailable — region '+pf.region
         +' has mask styling applied; a whole-map style would overwrite it.</div>';
     }else{
-      row.innerHTML='<div class="lbl">Style for this build</div>';
+      row.innerHTML='<div class="lbl">Style for this build'
+        +((pf.mask_rows&&pf.mask_rows.length)?' (outside the masked areas)':'')+'</div>';
       const sel=document.createElement("select");
       sel.innerHTML='<option value="">(sketch palette)</option>'
         +pf.styles.map(n=>'<option'+(n===pf.style?' selected':'')+'>'+n+'</option>').join("");
@@ -2026,19 +2047,19 @@ async function runPreflight(){
           +"The import backup is ignored. Anything that was in the old region but is not "
           +"in this sketch will not be there.")) return;
         runAction(rb,async()=>{
-          const r=await APP().build_run(data,"new",true,buildStyle||null);
+          const r=await APP().build_run(data,"new",true,buildStyle||null,masksJson);
           bRep().textContent+="\n"+r.report+"\n"+(r.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
           bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
         });
       });
     }
     const dry=actButton(pf.mode==="merge"?"MERGE (DRY RUN)":"RESTORE + MERGE (DRY RUN)","go",()=>runAction(dry,async()=>{
-      const r=await APP().build_run(data,pf.mode,false,buildStyle||null);
+      const r=await APP().build_run(data,pf.mode,false,buildStyle||null,masksJson);
       bRep().textContent+="\n"+r.report+"\n";
       bRep().scrollTop=bRep().scrollHeight;
       if(r.ok){
         const wr=actButton("CONFIRM & WRITE","danger",()=>runAction(wr,async()=>{
-          const r2=await APP().build_run(data,"merge",true);
+          const r2=await APP().build_run(data,"merge",true,buildStyle||null,masksJson);
           bRep().textContent+="\n"+r2.report+"\n"+(r2.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
           bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
         }));
@@ -2046,7 +2067,7 @@ async function runPreflight(){
     }));
   } else {
     const cr=actButton("CREATE NEW "+pf.region+".xml","go",()=>runAction(cr,async()=>{
-      const r=await APP().build_run(data,"new",true,buildStyle||null);
+      const r=await APP().build_run(data,"new",true,buildStyle||null,masksJson);
       bRep().textContent+="\n"+r.report+"\n"+(r.ok?"\n✔ WRITTEN.":"\n✗ FAILED.");
       bAct().querySelectorAll("button").forEach(b=>{ if(b.textContent!=="Close") b.remove(); });
     }));

@@ -142,6 +142,68 @@ def resolve_palette(pal, rep):
 CONNS = ("spawn", "portal", "stairs_up", "stairs_down")
 
 
+
+WALLISH = ("wall-ns", "wall-ew", "corner", "structural",
+           "door-ns", "door-ew", "indestructible")
+
+
+def build_mask_palette(base, a, S, M, rep):
+    """--masks <file>: return a per-tile palette callable, or `base` when unmasked."""
+    if "--masks" not in a:
+        return base
+    mf = Path(a[a.index("--masks") + 1])
+    md = json.load(open(mf, encoding="utf-8"))
+    if md.get("kind") != "masks":
+        sys.exit(f"{mf} is not a masks file")
+    embedded = md.get("styles", {})
+    sdir = Path(__file__).resolve().parent / "styles"
+    mask_pal, tile_mask = {}, {}
+    for m in md.get("masks", []):
+        name, style = m.get("name", "?"), m.get("style", "")
+        tiles = [tuple(t) for t in m.get("tiles", [])]
+        if not tiles:
+            continue
+        vals = embedded.get(style)
+        if vals is None and style:
+            sp = sdir / f"{style}.json"
+            if sp.exists():
+                vals = json.load(open(sp, encoding="utf-8"))
+        if vals is None:
+            sys.exit(f"mask '{name}': style '{style or '(none)'}' not found in the masks "
+                     f"file or {sdir} — bind a style in the sketcher and re-export")
+        p = dict(base); p.update(vals); p.pop("_comment", None)
+        resolve_palette(p, rep)
+        mask_pal[name] = p
+        for t in tiles:
+            tile_mask[t] = name
+    if not tile_mask:
+        return base
+    # carriers: a masked block/door pushes faces onto N/W/NW neighbours outside the
+    # mask — those take the mask's WALL roles but keep their own ground
+    carriers = {}
+    for c, name in tile_mask.items():
+        if c not in S["structural"] and c not in S["door"]:
+            continue
+        x, y = c
+        for nb in ((x, y - 1), (x - 1, y), (x - 1, y - 1)):
+            if nb in tile_mask or nb in carriers:
+                continue
+            mnb = M.get(nb)
+            if mnb and any(r in WALLISH for r in mnb["stack"]):
+                carriers[nb] = name
+    hybrid = {}
+    for c, name in carriers.items():
+        h = dict(base)
+        for k in WALLISH:
+            h[k] = mask_pal[name][k]
+        hybrid[c] = h
+    rep.append(f"MASKS: {len(mask_pal)} styled area(s), {len(tile_mask)} tiles"
+               + (f" + {len(carriers)} carrier tiles" if carriers else ""))
+    for name in sorted(mask_pal):
+        n = sum(1 for v in tile_mask.values() if v == name)
+        rep.append(f"  mask '{name}': {n} tiles")
+    return lambda c: hybrid.get(c) or (mask_pal[tile_mask[c]] if c in tile_mask else base)
+
 def load_sketch(path):
     d = json.load(open(path, encoding="utf-8"))
     if d.get("app") != "lok-sketcher":
@@ -1052,6 +1114,13 @@ def main():
     S = determine(d, L, rep)
     normalize(S, rep)
     M, warns = build_model(S, rep)
+    # ---- MASKS IN THE BUILD (Tony 2026-08-26): each painted area builds in its own
+    # style, one pass. Same vocabulary as apply_masks (embedded style values win, then
+    # styles/<name>.json; carriers keep base ground but take the mask's wall roles), but
+    # here it drives a fresh build too — apply_masks needs an existing region.
+    # pal stays the BASE DICT (strip_disabled and the dict consumers need it);
+    # pal_emit is what tile emission uses.
+    pal_emit = build_mask_palette(pal, a, S, M, rep)
     strip_disabled(M, S, pal, rep)
     if not M:
         sys.exit("empty sketch — nothing to build")
@@ -1070,7 +1139,7 @@ def main():
         i = a.index("--new")
         rid, rname = a[i+1], a[i+2]
         out = Path(a[a.index("-o")+1]) if "-o" in a else out_dir / f"{stem}.xml"
-        txt = emit_new(M, pal, rid, rname)
+        txt = emit_new(M, pal_emit, rid, rname)
         audit(txt, M, pal, rep)
         out.write_bytes(b'\xef\xbb\xbf' + txt.encode("utf-8"))
         rep.append(f"new region written: {out}")
@@ -1105,7 +1174,7 @@ def main():
             if not M_write and not clear_keys:
                 rep.append("  nothing differs from the base — no merge needed")
         if M_write or clear_keys:
-            txt, intended = merge(M_write, pal, src, rep, write="--write" in a,
+            txt, intended = merge(M_write, pal_emit, src, rep, write="--write" in a,
                                   clear_window=cw,
                                   preserve_extras="--no-preserve-extras" not in a,
                                   clear_keys=clear_keys)
