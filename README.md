@@ -49,19 +49,27 @@ A style is a saved set of tile ids — this floor, that wall family, these doors
 many as you like: a dungeon set, a marble set, a ruined set. Every tile in the game is
 browsable with its picture, so you pick by eye rather than by number.
 
-Masking is the other half. Paint over sections of a map and assign each section its own
-style, and those areas get rebuilt in their own tiles — one wing in dungeon stone,
-another in marble — without redrawing a single wall.
+Masking is the other half. Paint over sections of the map and give each section its own
+style, and Build writes each area in its own tiles — one wing in dungeon stone, another
+in marble — in a single pass, without redrawing a wall. Restyling a region you don't
+want to rebuild has its own button on the masks tab.
 
 ### Build R#
 
 **R#** is the region number you're building into. Press build and the sketch goes
-through the generators, which convert it into WorldForge region XML following the
-placement and isometric rules.
+through the generators, which convert it into WorldForge region XML following placement
+and isometric rules.
 
-You see what it intends to do before it does it — which region, how many tiles, which
-tile set. Building into an existing region is a dry run first: it reports exactly what
-would change and writes nothing until you confirm. Every write is backed up.
+You get a preview first of what is being built: what is on disk for that number, how
+many tiles the sketch holds, and the exact tile ids that will be written — read that
+line first whenever a build looks wrong. You can change the style for this build here,
+and any masked areas are listed showing which style each one will use.
+
+Then two actions. **Build new** is always offered; if the number is taken it asks which
+free number to use instead. **Merge to existing** appears only when there is something
+to merge into, and it goes **Preview merge** first — a full rehearsal that reports every
+tile it would change and writes nothing — then **Confirm & write**. Every write is
+backed up first.
 
 ### Import
 
@@ -69,6 +77,16 @@ Import a section of a region to work on one area without disturbing the rest, an
 you rebuild, only what you actually changed gets rewritten — decoration you placed by
 hand in WorldForge stays untouched. Or import a whole map purely to mask it and apply
 styles to specific areas.
+
+### Keeping track
+
+Every build, merge and mask run leaves a record. Previews log what they would have done;
+writes get a folder holding the report, the exact map that was built, the masks and
+styles used, every tile id written, and the region file as it was beforehand — enough to
+understand or reopen any build later. Region files are backed up before every write.
+
+The ☰ menu holds Settings — where the Regions, Workspace and Styles folders live, and
+the interface scale — and a manual check for updates.
 
 ---
 
@@ -92,7 +110,7 @@ palette screen) to bring it across.
 
 ## How it protects your maps
 
-- Writing into an existing region is dry-run first, explicit confirm second, backed up
+- Writing into an existing region is preview first, explicit confirm second, backed up
   always.
 - The sketch is the source of truth. Generated XML is never hand-edited — you change
   the drawing and rebuild.

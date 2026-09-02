@@ -486,8 +486,8 @@ class Api:
         if style and style in styles and not masked:
             pal.update(styles[style])
         g = lambda k, d: pal.get(k, d)
-        pal_line = (f"room {g('room',1)} · hall {g('hall',1)} · NS {g('wall-ns',29)} · "
-                    f"EW {g('wall-ew',30)} · corner {g('corner',34)} · "
+        pal_line = (f"room {g('room',1)} · hall {g('hall',1)} · wall-h {g('wall-ns',29)} · "
+                    f"wall-v {g('wall-ew',30)} · corner {g('corner',34)} · "
                     f"struct {g('structural',447)} · doors {g('door-ns',66)}/{g('door-ew',67)}")
         if (g('room',1), g('hall',1), g('wall-ns',29), g('wall-ew',30),
                 g('corner',34), g('structural',447)) == (1, 1, 29, 30, 34, 447):
