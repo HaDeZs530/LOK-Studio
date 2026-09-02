@@ -707,9 +707,9 @@ function drawEdit(){
   rulers();
 }
 function drawIso(){
-  // ISO view (Tony 2026-08-24): presentation styling, structural masses render as
-  // merged isometric cubes — top faces shifted up-left by S, 45-degree side faces on
-  // the SE edges — matching how the game actually sits the mass on the map.
+  // ISO view (Tony 2026-08-24; masses reworked 2026-09-01): presentation styling.
+  // Masses draw flat with their faces as wall slabs on the tiles the generator
+  // writes them to (see MASS FACES below); partitions/doors are leaning panels.
   cx.shadowBlur=0;
   cx.fillStyle="#0d0b09"; cx.fillRect(0,0,cv.width,cv.height);
   const [x1,y1,x2,y2]=bounds();
@@ -719,6 +719,7 @@ function drawIso(){
     for(let gy=y1; gy<=y2; gy++){ cx.moveTo(panX+x1*zoom,panY+gy*zoom+.5); cx.lineTo(panX+x2*zoom,panY+gy*zoom+.5); }
     cx.stroke();
   }
+  const pal=palObj(), fH=!!pal["wall-ns"], fV=!!pal["wall-ew"];
   for(let gx=x1; gx<x2; gx++) for(let gy=y1; gy<y2; gy++){
     const t=terrain.get(key(gx,gy));
     if(t && t!=="wall" && t!=="structural" && t!=="door"){
@@ -735,9 +736,29 @@ function drawIso(){
   // (east face shown); junction tiles carry both and form the corner L. Doors are the
   // same panel in ember. Approved from the 2026-08-25 mock.
   const S=0.75, T=0.30, tv=(x,y)=>terrain.get(key(x,y));
+  const MASS_TOP="#a39470";                     // shoulder tan — full wall, cream faces ring it (Tony 2026-09-01)
   const isB=(x,y)=>tv(x,y)==="structural";
-  const wallish=(x,y)=>{const q=tv(x,y); return q==="wall"||q==="door"||q==="structural";};
   const isTW=(x,y)=>marks.get(key(x,y))==="treewall";
+  // MASS FACES AS WALL SLABS (Tony 2026-09-01, region 1 calibration): the game draws
+  // a mass as a flat tile with the SAME wall pieces a partition uses — north face on
+  // the row ABOVE it, west face on the column LEFT of it, south/east faces on its
+  // own tile. Iso draws exactly that, with the panel code partitions already use, so
+  // a partition run on the right row continues the face slab seamlessly and one on
+  // the wrong row visibly sits a row under it. Gated on the palette: no wall-h id →
+  // no north/south slabs, no wall-v id → no west/east slabs (a bare mass has none —
+  // matches strip_disabled). The shifted cube is retired for masses.
+  const face=new Map();                          // derived slabs on non-mass tiles
+  const own=new Map();                           // a mass's own S/E slabs
+  const addF=(m,x,y,o)=>{ const k=key(x,y), f=m.get(k)||{h:false,v:false}; f[o]=true; m.set(k,f); };
+  for(let gx=x1-3; gx<x2+3; gx++) for(let gy=y1-3; gy<y2+3; gy++){
+    if(!isB(gx,gy)) continue;
+    if(fH&&!isB(gx,gy-1)) addF(face,gx,gy-1,"h");
+    if(fV&&!isB(gx-1,gy)) addF(face,gx-1,gy,"v");
+    if(fH&&!isB(gx,gy+1)) addF(own,gx,gy,"h");
+    if(fV&&!isB(gx+1,gy)) addF(own,gx,gy,"v");
+  }
+  const realW=(x,y)=>{const q=tv(x,y); return q==="wall"||q==="door";};
+  const wallish=(x,y)=>realW(x,y)||isB(x,y)||face.has(key(x,y));
   // doors piercing a structural run: the generator CARVES the flank block into a
   // divider — east flank for a NS door, south flank for an EW door (canon gap-door
   // form). The iso view previews that carve: flank cube suppressed, panel drawn.
@@ -752,10 +773,48 @@ function drawIso(){
     const q=tv(gx,gy);
     if(carved.has(key(gx,gy))) items.push([gx,gy,carved.get(key(gx,gy))]);
     else if(q==="structural"||q==="wall"||q==="door") items.push([gx,gy,q]);
+    else if(face.has(key(gx,gy))) items.push([gx,gy,"face"]);
+    else if(fH&&fV&&isB(gx+1,gy+1)&&!isB(gx+1,gy)&&!isB(gx,gy+1)) items.push([gx,gy,"cap"]);
     else if(isTW(gx,gy)) items.push([gx,gy,"tw"]);
     else if(marks.get(key(gx,gy))==="tree") items.push([gx,gy,"tr"]);
   }
   items.sort((a,b)=>a[1]-b[1]||a[0]-b[0]);
+  // one panel painter for partitions, doors AND mass faces — same piece, same lean
+  // full=true (derived mass faces): no start cut — a face is never the start of a
+  // run, its band always spans the tile, so N and W faces close their own NW corner.
+  function panel(gx,gy,h,v,door,full){
+    const X=panX+gx*zoom, Y=panY+gy*zoom, z=zoom;
+    const top=door?"#e88c50":"#e8dcc0", shS=door?"#b5622f":"#a39470", shE=door?"#9c5426":"#8c7e5e";
+    if(h){                                           // south-edge panel
+      // START CUT (Tony 2026-08-25): no wall continuing west -> the run ends flush at
+      // the tile's true west edge instead of overhanging by S (matches the game, where
+      // the corner piece closes the run).
+      const Lx = (full||wallish(gx-1,gy)) ? X-S*z : X;
+      cx.fillStyle=shS; cx.beginPath();              // south face
+      cx.moveTo(Lx,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+      cx.closePath(); cx.fill();
+      if(!wallish(gx+1,gy)){                         // east end cap
+        cx.fillStyle=shE; cx.beginPath();
+        cx.moveTo(X+z-S*z,Y+(1-T)*z-S*z); cx.lineTo(X+z,Y+(1-T)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
+        cx.closePath(); cx.fill();
+      }
+      cx.fillStyle=top;
+      cx.fillRect(Lx,Y+(1-T)*z-S*z,(X+z-S*z)-Lx,T*z); // top band
+    }
+    if(v){                                           // east-edge panel
+      const Ty = (full||wallish(gx,gy-1)) ? Y-S*z : Y;   // START CUT: flush north edge
+      cx.fillStyle=shE; cx.beginPath();              // east face
+      cx.moveTo(X+z-S*z,Ty); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
+      cx.closePath(); cx.fill();
+      if(!wallish(gx,gy+1)){                         // south end cap
+        cx.fillStyle=shS; cx.beginPath();
+        cx.moveTo(X+(1-T)*z-S*z,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-T)*z,Y+z);
+        cx.closePath(); cx.fill();
+      }
+      cx.fillStyle=top;
+      cx.fillRect(X+(1-T)*z-S*z,Ty,T*z,(Y+z-S*z)-Ty); // top band
+    }
+  }
   for(const [gx,gy,q] of items){
     const X=panX+gx*zoom, Y=panY+gy*zoom, z=zoom;
     if(q==="tr"){                                  // walkable tree: Tony's sprite
@@ -783,69 +842,59 @@ function drawIso(){
     if(q==="pv"||q==="ph"){                          // carved door flank: derived divider
       cx.fillStyle=BPCOL.floor||"#332c22";           // seen floor under it
       cx.fillRect(X,Y,z,z);
-      if(q==="pv"){
-        cx.fillStyle="#8c7e5e"; cx.beginPath();
-        cx.moveTo(X+z-S*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
-        cx.closePath(); cx.fill();
-        cx.fillStyle="#e8dcc0";
-        cx.fillRect(X+(1-T)*z-S*z,Y-S*z,T*z,z);
-      } else {
-        cx.fillStyle="#a39470"; cx.beginPath();
-        cx.moveTo(X-S*z,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
-        cx.closePath(); cx.fill();
-        cx.fillStyle="#e8dcc0";
-        cx.fillRect(X-S*z,Y+(1-T)*z-S*z,z,T*z);
-      }
+      panel(gx,gy,q==="ph",q==="pv",false);
       continue;
     }
     if(q==="structural"){
-      if(!isB(gx+1,gy)||!isB(gx+1,gy-1)){            // east shoulder
-        cx.fillStyle="#8c7e5e"; cx.beginPath();
-        cx.moveTo(X+(1-S)*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z);
-        cx.closePath(); cx.fill();
+      if(!fH&&!fV){                                  // BARE palette: the solid cube (Tony 2026-09-01)
+        if(!isB(gx+1,gy)||!isB(gx+1,gy-1)){          // east shoulder
+          cx.fillStyle="#8c7e5e"; cx.beginPath();
+          cx.moveTo(X+(1-S)*z,Y-S*z); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z);
+          cx.closePath(); cx.fill();
+        }
+        if(!isB(gx,gy+1)||!isB(gx-1,gy+1)){          // south shoulder
+          cx.fillStyle="#a39470"; cx.beginPath();
+          cx.moveTo(X-S*z,Y+(1-S)*z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
+          cx.closePath(); cx.fill();
+        }
+        cx.fillStyle="#e8dcc0"; cx.fillRect(X-S*z,Y-S*z,z,z);
+        continue;
       }
-      if(!isB(gx,gy+1)||!isB(gx-1,gy+1)){            // south shoulder
-        cx.fillStyle="#a39470"; cx.beginPath();
-        cx.moveTo(X-S*z,Y+(1-S)*z); cx.lineTo(X+(1-S)*z,Y+(1-S)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
-        cx.closePath(); cx.fill();
+      // walls in the palette: the mass is a FULL WALL (Tony 2026-09-01) — its top is
+      // painted in wall colour, leaning by S like every piece, AFTER the north/west
+      // face slabs (their shoulders vanish under it, the bands stay on its edges) and
+      // BEFORE its own south/east slabs.
+      cx.fillStyle=MASS_TOP; cx.fillRect(X-S*z,Y-S*z,z,z);
+      // on-block corner piece (generator's corner predicate): S neighbour carries the
+      // mass's E face, E neighbour its S face — the concave step of a staircase. The
+      // cap is the square where the two bands would cross.
+      if(isB(gx,gy+1)&&isB(gx+1,gy)&&!isB(gx+1,gy+1)){
+        cx.fillStyle="#e8dcc0"; cx.fillRect(X+(1-T)*z-S*z,Y+(1-T)*z-S*z,T*z,T*z);
       }
-      cx.fillStyle="#e8dcc0";
-      cx.fillRect(X-S*z,Y-S*z,z,z);
+      const f=own.get(key(gx,gy)); if(f) panel(gx,gy,f.h,f.v,false);
       continue;
     }
-    const h=wallish(gx+1,gy)||wallish(gx-1,gy), v=wallish(gx,gy-1)||wallish(gx,gy+1);
-    const o=(h&&!v)?"h":(v&&!h)?"v":(h&&v)?"hv":"h";
-    const door=q==="door";
-    const top=door?"#e88c50":"#e8dcc0", shS=door?"#b5622f":"#a39470", shE=door?"#9c5426":"#8c7e5e";
-    if(o.indexOf("h")>=0){                           // south-edge panel
-      // START CUT (Tony 2026-08-25): no wall continuing west -> the run ends flush at
-      // the tile's true west edge instead of overhanging by S (matches the game, where
-      // the corner piece closes the run).
-      const Lx = wallish(gx-1,gy) ? X-S*z : X;
-      cx.fillStyle=shS; cx.beginPath();              // south face
-      cx.moveTo(Lx,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X,Y+z);
-      cx.closePath(); cx.fill();
-      if(!wallish(gx+1,gy)){                         // east end cap
-        cx.fillStyle=shE; cx.beginPath();
-        cx.moveTo(X+z-S*z,Y+(1-T)*z-S*z); cx.lineTo(X+z,Y+(1-T)*z); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
-        cx.closePath(); cx.fill();
-      }
-      cx.fillStyle=top;
-      cx.fillRect(Lx,Y+(1-T)*z-S*z,(X+z-S*z)-Lx,T*z); // top band
+    if(q==="face"){                                  // derived north / west face slab
+      const f=face.get(key(gx,gy)); panel(gx,gy,f.h,f.v,false,true);
+      continue;
     }
-    if(o.indexOf("v")>=0){                           // east-edge panel
-      const Ty = wallish(gx,gy-1) ? Y-S*z : Y;       // START CUT: flush north edge
-      cx.fillStyle=shE; cx.beginPath();              // east face
-      cx.moveTo(X+z-S*z,Ty); cx.lineTo(X+z,Y); cx.lineTo(X+z,Y+z); cx.lineTo(X+z-S*z,Y+z-S*z);
-      cx.closePath(); cx.fill();
-      if(!wallish(gx,gy+1)){                         // south end cap
-        cx.fillStyle=shS; cx.beginPath();
-        cx.moveTo(X+(1-T)*z-S*z,Y+z-S*z); cx.lineTo(X+z-S*z,Y+z-S*z); cx.lineTo(X+z,Y+z); cx.lineTo(X+(1-T)*z,Y+z);
-        cx.closePath(); cx.fill();
-      }
-      cx.fillStyle=top;
-      cx.fillRect(X+(1-T)*z-S*z,Ty,T*z,(Y+z-S*z)-Ty); // top band
+    // NW corner cap (generator's off-block corner piece): this tile is the diagonal
+    // of a mass corner — the N band on the tile east and the W band on the tile south
+    // both stop at this tile's SE square and would leave a notch. A face tile's own
+    // band already covers that square; a bare tile or a drawn wall gets the cap.
+    const nwcap = fH&&fV&&isB(gx+1,gy+1)&&!isB(gx+1,gy)&&!isB(gx,gy+1);
+    if(q==="cap"){
+      cx.fillStyle="#e8dcc0"; cx.fillRect(X+(1-T)*z-S*z,Y+(1-T)*z-S*z,T*z,T*z);
+      continue;
     }
+    // drawn partition / door: orientation from wall neighbours first; a mass or a
+    // face slab beside it only decides when no drawn wall does (a run laid along a
+    // mass's face must not turn into an L on every tile)
+    let h=realW(gx+1,gy)||realW(gx-1,gy), v=realW(gx,gy-1)||realW(gx,gy+1);
+    if(!h&&!v){ h=wallish(gx+1,gy)||wallish(gx-1,gy); v=wallish(gx,gy-1)||wallish(gx,gy+1); }
+    if(!h&&!v) h=true;
+    panel(gx,gy,h,v,q==="door");
+    if(nwcap){ cx.fillStyle=q==="door"?"#e88c50":"#e8dcc0"; cx.fillRect(X+(1-T)*z-S*z,Y+(1-T)*z-S*z,T*z,T*z); }
   }
   drawMarks(x1,y1,x2,y2,true);
   drawConnectors(true);
@@ -1180,6 +1229,24 @@ function drawGhost(bp){
     cx.restore(); return;
   }
   if(!hover||panning||(uiMode!=="mask"&&tool==="select")) return;
+  // FACE-ZONE HOVER (Tony 2026-09-01, region 1 calibration): a mass's north face draws
+  // on the row above it and its west face on the column left of it (south/east on the
+  // block itself). While the wall/door brush is near a block, tint those face tiles
+  // for the blocks within a small window so the run can be drawn onto the face row.
+  // Hover only — an always-on fringe was tried and rejected as clutter on real mazes.
+  if(uiMode!=="mask" && !bp && (tool==="wall"||tool==="door")){
+    const isB=(x,y)=>terrain.get(key(x,y))==="structural";
+    let near=false;
+    for(let dx=-1; dx<=1&&!near; dx++) for(let dy=-1; dy<=1; dy++) if(isB(hover[0]+dx,hover[1]+dy)){ near=true; break; }
+    if(near){
+      const R=1; cx.save(); cx.fillStyle="rgba(176,186,194,0.34)";   // 3x3 around the cursor, no more (Tony)
+      for(let gx=hover[0]-R; gx<=hover[0]+R; gx++) for(let gy=hover[1]-R; gy<=hover[1]+R; gy++){
+        if(gx<0||gy<0||gx>=GW||gy>=GH||isB(gx,gy)) continue;
+        if(isB(gx,gy+1)||isB(gx+1,gy)||isB(gx+1,gy+1)) cx.fillRect(panX+gx*zoom,panY+gy*zoom,zoom,zoom);
+      }
+      cx.restore();
+    }
+  }
   const single = uiMode!=="mask" && (tool==="label" || CONNIDS.includes(tool));
   const r = single?0:Math.floor(brush/2), n = single?1:brush;
   const t = TOOLS.concat(CONN).find(t=>t.id===tool);

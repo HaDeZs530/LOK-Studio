@@ -26,6 +26,71 @@ Colour serialization (same law, captured from region 9):
 `<color r=".." g=".." b=".." a=".." />` as the component's FIRST child, 255 = untouched.
 
 
+## RULING (Tony, 2026-09-01): WALL RUNS MEET A MASS ON ITS FACE ROW — warning + hover + Iso faces
+
+CALIBRATION: `Claude Worldforge Testing\Regions\1.xml` (rebuilt by Tony this day: a
+2x2+1x2 mass with partition runs on every side) and region 2 (his test1.json, two
+masses, one drawn right, one wrong). sketch_build reproduces region 1 tile-for-tile
+from a sketch laid out the same way — THE GENERATOR IS CORRECT, nothing changed there.
+
+THE RULE (game geometry, captured): a horizontal wall (29) draws along the SOUTH edge
+of its tile, a vertical wall (30) along the EAST edge. A mass's north face therefore
+draws on the row ABOVE it and its west face on the column LEFT of it; south and east
+faces draw on the mass's own tiles. So a partition run continuing a mass's north face
+sits one row above the block's top row; continuing its west face, one column left;
+south/east faces, the block's own bottom row / right column. A run drawn on the mass's
+own TOP row lands one row under the face; on its own LEFT column, one column inside
+it (that is what Tony's region 2 top block showed in game).
+
+WHAT WAS BUILT / REVERTED (Tony's call): "make walls snap/move" and "auto-insert
+wall tiles on the N/W sides" were discussed and REJECTED — the sketch stays
+exactly-as-drawn. A FRINGE render (mass drawn with its row above / column left as a
+lighter tint in Edit view) was mocked up, approved, built, and then REVERTED the same
+night: on a real maze sketch with many structural walls it made the drawing unreadable.
+Tony: "this overcomplicates the sketch". DO NOT re-propose fringe/ghost rendering of
+the face tiles in Edit view. Iso view (M) already shows the geometry when needed.
+What stayed:
+2. Pre-flight + generator warning: a horizontal run tile beside a mass on the mass's
+   TOP row, or a vertical run tile above/below a mass on its LEFT column, is flagged
+   ("meets the mass on its TOP row — the north face is one row up, at y=…"). Only when
+   the mass is 2+ deep that way, so the north/south (west/east) faces can't be
+   confused; 1-deep masses stay silent. Same test twice: `_face_row_checks` in
+   app/main.py (shows in the pre-flight notes BEFORE the build is confirmed) and in
+   sketch_build's model warnings (in the report / History). Verified: region 1 layout
+   → 0 warnings; test1.json → exactly its three bad runs and nothing else.
+
+ISO VIEW REWORK (same day, Tony's design, built and approved on his maze):
+- Walls in the palette (wall-h or wall-v id set): a mass is a FULL WALL — top painted
+  MASS_TOP "#a39470" (shoulder tan; cream and muted cream were rendered and rejected
+  — the cream made it the old cube again) leaning by S like every piece, and its
+  faces are the SAME leaning panel partitions use: derived N face on the row above,
+  W face on the column left (`face` map, drawn with full=true = no start cut, so the
+  bands overhang and close their own NW corner), own S/E on the block (`own` map).
+  Draw order per tile: N/W faces (earlier rows/cols) → mass top (hides their
+  shoulders, keeps the bands on its edges) → own S/E panels. Gated per orientation:
+  no wall-h → no N/S slabs, no wall-v → no W/E slabs (mirrors strip_disabled).
+- Bare palette (both ids 0): the old shifted cube, unchanged.
+- Corner pieces mirrored from the generator: ON-BLOCK cap where S neighbour is a
+  block with an E face and E neighbour a block with an S face (concave staircase
+  step); OFF-BLOCK cap on the NW diagonal of a mass corner (bare tile or drawn wall;
+  a face tile's own band already covers the square). Without them every staircase
+  step and NW corner showed a notch.
+- Drawn partition orientation: wall/door neighbours decide first; a mass or face
+  beside it only decides when no drawn wall does (a run laid along a face must not
+  become an L on every tile).
+- The 447 "green floor" version (flat, then leaning) was built and rejected: made
+  mass interiors read as rooms. Don't go back to it.
+- HOVER face zone in Edit: wall/door brush within 1 tile of a block tints the face
+  tiles in a 3x3 around the cursor (`drawGhost`). Tony cut it from 6-tile radius.
+- TEST HARNESS: drawIso can be run headless — extract the function, stub terrain/
+  marks/palObj/cx (record fillRect/moveTo/lineTo/fill), rasterise with PIL. Used to
+  find the notches; rebuild it from this note if needed (lived in /tmp, not kept).
+
+Also this day: palette labels "Wall horizontal / Wall vertical", "Door horizontal /
+Door vertical" (keys unchanged: wall-ns = horizontal runs, wall-ew = vertical runs);
+pre-flight palette line reads wall-h / wall-v.
+
+
 ## RULING (Tony, 2026-08-24): the 1-wide-hall coverage question is CLOSED — no fix
 
 A 1-tile hall drawn against structural mass on its SOUTH or EAST reads half-covered in

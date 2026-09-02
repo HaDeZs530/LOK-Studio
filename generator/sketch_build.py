@@ -615,6 +615,28 @@ def build_model(S, rep):
     for c in S["boss"] | set(S["conn"]):
         if c in S["wall"] or c in S["structural"]:
             warns.append(f"mark/connector at {c} sits on a wall tile")
+    # Wall runs meeting a mass on its top row / left column (Tony 2026-09-01, region 1
+    # calibration): a mass's north face draws on the row ABOVE it and its west face on
+    # the column LEFT of it, so a horizontal run on the mass's own top row lands one
+    # row under the face, and a vertical run on its own left column lands one column
+    # inside it. Only flagged when the mass is 2+ deep that way, so the two faces
+    # cannot be confused. Warning only — nothing is moved.
+    B = S["structural"]
+    for (x, y) in W:
+        horiz = (x-1, y) in W or (x+1, y) in W
+        vert = (x, y-1) in W or (x, y+1) in W
+        if horiz and not vert:
+            for bx in (x+1, x-1):
+                if (bx, y) in B and (bx, y-1) not in B and (bx, y+1) in B:
+                    warns.append(f"wall at ({x},{y}) meets the mass on its TOP row — "
+                                 f"the north face is one row up, at y={y-1}")
+                    break
+        if vert and not horiz:
+            for by in (y+1, y-1):
+                if (x, by) in B and (x-1, by) not in B and (x+1, by) in B:
+                    warns.append(f"wall at ({x},{y}) meets the mass on its LEFT column — "
+                                 f"the west face is one column left, at x={x-1}")
+                    break
     # enclosure / leak report (INFORMATIONAL — outdoor maps are legitimately open)
     zone = set(M) | S["dead"]
     leaks = []

@@ -189,6 +189,30 @@ def _log(script, cmd, out, history=None):
         pass
 
 
+def _face_row_checks(sketch):
+    """Wall tiles that meet a structural mass on its TOP row or LEFT column. The
+    mass's north face draws on the row above it and its west face on the column
+    left of it, so such a run lands one tile off the face. Only flagged when the
+    mass is 2+ deep that way (no ambiguity with the south/east face). Mirrors the
+    generator's own model check; warning only, nothing is moved."""
+    L = sketch.get("layers") or {}
+    W = {tuple(c) for c in L.get("wall", [])}
+    B = {tuple(c) for c in L.get("structural", [])}
+    out = []
+    for (x, y) in sorted(W, key=lambda p: (p[1], p[0])):
+        horiz = (x-1, y) in W or (x+1, y) in W
+        vert = (x, y-1) in W or (x, y+1) in W
+        if horiz and not vert and any((bx, y) in B and (bx, y-1) not in B
+                                       and (bx, y+1) in B for bx in (x+1, x-1)):
+            out.append(f"wall at ({x},{y}) meets the mass on its TOP row — "
+                       f"the north face is one row up, at y={y-1}")
+        elif vert and not horiz and any((x, by) in B and (x-1, by) not in B
+                                         and (x+1, by) in B for by in (y+1, y-1)):
+            out.append(f"wall at ({x},{y}) meets the mass on its LEFT column — "
+                       f"the west face is one column left, at x={x-1}")
+    return out
+
+
 class Api:
     """Called from the page as window.pywebview.api.<method>(...) — returns Promises."""
 
@@ -505,6 +529,11 @@ class Api:
             notes.append(f"WARNING: this sketch traces to region {rid} but neither the "
                          f"file nor an import backup exists — a new build will contain "
                          f"ONLY what is sketched.")
+        # Wall runs on a mass's top row / left column build one tile off its face
+        # (region 1 calibration, Tony 2026-09-01). Same test the generator makes in
+        # its report; repeated here so it is on screen BEFORE the build is confirmed.
+        for w in _face_row_checks(s):
+            notes.append("⚠ " + w)
         # BUILD NEW is always offered; MERGE only when there is something to merge
         # into (the file, or an import backup that can restore it). Tony 2026-08-26.
         taken = sorted(int(f.stem) for f in Path(_settings()["regions_dir"]).glob("*.xml")
