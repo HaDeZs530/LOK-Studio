@@ -715,7 +715,13 @@ class Api:
                 shutil.copyfileobj(r, f)
             if dest.stat().st_size < 1_000_000:
                 return {"error": "the download looks truncated — try again"}
-            os.startfile(str(dest))
+            # SILENT UPDATE (Tony 2026-09-01): no wizard on an in-app update — the user
+            # already confirmed in the app. Inno reinstalls over the existing AppId, so
+            # it reuses the folder this copy was installed to; UAC may still appear
+            # because that folder is under Program Files. /NOCANCEL keeps a half-written
+            # install from being abandoned; the installer relaunches the app when done.
+            subprocess.Popen([str(dest), "/VERYSILENT", "/SUPPRESSMSGBOXES",
+                              "/NOCANCEL", "/NORESTART"], close_fds=True)
         except Exception as e:
             return {"error": f"Update failed: {e}"}
         import threading, webview

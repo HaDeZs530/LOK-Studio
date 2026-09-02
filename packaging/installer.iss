@@ -37,4 +37,5 @@ Name: "{group}\LOK Studio"; Filename: "{app}\LOK-Studio.exe"
 Name: "{autodesktop}\LOK Studio"; Filename: "{app}\LOK-Studio.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\LOK-Studio.exe"; Description: "Launch LOK Studio"; Flags: nowait postinstall skipifsilent
+; no skipifsilent — a silent run is the in-app updater, and it must come back up
+Filename: "{app}\LOK-Studio.exe"; Description: "Launch LOK Studio"; Flags: nowait postinstall
