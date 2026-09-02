@@ -43,6 +43,34 @@ The isometric rules are applied as you go, so what you draw is a layout that wil
 actually build. You lay out the shape of the space; you don't have to think about which
 tile carries which wall face.
 
+### Connecting walls to structural blocks
+
+Thin partition walls and thick structural blocks meet in one particular way, and it is
+worth knowing before you draw a lot of them.
+
+**The rule.** A block's south and east faces are drawn on the block itself. Its north
+and west faces are drawn one tile out — the row above it and the column to its left.
+
+<img src="docs/images/faces_where.png" width="440" alt="where a block's faces sit">
+
+**Two ways to join a run to a face, both correct.** Draw the run straight across the
+face row or column, through the block's width — or stop it beside the block and let the
+app write the face for you. Either way the wall comes out the same.
+
+<img src="docs/images/faces_two_ways.png" width="400" alt="a run drawn across the face, and a run stopped at the block">
+
+**What doesn't work** is drawing the run on the block's own top row or left column. It
+builds one tile short of the face and leaves a gap.
+
+<img src="docs/images/faces_wrong_right.png" width="560" alt="the same run drawn wrong and right">
+
+**Three checks in the app.** Hold the wall or door brush next to a block and the block's
+face tiles tint, so you can see which row to draw on. Press **M** for the Iso view,
+where blocks show their faces as real wall pieces — a run that lines up continues the
+wall, one that doesn't sits visibly beside it. And the build preview warns you before
+anything is written: *"wall at (2,-69) meets the mass on its TOP row — the north face is
+one row up."*
+
 ### Styles
 
 A style is a saved set of tile ids — this floor, that wall family, these doors. Save as

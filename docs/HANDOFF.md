@@ -86,6 +86,16 @@ ISO VIEW REWORK (same day, Tony's design, built and approved on his maze):
   marks/palObj/cx (record fillRect/moveTo/lineTo/fill), rasterise with PIL. Used to
   find the notches; rebuild it from this note if needed (lived in /tmp, not kept).
 
+TWO CORRECT FORMS (Tony 2026-09-01, from his region 6 / test2.json): a run joining a
+mass's north or west face may be drawn straight across the face row/column through the
+block's width (region 1 style), OR stopped beside the block with the generator writing
+the face and NW corner (region 6's second block). Both build identically — verified by
+rebuilding region 6 from its exported sketch: 61 wall tiles, same tiles, same places.
+The face-row warning was checked against region 6 and fires on neither form.
+README now carries a "Connecting walls to structural blocks" section with three
+rendered figures in docs/images/ (faces_where, faces_two_ways, faces_wrong_right) —
+the Iso halves are real drawIso output from the headless harness, not drawings.
+
 Also this day: palette labels "Wall horizontal / Wall vertical", "Door horizontal /
 Door vertical" (keys unchanged: wall-ns = horizontal runs, wall-ew = vertical runs);
 pre-flight palette line reads wall-h / wall-v.
