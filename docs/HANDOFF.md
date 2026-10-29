@@ -1,5 +1,52 @@
 # LOK STUDIO — the app era (2026-08-24 on)
 
+## RULING (Tony, 2026-10-29): THREE MASS STYLES · junction fix · regression suite
+
+Context: six developer-built segments (Praetoseba, Blackburrow, Leng, Axe Glacier, Oakvael,
+Underkingdom; 93 regions) became available and were mined for placement rules, then LOK Studio
+was round-tripped against them (import → rebuild → diff on H/V/C/door/mass role classes).
+Reports: project docs "2026-10-29 Dev World Patterns" and "2026-10-29 LOK Studio Round-Trip
+Report"; fixtures in tests/fixtures.
+
+FINDINGS. The partition classifier matches the dev majority in every junction class (through
+runs, four corners, four T types, run ends) — the divider vocabulary is right. Devs never use the
+canon structural idiom; they either wrap Solid fill with an ordinary divider ring on the four
+OUTSIDE tiles (dungeons, 75–81% of mass edges) or leave it bare against floor (overland).
+Tony's region 7 uses Solid Dirt 446 bare under hand-drawn marble runs.
+
+TONY'S RULING: all three are legitimate and chosen per area. "A lot of the devs took an easier
+route … To properly build some areas there should be structural behind some walls. This is not
+always the rule though. You can create areas with just structural without the wall encasements."
+The NW corner post is ALWAYS there (A and B both have it) — the only difference between the
+canon style and the dev ring is where the S and E walls sit: on the block (canon) or one tile
+out, on the tile outside the block (ring).
+
+BUILT (branch wall-fixes-2026-10-29):
+1. build_model junction classifier: stubs come only from DRAWN walls/doors. Before, a mass
+   counted as a run neighbour, so an H run directly SOUTH of a mass got a V stub on every tile
+   and a V run directly EAST of a mass an H stub (527 tiles across 7 dev regions). Tony's canon
+   never has that configuration, so none of the teaching regions change.
+2. A door inside a run of doors takes the run's orientation (S["door"] joins the run set).
+3. xml_to_sketch: orientation-aware face dropping (only the wall that IS the derived face is
+   dropped — H when mass is south, V when east, C when only south-east); posts/pillars/columns
+   (ids with no H/V/C name) import as extras, not partition walls; `--mass-style`, `--keep-faces`;
+   wall_orient.json baked from Components.xml (wall id → H/V/C, door closedId → H/V).
+4. `mass_style` = faces (default, canon, unchanged) | ring | bare. Top-level palette key or the
+   palette screen's Structural option "Mass style"; shown in the pre-flight palette line.
+   ring derives: H row above and below (running one tile further east), V column left and
+   right (one further south), post on the NW diagonal, H+V stacked on the SE tile; fills only
+   what isn't drawn. bare derives nothing. NOT YET per-mask (one mass style per build).
+5. tests/run_regression.py + baseline.json: 9 dev regions + 7 of Tony's regions. `--update`
+   after an approved change. `--no-normalize` on sketch_build for imports (dev 2-thick walls).
+
+Before → after on the suite (role-class agreement): dev regions 30–66% → 87–100%;
+Tony's r3/r4/r6 unchanged (97%), r5 99.0 → 99.5, test2 100 → 100, r9 92.5 → 91.2 (pillars now
+kept as extras instead of rebuilt as walls — intended), r7 76.6 → 76.9.
+
+Calibration regions 1 and 2 from 2026-09-01 are GONE (Tony, 2026-10-29) — new test runs are
+built as needed; the teaching saves in tests/fixtures/tony are the surviving canon.
+
+
 ## ⭐ STANDING LAW (Tony, 2026-08-25): CONFIRM EVERYTHING AGAINST A WORLDFORGE FILE
 
 Nothing this project writes into a region is ever inferred, pattern-matched, or taken
