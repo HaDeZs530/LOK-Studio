@@ -226,6 +226,7 @@
   <div id="menupanel">
     <button class="menuitem" id="mi_settings">Settings&hellip;</button>
     <button class="menuitem" id="mi_update">Check for updates&hellip;</button>
+    <button class="menuitem" id="mi_rollback">Roll back to previous version&hellip;</button>
   </div>
   <span class="tsep"></span>
   <span id="pos" title="Cursor tile coordinates">&nbsp;</span>
@@ -602,6 +603,25 @@ document.getElementById("mi_update").onclick=async()=>{
     return;
   uiToast("DOWNLOADING UPDATE…");
   const r=await APP().run_update(u.setup);
+  if(r&&r.error) uiAlert(r.error);
+};
+document.getElementById("mi_rollback").onclick=async()=>{
+  menuClose();
+  if(!APP()){ uiAlert("Rolling back needs the LOK Studio app."); return; }
+  uiToast("LOOKING UP RELEASES…");
+  const u=await APP().previous_release();
+  if(!u||u.error){ uiAlert((u&&u.error)||"Could not list releases."); return; }
+  if(u.dev){ uiAlert("This copy runs from source — switch versions with git instead."); return; }
+  if(!u.previous){ uiAlert("No older release to roll back to.\n\nInstalled: "+u.current); return; }
+  if(!u.installed){ uiAlert("This copy wasn't installed with the installer — download an older build from the releases page."); return; }
+  const list=u.releases.map(r=>(r.tag===u.current.replace(/^v/,"")?"▸ ":"  ")+r.tag+"  ("+r.date+")").join("\n");
+  if(!await uiConfirm("Roll back from "+u.current+" to "+u.previous.tag+" ("+u.previous.date+")?"
+      +"\n\nReleases kept on GitHub:\n"+list
+      +"\n\nLOK Studio will close so the installer can replace it. Your maps, styles and settings are not touched. "
+      +"You can move forward again with Check for updates."))
+    return;
+  uiToast("DOWNLOADING "+u.previous.tag+"…");
+  const r=await APP().run_update(u.previous.setup);
   if(r&&r.error) uiAlert(r.error);
 };
 document.getElementById("mi_settings").onclick=async()=>{

@@ -705,6 +705,38 @@ class Api:
                 "page": d.get("html_url"), "setup": setup,
                 "installed": installed and bool(setup)}
 
+    def previous_release(self):
+        """The newest release OLDER than the installed version, for one-click rollback.
+        Every release stays on GitHub with its installer, so the backup of any version
+        is the release itself (Tony 2026-10-29: always update the installed app, keep
+        every previous version available to revert to)."""
+        import urllib.request
+        try:
+            req = urllib.request.Request(
+                self.REPO_API.replace("/latest", "?per_page=30"),
+                headers={"User-Agent": "LOK-Studio", "Accept": "application/vnd.github+json"})
+            with urllib.request.urlopen(req, timeout=12) as r:
+                rels = json.loads(r.read().decode("utf-8"))
+        except Exception as e:
+            return {"error": f"Could not reach GitHub: {e}"}
+        cur = self._vtuple(VERSION)
+        rows = []
+        for d in rels:
+            if d.get("draft"):
+                continue
+            setup = next((a.get("browser_download_url") for a in (d.get("assets") or [])
+                          if str(a.get("name", "")).lower().endswith("setup.exe")), None)
+            if not setup:
+                continue
+            rows.append({"tag": (d.get("tag_name") or "").lstrip("vV"),
+                         "date": (d.get("published_at") or "")[:10], "setup": setup,
+                         "older": self._vtuple(d.get("tag_name")) < cur})
+        rows.sort(key=lambda x: self._vtuple(x["tag"]), reverse=True)
+        prev = next((x for x in rows if x["older"]), None)
+        installed = "program files" in str(Path(sys.executable).parent).lower()
+        return {"current": VERSION, "previous": prev, "releases": rows[:8],
+                "installed": installed, "dev": VERSION.endswith("-dev")}
+
     def run_update(self, url):
         """Download the release installer and launch it, then close the app so the
         installer can replace the files. Only ever called after an explicit confirm."""
