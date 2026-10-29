@@ -348,7 +348,10 @@ def build_model(S, rep):
     # partition walls: orientation from the run (emit_south classifier, Tony-corrected)
     for c in sorted(S["wall"], key=lambda p: (p[1], p[0])):
         x, y = c
-        E, W_, N, Sd = (x+1, y) in wd, (x-1, y) in wd, (x, y-1) in wd, (x, y+1) in wd
+        drawn = S["wall"] | S["door"]
+        E, W_, N, Sd = (x+1, y) in drawn, (x-1, y) in drawn, (x, y-1) in drawn, (x, y+1) in drawn
+        if not (E or W_ or N or Sd):           # no drawn neighbour: a mass beside it decides
+            E, W_, N, Sd = (x+1, y) in wd, (x-1, y) in wd, (x, y-1) in wd, (x, y+1) in wd
         h, v = (E or W_), (N or Sd)
         if h and not v: roles = ["wall-ns"]
         elif v and not h: roles = ["wall-ew"]
@@ -396,8 +399,9 @@ def build_model(S, rep):
            ((x, y-1) in S["structural"] and (x, y+1) in S["structural"]):
             sd_doors.append(c)
             continue
-        h = (x+1, y) in S["wall"] | S["structural"] or (x-1, y) in S["wall"] | S["structural"]
-        v = (x, y-1) in S["wall"] | S["structural"] or (x, y+1) in S["wall"] | S["structural"]
+        runset = S["wall"] | S["structural"] | S["door"]
+        h = (x+1, y) in runset or (x-1, y) in runset
+        v = (x, y-1) in runset or (x, y+1) in runset
         if h == v:
             amb.append(c)
         m = cell(c)
@@ -406,11 +410,53 @@ def build_model(S, rep):
         add(c, "door-ns" if h and not v else ("door-ew" if v and not h else "door-ns"))
     # structural blocks + faces (stage_a finalize vocabulary)
     B = S["structural"]
+    # MASS STYLE (2026-10-29, Tony's ruling after the dev-map review): how a structural
+    # mass is dressed. "faces" = the canon idiom (S/E faces ON the block, N/W faces on
+    # the neighbours, post on the NW diagonal) — the default, unchanged. "ring" = the
+    # devs' dungeon style: the block is bare fill and an ordinary divider ring sits on
+    # the four OUTSIDE tiles (post on the NW diagonal, H row runs one further east, V
+    # column one further south, H+V stacked on the SE tile). "bare" = block against
+    # floor, nothing derived.
+    mass_style = S.get("_mass_style", "faces")
+    bare_mass = mass_style in ("bare", "ring")
     for c in B:
         m = cell(c)
-        if m["ground"] is None:
+        if m["ground"] is None and not bare_mass:
             m["ground"] = "structural_floor"
         add(c, "structural")
+    if bare_mass:
+        for c in sd_doors:                       # doors in a mass gap: plain door, run orientation
+            x, y = c
+            m = cell(c)
+            if m["ground"] is None:
+                m["ground"] = "floor"
+            add(c, "door-ns" if ((x-1, y) in B and (x+1, y) in B) else "door-ew")
+        sd_doors = []
+    if mass_style == "ring":
+        def ring(t, role):
+            if t in B or t in S["door"]:
+                return
+            m = M.get(t)
+            if m is None:
+                M[t] = {"ground": S["ground"].get(t) or "floor", "stack": [role], "conn": None}
+            else:
+                if m["ground"] is None:
+                    m["ground"] = "floor"
+                if role not in m["stack"]:
+                    m["stack"].append(role)
+        for (x, y) in sorted(B, key=lambda p: (p[1], p[0])):
+            n, s_, w, e = (x, y-1) not in B, (x, y+1) not in B, (x-1, y) not in B, (x+1, y) not in B
+            if n: ring((x, y-1), "wall-ns")
+            if s_: ring((x, y+1), "wall-ns")
+            if w: ring((x-1, y), "wall-ew")
+            if e: ring((x+1, y), "wall-ew")
+            if n and w and (x-1, y-1) not in B: ring((x-1, y-1), "corner")
+            if n and e and (x+1, y-1) not in B: ring((x+1, y-1), "wall-ns")      # H row runs one further east
+            if s_ and w and (x-1, y+1) not in B: ring((x-1, y+1), "wall-ew")     # V column runs one further south
+            if s_ and e and (x+1, y+1) not in B:
+                ring((x+1, y+1), "wall-ns"); ring((x+1, y+1), "wall-ew")         # SE: H then V stacked
+    if bare_mass:
+        B = set()                                # nothing below derives from the mass
     for (x, y) in B:
         if (x, y+1) not in B:
             add((x, y), "wall-ns")                       # south face ON the block
@@ -565,7 +611,7 @@ def build_model(S, rep):
     # tile, stacking AFTER the face wall already there. Ends against a bare BLOCK stop
     # clean (the stacking prediction for that edge is UNTESTED — not built).
     W = S["wall"]
-    for (x, y) in sorted(W, key=lambda p: (p[1], p[0])):
+    for (x, y) in (sorted(W, key=lambda p: (p[1], p[0])) if not bare_mass else []):
         if (x-1, y) in W and (x+1, y) not in W and (x+1, y) not in B:
             t = M.get((x+1, y))
             if t and "wall-ew" in t["stack"] and not any(r.startswith("door") for r in t["stack"]):
@@ -1136,7 +1182,13 @@ def main():
     rep.append(f"palette: {' < '.join(pal_src)} (later overrides earlier)")
     resolve_palette(pal, rep)
     S = determine(d, L, rep)
-    normalize(S, rep)
+    if "--no-normalize" not in a:
+        normalize(S, rep)
+    # mass_style: top-level palette key, or the palette screen's structural option
+    S["_mass_style"] = pal.get("mass_style") or _opt(pal, "structural", "mass_style", "faces")
+    if S["_mass_style"] not in ("faces", "ring", "bare"):
+        sys.exit(f"palette: mass_style must be faces, ring or bare (got {S['_mass_style']!r})")
+    rep.append(f"mass style: {S['_mass_style']}")
     M, warns = build_model(S, rep)
     # ---- MASKS IN THE BUILD (Tony 2026-08-26): each painted area builds in its own
     # style, one pass. Same vocabulary as apply_masks (embedded style values win, then

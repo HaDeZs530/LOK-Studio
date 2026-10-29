@@ -16,3 +16,4 @@ generator/last_applied_masks/
 generator/styles/*.json
 !generator/styles/graybox.json
 !generator/styles/bare.json
+tests/_out/

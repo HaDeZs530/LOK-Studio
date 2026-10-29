@@ -1518,7 +1518,12 @@ for(const r of FLOOR_ROLES) ROLE_OPTS[r]=[["movementCost","Movement cost","num",
 ROLE_OPTS["water"]=[["movementCost","Movement cost","num",3],["depth","Depth","num",""]];
 ROLE_OPTS["deepwater"]=[["movementCost","Movement cost","num",3],["depth","Depth","num",""]];
 for(const r of ["wall-ns","wall-ew","corner"]) ROLE_OPTS[r]=[["indestructible","Indestructible","bool",false]];
-ROLE_OPTS["structural"]=[["indestructible","Indestructible (always on for structural)","lockedTrue",true]];
+ROLE_OPTS["structural"]=[["indestructible","Indestructible (always on for structural)","lockedTrue",true],
+  // MASS STYLE (2026-10-29): how a structural mass is dressed. faces = canon (S/E faces on the
+  // block, N/W faces on the neighbours, post on the NW diagonal). ring = the devs' dungeon
+  // style (block is bare fill, ordinary wall ring on the four OUTSIDE tiles). bare = block
+  // against floor, nothing derived. A "choice" option stores the string when not default.
+  ["mass_style","Mass style","choice","faces|ring|bare"]];
 for(const r of ["door-ns","door-ew"]) ROLE_OPTS[r]=[["isOpen","Starts open","bool",false],
                                                     ["isSecret","Secret","bool",false],
                                                     ["isDestroyed","Starts destroyed","bool",false],
@@ -1681,7 +1686,10 @@ function renderOpts(k){
     const v=(cur[key]!==undefined)?cur[key]:def;
     if(kind==="num")
       r.innerHTML='<label>'+label+'</label><input type="number" id="opt_'+key+'" value="'+(v===""?"":v)+'" placeholder="'+(def===""?"—":def)+'">';
-    else
+    else if(kind==="choice"){
+      const choices=def.split("|"), sel=(cur[key]!==undefined)?cur[key]:choices[0];
+      r.innerHTML='<label>'+label+'</label><select id="opt_'+key+'">'+choices.map(c=>'<option value="'+c+'"'+(c===sel?' selected':'')+'>'+c+'</option>').join('')+'</select>';
+    } else
       r.innerHTML='<label>'+label+'</label><input type="checkbox" id="opt_'+key+'"'+((kind==="lockedTrue"||v===true||v==="true")?" checked":"")+(kind==="lockedTrue"?" disabled":"")+'>';
     box.appendChild(r);
   }
@@ -1692,7 +1700,9 @@ function collectOpts(k){
     if(kind==="lockedTrue") continue;                 // role decides; never stored
     const el=document.getElementById("opt_"+key);
     if(!el) continue;
-    if(kind==="num"){
+    if(kind==="choice"){
+      if(el.value!==def.split("|")[0]) out[key]=el.value;
+    } else if(kind==="num"){
       const raw=el.value.trim();
       if(raw==="") continue;                          // blank = leave it to the default
       const n=parseInt(raw,10);

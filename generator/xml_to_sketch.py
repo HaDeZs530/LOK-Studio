@@ -23,12 +23,22 @@ them by default when it replaces a tile, so a round trip does NOT wipe decoratio
 
 Usage:
   python3 xml_to_sketch.py <region.xml> [--window x0 y0 x1 y1] [--title "..."] [-o out.json]
+                          [--structural-ids 31,447] [--mass-style faces|ring|bare] [--keep-faces]
 """
 import json, sys
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
 STRUCTURAL_IDS = {446, 447}
+def _orient_table():
+    """wall id -> H/V/C from generator/wall_orient.json (baked from Components.xml names).
+    Ids not in the table (posts, pillars, columns, masses) are not run pieces."""
+    p = Path(__file__).resolve().parent / "wall_orient.json"
+    try:
+        return {int(k): v for k, v in json.load(open(p, encoding="utf-8"))["orient"].items()}
+    except Exception:
+        return {}
+ORIENT = _orient_table()
 GROUND_MAP = {13: "grass", 12: "dirt"}   # 2 (spawn) and 5 (boss) handled specially
 
 
@@ -42,6 +52,12 @@ def main():
         i = a.index("--window")
         win = tuple(int(v) for v in a[i+1:i+5])
     sids = set(STRUCTURAL_IDS)
+    # --mass-style faces|ring|bare (default faces): with faces, walls that ARE the derived
+    # faces of a mass are dropped (the builder regenerates them); with ring or bare every
+    # drawn wall is kept, because the builder derives nothing from the mass (or derives a
+    # ring that only fills in what is missing). --keep-faces forces keeping under faces.
+    mass_style = a[a.index("--mass-style")+1] if "--mass-style" in a else "faces"
+    keep_faces = "--keep-faces" in a or mass_style != "faces"
     if "--structural-ids" in a:
         sids |= {int(v) for v in a[a.index("--structural-ids")+1].split(",")}
     root = ET.fromstring(src.read_bytes())
@@ -106,6 +122,10 @@ def main():
         if extra or spec:
             extras_tiles += 1
         # terrain layer
+        pillars = [w for w in walls if w not in sids and ORIENT.get(w) is None]
+        if pillars:
+            extra = True                      # posts/pillars/columns ride as extras, not walls
+            walls = [w for w in walls if w not in pillars]
         if walls:
             for w in walls:
                 wall_hist[w] = wall_hist.get(w, 0) + 1
@@ -114,9 +134,14 @@ def main():
             # structural mass is a face sketch_build regenerates — recover the GROUND, not
             # a drawn wall (the inverse of face completeness). Floorless faces vanish.
             # The SE-diagonal check covers the NW exterior corner cap (derived 2026-08-23).
-            adj = ((x, y+1) in struct_at) + ((x+1, y) in struct_at) \
-                + ((x+1, y+1) in struct_at)
-            if layer == "wall" and adj and len(walls) <= adj:
+            # orientation-aware: only a wall that IS the face the builder would derive is
+            # dropped (H when the mass is south, V when east, C when only south-east)
+            face = set()
+            if (x, y+1) in struct_at: face.add('H')
+            if (x+1, y) in struct_at: face.add('V')
+            if (x+1, y+1) in struct_at and not face: face.add('C')
+            ors = {ORIENT.get(w) for w in walls}
+            if layer == "wall" and face and ors <= face and not keep_faces:
                 dropped_faces[0] += 1
                 if ground is None and not is_water:
                     continue

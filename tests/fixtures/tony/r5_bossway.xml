@@ -1,0 +1,3292 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<region>
+  <id>5</id>
+  <name>StageA bossway - path to the boss</name>
+  <height>0</height>
+  <bounds left="0" top="-1" right="25" bottom="22" />
+  <tile x="13" y="-1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="-1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="15" y="-1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="-1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="17" y="-1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="18" y="-1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="19" y="-1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="20" y="-1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="21" y="-1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="22" y="-1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="23" y="-1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="13" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="15" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="17" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="18" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="19" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="20" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="21" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="22" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="23" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="24" y="0">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="13" y="1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="15" y="1">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="16" y="1">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="17" y="1">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="18" y="1">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="19" y="1">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="20" y="1">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="21" y="1">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="22" y="1">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="23" y="1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="24" y="1">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="2">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="13" y="2">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="2">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="15" y="2">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="16" y="2">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="17" y="2">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="18" y="2">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="19" y="2">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="20" y="2">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="21" y="2">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="22" y="2">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="23" y="2">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="24" y="2">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="3">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="13" y="3">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="3">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="15" y="3">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="16" y="3">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="17" y="3">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="18" y="3">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="19" y="3">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="20" y="3">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="21" y="3">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="22" y="3">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="23" y="3">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="24" y="3">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="4">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="13" y="4">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="4">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="15" y="4">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="16" y="4">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="17" y="4">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="18" y="4">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="19" y="4">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="20" y="4">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="21" y="4">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="22" y="4">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="23" y="4">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="24" y="4">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="5">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="13" y="5">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="5">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="15" y="5">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="16" y="5">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="17" y="5">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="18" y="5">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="19" y="5">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="20" y="5">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="21" y="5">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="22" y="5">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="23" y="5">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="24" y="5">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="6">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="13" y="6">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="6">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="15" y="6">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="6">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="17" y="6">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="18" y="6">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="19" y="6">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="20" y="6">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="21" y="6">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="22" y="6">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="23" y="6">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="24" y="6">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="13" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+  </tile>
+  <tile x="15" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+  </tile>
+  <tile x="16" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="17" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="18" y="7">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="DoorComponent">
+      <openId>78</openId>
+      <closedId>66</closedId>
+      <secretId>151</secretId>
+      <destroyedId>84</destroyedId>
+    </component>
+  </tile>
+  <tile x="19" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="20" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="21" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="22" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="23" y="7">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="8">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="8">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="8">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="13" y="8">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="8">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="15" y="8">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="8">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="17" y="8">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="18" y="8">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="19" y="8">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="20" y="8">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="21" y="8">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="9">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="9">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="9">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="13" y="9">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="14" y="9">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="15" y="9">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="16" y="9">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="17" y="9">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="18" y="9">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="19" y="9">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="20" y="9">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="21" y="9">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="10">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="10">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="10">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="13" y="10">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="10">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="15" y="10">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="10">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="17" y="10">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="18" y="10">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="19" y="10">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="20" y="10">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="21" y="10">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="9" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="11">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="13" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+  </tile>
+  <tile x="15" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+  </tile>
+  <tile x="16" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="17" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="18" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="19" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="20" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="21" y="11">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="9" y="12">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="12">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="12">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="12">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="DoorComponent">
+      <openId>78</openId>
+      <closedId>66</closedId>
+      <secretId>151</secretId>
+      <destroyedId>84</destroyedId>
+    </component>
+  </tile>
+  <tile x="13" y="12">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="12">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="15" y="12">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="12">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="17" y="12">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="18" y="12">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="19" y="12">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="20" y="12">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="21" y="12">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="9" y="13">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="13">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="13">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="12" y="13">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="13" y="13">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="14" y="13">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="15" y="13">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="13">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="0" y="14">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="1" y="14">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="2" y="14">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="3" y="14">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="4" y="14">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="5" y="14">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="6" y="14">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="9" y="14">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="14">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="14">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="12" y="14">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="13" y="14">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="14" y="14">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="15" y="14">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="14">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="0" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="1" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="2" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="3" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="4" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="5" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="6" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="7" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="8" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="9" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="15">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="12" y="15">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="13" y="15">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="14" y="15">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="15" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="15">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="0" y="16">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="1" y="16">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="2" y="16">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="3" y="16">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="4" y="16">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="5" y="16">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="6" y="16">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="7" y="16">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="8" y="16">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="9" y="16">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="16">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="16">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="12" y="16">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="13" y="16">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="14" y="16">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="15" y="16">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="16">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="0" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="DoorComponent">
+      <openId>79</openId>
+      <closedId>67</closedId>
+      <secretId>152</secretId>
+      <destroyedId>85</destroyedId>
+    </component>
+  </tile>
+  <tile x="1" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="2" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="3" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="4" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="5" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="6" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="7" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="8" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="9" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="10" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="DoorComponent">
+      <openId>79</openId>
+      <closedId>67</closedId>
+      <secretId>152</secretId>
+      <destroyedId>85</destroyedId>
+    </component>
+  </tile>
+  <tile x="11" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="12" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="13" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="14" y="17">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="15" y="17">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="17">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="0" y="18">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="1" y="18">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="2" y="18">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="3" y="18">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="4" y="18">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="5" y="18">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="6" y="18">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="7" y="18">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="8" y="18">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="9" y="18">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="18">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="18">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="12" y="18">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="13" y="18">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="14" y="18">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="15" y="18">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="18">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="0" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="1" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="2" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="3" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="4" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="5" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="6" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>34</wall>
+      <destroyed>144</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="7" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="8" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="9" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="19">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="12" y="19">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="13" y="19">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="14" y="19">
+    <component type="FloorComponent">
+      <ground>1</ground>
+    </component>
+  </tile>
+  <tile x="15" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="19">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="0" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="1" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="2" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="3" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="4" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="5" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="6" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="9" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="13" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="15" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="20">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="9" y="21">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="10" y="21">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="11" y="21">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="12" y="21">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="13" y="21">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="14" y="21">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="15" y="21">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+  <tile x="16" y="21">
+    <component type="FloorComponent">
+      <ground>12</ground>
+    </component>
+    <component type="WallComponent">
+      <wall>447</wall>
+      <destroyed>0</destroyed>
+      <ruins>44</ruins>
+      <indestructible>true</indestructible>
+    </component>
+    <component type="WallComponent">
+      <wall>29</wall>
+      <destroyed>42</destroyed>
+      <ruins>46</ruins>
+    </component>
+    <component type="WallComponent">
+      <wall>30</wall>
+      <destroyed>43</destroyed>
+      <ruins>46</ruins>
+    </component>
+  </tile>
+</region>

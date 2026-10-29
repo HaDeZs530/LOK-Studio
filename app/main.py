@@ -513,6 +513,9 @@ class Api:
         pal_line = (f"room {g('room',1)} · hall {g('hall',1)} · wall-h {g('wall-ns',29)} · "
                     f"wall-v {g('wall-ew',30)} · corner {g('corner',34)} · "
                     f"struct {g('structural',447)} · doors {g('door-ns',66)}/{g('door-ew',67)}")
+        ms = pal.get("mass_style") or ((pal.get("opts") or {}).get("structural") or {}).get("mass_style")
+        if ms and ms != "faces":
+            pal_line += f" · mass style {ms}"
         if (g('room',1), g('hall',1), g('wall-ns',29), g('wall-ew',30),
                 g('corner',34), g('structural',447)) == (1, 1, 29, 30, 34, 447):
             pal_line += "   (gray-box values)"
